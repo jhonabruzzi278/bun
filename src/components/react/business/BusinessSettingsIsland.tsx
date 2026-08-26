@@ -107,58 +107,131 @@ export default function BusinessSettingsIsland() {
         </div>
 
         {/* Imágenes y Personalización Visual */}
-        <div className="p-6 rounded-2xl bg-slate-950 border border-slate-800 space-y-4">
+        <div className="p-6 rounded-2xl bg-slate-950 border border-slate-800 space-y-6">
           <h2 className="text-base font-bold text-white flex items-center gap-2">
             <Palette className="w-4 h-4 text-brand-400" />
-            Imágenes & Color de Marca
+            Logo, Portada & Color de Marca
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">URL Logo Cuadrado</label>
-              <input
-                type="url"
-                name="logoUrl"
-                value={formData.logoUrl}
-                onChange={handleChange}
-                placeholder="https://..."
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm focus:outline-none focus:border-brand-500"
-              />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            {/* Logo Upload & Preview */}
+            <div className="space-y-3">
+              <label className="block text-xs font-bold text-slate-300">Logo del Restaurante</label>
+              
+              <div className="flex items-center gap-4">
+                <div className="w-20 h-20 rounded-2xl bg-slate-900 border-2 border-dashed border-slate-700 overflow-hidden flex items-center justify-center shrink-0 relative group">
+                  {formData.logoUrl ? (
+                    <img src={formData.logoUrl} alt="Logo" className="w-full h-full object-cover" />
+                  ) : (
+                    <span className="text-2xl">🍔</span>
+                  )}
+                </div>
+
+                <div className="space-y-2 flex-1">
+                  <label className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-xs font-bold cursor-pointer transition shadow-md shadow-brand-500/20 active:scale-95">
+                    <span>Subir Logo desde el PC</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          const reader = new FileReader();
+                          reader.onloadend = () => {
+                            setFormData((prev) => ({ ...prev, logoUrl: reader.result as string }));
+                          };
+                          reader.readAsDataURL(file);
+                        }
+                      }}
+                    />
+                  </label>
+
+                  <input
+                    type="url"
+                    name="logoUrl"
+                    value={formData.logoUrl || ''}
+                    onChange={handleChange}
+                    placeholder="O pega una URL: https://..."
+                    className="w-full px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-[11px] placeholder:text-slate-600 focus:outline-none focus:border-brand-500"
+                  />
+                </div>
+              </div>
             </div>
 
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">URL Banner / Portada</label>
-              <input
-                type="url"
-                name="bannerUrl"
-                value={formData.bannerUrl}
-                onChange={handleChange}
-                placeholder="https://..."
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm focus:outline-none focus:border-brand-500"
-              />
+            {/* Banner / Portada Upload & Preview */}
+            <div className="space-y-3">
+              <label className="block text-xs font-bold text-slate-300">Imagen de Portada / Banner</label>
+              
+              <div className="space-y-2">
+                <div className="h-20 w-full rounded-2xl bg-slate-900 border-2 border-dashed border-slate-700 overflow-hidden flex items-center justify-center relative">
+                  {formData.bannerUrl ? (
+                    <img src={formData.bannerUrl} alt="Banner" className="w-full h-full object-cover" />
+                  ) : (
+                    <span className="text-xs text-slate-500 font-semibold">Sin imagen de portada</span>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <label className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold cursor-pointer transition whitespace-nowrap border border-slate-700">
+                    <span>Subir Portada</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          const reader = new FileReader();
+                          reader.onloadend = () => {
+                            setFormData((prev) => ({ ...prev, bannerUrl: reader.result as string }));
+                          };
+                          reader.readAsDataURL(file);
+                        }
+                      }}
+                    />
+                  </label>
+
+                  <input
+                    type="url"
+                    name="bannerUrl"
+                    value={formData.bannerUrl || ''}
+                    onChange={handleChange}
+                    placeholder="O pega una URL: https://..."
+                    className="w-full px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-[11px] placeholder:text-slate-600 focus:outline-none focus:border-brand-500"
+                  />
+                </div>
+              </div>
             </div>
 
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">Color Principal (Hex)</label>
+            {/* Color de Marca */}
+            <div className="md:col-span-2 pt-2 border-t border-slate-800 flex items-center justify-between">
+              <div>
+                <label className="block text-xs font-bold text-slate-300">Color Primario de tu Menú</label>
+                <span className="text-[10px] text-slate-500">Se aplicará a botones, destacados y acentos visuales.</span>
+              </div>
               <div className="flex items-center gap-3">
                 <input
                   type="color"
                   name="primaryColor"
-                  value={formData.primaryColor}
+                  value={formData.primaryColor || '#0074FF'}
                   onChange={handleChange}
-                  className="w-10 h-10 rounded-lg border-0 bg-transparent cursor-pointer"
+                  className="w-10 h-10 rounded-xl border-0 bg-transparent cursor-pointer"
                 />
                 <input
                   type="text"
                   name="primaryColor"
-                  value={formData.primaryColor}
+                  value={formData.primaryColor || '#0074FF'}
                   onChange={handleChange}
-                  className="w-32 px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs font-mono"
+                  className="w-28 px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs font-mono text-center font-bold"
                 />
               </div>
             </div>
+
           </div>
         </div>
+
 
         {/* Contacto & Pedidos */}
         <div className="p-6 rounded-2xl bg-slate-950 border border-slate-800 space-y-4">
