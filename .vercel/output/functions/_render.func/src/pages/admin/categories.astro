@@ -1,0 +1,8 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import CategoryManagerIsland from '../../components/react/categories/CategoryManagerIsland';
+---
+
+<AdminLayout title="Categorías del Menú" activePath="/admin/categories">
+  <CategoryManagerIsland client:load />
+</AdminLayout>
