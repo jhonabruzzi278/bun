@@ -1,4 +1,35 @@
 ---
-// Redirect to /admin as default landing for MVP
-return Astro.redirect('/admin');
+import '../styles/global.css';
+import LandingNavbar from '../components/react/landing/LandingNavbar';
+import LandingHero from '../components/react/landing/LandingHero';
+import LandingFeatures from '../components/react/landing/LandingFeatures';
+import LandingPricing from '../components/react/landing/LandingPricing';
+import LandingFAQ from '../components/react/landing/LandingFAQ';
+import LandingFooter from '../components/react/landing/LandingFooter';
 ---
+
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth bg-slate-950 text-slate-100 selection:bg-brand-500 selection:text-white">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BUN | Software para Restaurantes — Menú Digital QR, WhatsApp y Cocina KDS</title>
+    <meta
+      name="description"
+      content="BUN es el software gastronómico estilo OlaClick con Menú Digital QR, pedidos directos por WhatsApp, KDS de cocina en tiempo real y 0% comisiones."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  </head>
+  <body class="bg-slate-950 font-sans antialiased overflow-x-hidden">
+    <LandingNavbar client:load />
+    <main>
+      <LandingHero client:load />
+      <LandingFeatures client:load />
+      <LandingPricing client:load />
+      <LandingFAQ client:load />
+    </main>
+    <LandingFooter client:load />
+  </body>
+</html>
