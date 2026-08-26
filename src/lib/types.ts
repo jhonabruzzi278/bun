@@ -44,6 +44,47 @@ export interface Product {
   modifiers?: ProductModifier[];
 }
 
+export interface DeliverySettings {
+  enabledWeb: boolean;
+  enabledPos: boolean;
+  serviceFee: number;
+  packagingFee: number;
+  minOrderAmount: number;
+  freeDeliveryThreshold: number;
+  avgDeliveryMinutes: number;
+  scheduledOrders: boolean;
+  requireAddressDetails: boolean;
+}
+
+export interface TakeawaySettings {
+  enabledWeb: boolean;
+  enabledPos: boolean;
+  avgPrepMinutes: number;
+}
+
+export interface DineInSettings {
+  enabledWeb: boolean;
+  enabledPos: boolean;
+}
+
+export interface TableDineInSettings {
+  enabledPos: boolean;
+}
+
+export interface TipsSettings {
+  enabledWeb: boolean;
+  enabledPos: boolean;
+  suggestedPercentages: number[];
+}
+
+export interface BusinessServiceSettings {
+  delivery: DeliverySettings;
+  takeaway: TakeawaySettings;
+  dineIn: DineInSettings;
+  tableDineIn: TableDineInSettings;
+  tips: TipsSettings;
+}
+
 export interface Business {
   id: string;
   tenantId: string;
@@ -59,6 +100,7 @@ export interface Business {
   primaryColor: string;
   whatsappOrders: boolean;
   isOpen: boolean;
+  serviceSettings?: BusinessServiceSettings;
 }
 
 export interface CartItem {
@@ -127,5 +169,23 @@ export interface KitchenTicket {
   cancellationReason?: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface OnboardingStep {
+  id: string;
+  stageId: number;
+  title: string;
+  description: string;
+  completed: boolean;
+  actionUrl?: string;
+  actionLabel?: string;
+  iconName?: string;
+}
+
+export interface OnboardingStage {
+  id: number;
+  title: string;
+  badge: string;
+  steps: OnboardingStep[];
 }
 

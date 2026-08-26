@@ -20,8 +20,12 @@
 
 ## Enlaces Rápidos
 - **Hoja de Ruta (Roadmap):** [HOJA_RUTA.md](file:///c:/Trabajos/bun/HOJA_RUTA.md)
-- **Matriz de Funcionalidades:** [/pricing](http://localhost:4321/pricing)
-- **Panel Administrativo:** [/admin](http://localhost:4321/admin)
+- **Punto de Venta (PDV):** [/admin/pos](http://localhost:4321/admin/pos)
+- **Guía de Configuración (Onboarding 17 pasos):** [/admin/onboarding](http://localhost:4321/admin/onboarding)
+- **Configuración General & Canales:** [/admin/settings](http://localhost:4321/admin/settings)
+- **Historial de Ventas:** [/admin/sales](http://localhost:4321/admin/sales)
+- **Reportes & Estadísticas:** [/admin/reports](http://localhost:4321/admin/reports)
 - **Cocina KDS:** [/admin/kitchen](http://localhost:4321/admin/kitchen)
 - **Mis Enlaces y Códigos QR:** [/admin/qr](http://localhost:4321/admin/qr)
+- **Matriz de Funcionalidades:** [/pricing](http://localhost:4321/pricing)
 - **Despliegue Vercel:** [https://bun-cyan.vercel.app](https://bun-cyan.vercel.app)

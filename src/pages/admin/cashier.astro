@@ -1,0 +1,69 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { PiggyBank, Lock, Unlock, ArrowRight, DollarSign, CheckCircle2, History } from 'lucide-react';
+---
+
+<AdminLayout title="Cuadre y Arqueo de Cajas" activePath="/admin/cashier">
+  <div class="max-w-6xl mx-auto space-y-6 pb-16">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Cajas y Cuadre de Turnos</h1>
+        <p class="text-xs sm:text-sm text-slate-400 mt-1">Apertura de turno, control de efectivo inicial y arqueo de caja diario.</p>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button
+          type="button"
+          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-rose-500 hover:bg-rose-600 text-white font-bold text-xs shadow-lg transition"
+        >
+          <Lock className="w-4 h-4" />
+          <span>Cerrar Turno Actual</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Active Cashier Card -->
+    <div class="p-6 rounded-3xl bg-slate-950 border border-slate-800 space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-850">
+        <div class="flex items-center gap-3.5">
+          <div class="w-12 h-12 rounded-2xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center border border-emerald-500/30">
+            <Unlock className="w-6 h-6" />
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 class="text-base font-bold text-white">Caja Principal #1 (Turno Tarde)</h3>
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                Abierta
+              </span>
+            </div>
+            <p class="text-xs text-slate-400 mt-0.5">Operador: Jonathan Guerra • Apertura: Hoy 14:00 hrs</p>
+          </div>
+        </div>
+
+        <div class="text-right">
+          <span class="text-xs text-slate-400 block font-medium">Efectivo en Caja Esperado</span>
+          <span class="text-2xl font-black text-white font-mono">$134.500</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+        <div class="p-4 rounded-2xl bg-slate-900/60 border border-slate-800">
+          <span class="text-[11px] text-slate-400 block font-semibold">Monto Inicial</span>
+          <span class="text-base font-bold text-white font-mono mt-1 block">$50.000</span>
+        </div>
+        <div class="p-4 rounded-2xl bg-slate-900/60 border border-slate-800">
+          <span class="text-[11px] text-slate-400 block font-semibold">Ventas Efectivo</span>
+          <span class="text-base font-bold text-emerald-400 font-mono mt-1 block">+$84.500</span>
+        </div>
+        <div class="p-4 rounded-2xl bg-slate-900/60 border border-slate-800">
+          <span class="text-[11px] text-slate-400 block font-semibold">Ventas Tarjeta / Link</span>
+          <span class="text-base font-bold text-blue-400 font-mono mt-1 block">$100.000</span>
+        </div>
+        <div class="p-4 rounded-2xl bg-slate-900/60 border border-slate-800">
+          <span class="text-[11px] text-slate-400 block font-semibold">Retiros / Gastos</span>
+          <span class="text-base font-bold text-rose-400 font-mono mt-1 block">$0</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</AdminLayout>

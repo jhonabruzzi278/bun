@@ -50,7 +50,9 @@ export default function OnboardingWizardIsland() {
       // 1. Crear categoría
       const cat = addCategory({
         name: prodCategory,
+        slug: prodCategory.toLowerCase().replace(/[^a-z0-9-]/g, '-'),
         description: `Nuestros mejores ${prodCategory.toLowerCase()}`,
+        position: 1,
         isVisible: true,
       });
 
@@ -61,6 +63,7 @@ export default function OnboardingWizardIsland() {
         price: Number(prodPrice) || 5000,
         description: prodDescription,
         imageUrl: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=600&q=80',
+        position: 1,
         isVisible: true,
         isAvailable: true,
         isFeatured: true,
@@ -73,6 +76,7 @@ export default function OnboardingWizardIsland() {
           { id: `m_${Date.now()}_2`, groupName: 'Extras', name: 'Bacon Crispy', price: 1200, maxQuantity: 2 }
         ]
       });
+
 
       setLoading(false);
       setStep(4);

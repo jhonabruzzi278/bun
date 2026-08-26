@@ -1,0 +1,82 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { BarChart3, TrendingUp, DollarSign, Calendar, Users, ShoppingBag, ArrowUpRight } from 'lucide-react';
+---
+
+<AdminLayout title="Reportes" activePath="/admin/reports">
+  <div class="max-w-6xl mx-auto space-y-6 pb-16">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Reportes y Estadísticas</h1>
+        <p class="text-xs sm:text-sm text-slate-400 mt-1">Analiza el rendimiento de ventas por canal, productos más vendidos y horarios pico.</p>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button type="button" class="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 text-xs font-bold">Hoy</button>
+        <button type="button" class="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 text-xs font-bold">Últimos 7 días</button>
+        <button type="button" class="px-3 py-1.5 rounded-xl bg-brand-500 text-white text-xs font-bold shadow-md">Este mes</button>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="p-6 rounded-2xl bg-slate-950 border border-slate-800 space-y-4">
+        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+          <TrendingUp className="w-4 h-4 text-brand-400" />
+          <span>Ventas por Canal</span>
+        </h3>
+        <div class="space-y-3">
+          <div class="space-y-1">
+            <div class="flex justify-between text-xs font-bold">
+              <span class="text-slate-300">Menú Digital (WEB)</span>
+              <span class="text-white font-mono">$1.420.000 (62%)</span>
+            </div>
+            <div class="h-2 rounded-full bg-slate-900 overflow-hidden">
+              <div class="h-full bg-blue-500 rounded-full" style="width: 62%"></div>
+            </div>
+          </div>
+
+          <div class="space-y-1">
+            <div class="flex justify-between text-xs font-bold">
+              <span class="text-slate-300">Punto de Venta (PDV)</span>
+              <span class="text-white font-mono">$650.000 (28%)</span>
+            </div>
+            <div class="h-2 rounded-full bg-slate-900 overflow-hidden">
+              <div class="h-full bg-indigo-500 rounded-full" style="width: 28%"></div>
+            </div>
+          </div>
+
+          <div class="space-y-1">
+            <div class="flex justify-between text-xs font-bold">
+              <span class="text-slate-300">Pedidos QR en Mesa</span>
+              <span class="text-white font-mono">$230.000 (10%)</span>
+            </div>
+            <div class="h-2 rounded-full bg-slate-900 overflow-hidden">
+              <div class="h-full bg-purple-500 rounded-full" style="width: 10%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-6 rounded-2xl bg-slate-950 border border-slate-800 space-y-4">
+        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+          <ShoppingBag className="w-4 h-4 text-brand-400" />
+          <span>Top Productos Más Vendidos</span>
+        </h3>
+        <div class="space-y-3 text-xs">
+          <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-900/60 border border-slate-850">
+            <span class="font-bold text-white">1. Hamburguesa Clásica Doble</span>
+            <span class="text-brand-400 font-mono font-bold">142 vendidos</span>
+          </div>
+          <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-900/60 border border-slate-850">
+            <span class="font-bold text-white">2. Papas Rústicas con Queso</span>
+            <span class="text-brand-400 font-mono font-bold">98 vendidos</span>
+          </div>
+          <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-900/60 border border-slate-850">
+            <span class="font-bold text-white">3. Bebida 350ml</span>
+            <span class="text-brand-400 font-mono font-bold">85 vendidos</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</AdminLayout>

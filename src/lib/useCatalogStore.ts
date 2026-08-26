@@ -1,18 +1,21 @@
 import { useState, useEffect } from 'react';
-import type { Business, Category, Product, CartItem } from './types';
+import type { Business, Category, Product, CartItem, OnboardingStage } from './types';
 import { INITIAL_BUSINESS, INITIAL_CATEGORIES, INITIAL_PRODUCTS } from './mockData';
+import { INITIAL_ONBOARDING_STAGES } from './onboardingData';
 
 const STORAGE_KEYS = {
   BUSINESS: 'bun_business_state',
   CATEGORIES: 'bun_categories_state',
   PRODUCTS: 'bun_products_state',
   CART: 'bun_cart_state',
+  ONBOARDING: 'bun_onboarding_state',
 };
 
 export function useCatalogStore() {
   const [business, setBusinessState] = useState<Business>(INITIAL_BUSINESS);
   const [categories, setCategoriesState] = useState<Category[]>(INITIAL_CATEGORIES);
   const [products, setProductsState] = useState<Product[]>(INITIAL_PRODUCTS);
+  const [onboardingStages, setOnboardingStages] = useState<OnboardingStage[]>(INITIAL_ONBOARDING_STAGES);
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
@@ -20,10 +23,46 @@ export function useCatalogStore() {
       const storedBiz = localStorage.getItem(STORAGE_KEYS.BUSINESS);
       const storedCats = localStorage.getItem(STORAGE_KEYS.CATEGORIES);
       const storedProds = localStorage.getItem(STORAGE_KEYS.PRODUCTS);
+      const storedOnboarding = localStorage.getItem(STORAGE_KEYS.ONBOARDING);
 
-      if (storedBiz) setBusinessState(JSON.parse(storedBiz));
+      if (storedBiz) {
+        const parsed = JSON.parse(storedBiz);
+        setBusinessState({
+          ...INITIAL_BUSINESS,
+          ...parsed,
+          serviceSettings: {
+            ...INITIAL_BUSINESS.serviceSettings!,
+            ...(parsed.serviceSettings || {}),
+            delivery: {
+              ...INITIAL_BUSINESS.serviceSettings!.delivery,
+              ...(parsed.serviceSettings?.delivery || {}),
+            },
+            takeaway: {
+              ...INITIAL_BUSINESS.serviceSettings!.takeaway,
+              ...(parsed.serviceSettings?.takeaway || {}),
+            },
+            dineIn: {
+              ...INITIAL_BUSINESS.serviceSettings!.dineIn,
+              ...(parsed.serviceSettings?.dineIn || {}),
+            },
+            tableDineIn: {
+              ...INITIAL_BUSINESS.serviceSettings!.tableDineIn,
+              ...(parsed.serviceSettings?.tableDineIn || {}),
+            },
+            tips: {
+              ...INITIAL_BUSINESS.serviceSettings!.tips,
+              ...(parsed.serviceSettings?.tips || {}),
+            },
+          },
+        });
+      }
       if (storedCats) setCategoriesState(JSON.parse(storedCats));
       if (storedProds) setProductsState(JSON.parse(storedProds));
+      if (storedOnboarding) {
+        setOnboardingStages(JSON.parse(storedOnboarding));
+      } else {
+        setOnboardingStages(INITIAL_ONBOARDING_STAGES);
+      }
     } catch (e) {
       console.error('Error loading state from localStorage', e);
     } finally {
@@ -33,8 +72,56 @@ export function useCatalogStore() {
 
   const updateBusiness = (updated: Partial<Business>) => {
     setBusinessState((prev) => {
-      const next = { ...prev, ...updated };
+      const next = {
+        ...prev,
+        ...updated,
+        serviceSettings: updated.serviceSettings
+          ? {
+              ...prev.serviceSettings,
+              ...updated.serviceSettings,
+            }
+          : prev.serviceSettings,
+      };
       localStorage.setItem(STORAGE_KEYS.BUSINESS, JSON.stringify(next));
+      window.dispatchEvent(new Event('bun:data_updated'));
+      return next;
+    });
+  };
+
+
+  const toggleOnboardingStep = (stepId: string) => {
+    setOnboardingStages((prevStages) => {
+      const next = prevStages.map((stage) => {
+        const updatedSteps = stage.steps.map((s) =>
+          s.id === stepId ? { ...s, completed: !s.completed } : s
+        );
+        const completedInStage = updatedSteps.filter((s) => s.completed).length;
+        return {
+          ...stage,
+          badge: `${completedInStage}/${updatedSteps.length}`,
+          steps: updatedSteps,
+        };
+      });
+      localStorage.setItem(STORAGE_KEYS.ONBOARDING, JSON.stringify(next));
+      window.dispatchEvent(new Event('bun:data_updated'));
+      return next;
+    });
+  };
+
+  const setOnboardingStepStatus = (stepId: string, completed: boolean) => {
+    setOnboardingStages((prevStages) => {
+      const next = prevStages.map((stage) => {
+        const updatedSteps = stage.steps.map((s) =>
+          s.id === stepId ? { ...s, completed } : s
+        );
+        const completedInStage = updatedSteps.filter((s) => s.completed).length;
+        return {
+          ...stage,
+          badge: `${completedInStage}/${updatedSteps.length}`,
+          steps: updatedSteps,
+        };
+      });
+      localStorage.setItem(STORAGE_KEYS.ONBOARDING, JSON.stringify(next));
       window.dispatchEvent(new Event('bun:data_updated'));
       return next;
     });
@@ -90,7 +177,6 @@ export function useCatalogStore() {
     return newProd;
   };
 
-
   const updateProduct = (id: string, prod: Partial<Product>) => {
     setProductsState((prev) => {
       const next = prev.map((p) => (p.id === id ? { ...p, ...prod } : p));
@@ -113,9 +199,11 @@ export function useCatalogStore() {
     setBusinessState(INITIAL_BUSINESS);
     setCategoriesState(INITIAL_CATEGORIES);
     setProductsState(INITIAL_PRODUCTS);
+    setOnboardingStages(INITIAL_ONBOARDING_STAGES);
     localStorage.removeItem(STORAGE_KEYS.BUSINESS);
     localStorage.removeItem(STORAGE_KEYS.CATEGORIES);
     localStorage.removeItem(STORAGE_KEYS.PRODUCTS);
+    localStorage.removeItem(STORAGE_KEYS.ONBOARDING);
     window.dispatchEvent(new Event('bun:data_updated'));
   };
 
@@ -123,8 +211,11 @@ export function useCatalogStore() {
     business,
     categories,
     products,
+    onboardingStages,
     isLoaded,
     updateBusiness,
+    toggleOnboardingStep,
+    setOnboardingStepStatus,
     addCategory,
     updateCategory,
     deleteCategory,
@@ -134,3 +225,4 @@ export function useCatalogStore() {
     resetToDemo,
   };
 }
+

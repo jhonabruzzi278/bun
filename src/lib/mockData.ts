@@ -15,7 +15,38 @@ export const INITIAL_BUSINESS: Business = {
   primaryColor: '#f97316',
   whatsappOrders: true,
   isOpen: true,
+  serviceSettings: {
+    delivery: {
+      enabledWeb: true,
+      enabledPos: true,
+      serviceFee: 1500,
+      packagingFee: 500,
+      minOrderAmount: 5000,
+      freeDeliveryThreshold: 25000,
+      avgDeliveryMinutes: 40,
+      scheduledOrders: true,
+      requireAddressDetails: true,
+    },
+    takeaway: {
+      enabledWeb: true,
+      enabledPos: true,
+      avgPrepMinutes: 20,
+    },
+    dineIn: {
+      enabledWeb: true,
+      enabledPos: true,
+    },
+    tableDineIn: {
+      enabledPos: true,
+    },
+    tips: {
+      enabledWeb: true,
+      enabledPos: true,
+      suggestedPercentages: [5, 10, 15],
+    },
+  },
 };
+
 
 export const INITIAL_CATEGORIES: Category[] = [
   {

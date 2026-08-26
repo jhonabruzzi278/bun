@@ -1,27 +1,29 @@
 import React from 'react';
 import { useCatalogStore } from '@/lib/useCatalogStore';
-import { CheckCircle2, Circle, ArrowRight, Store, UtensilsCrossed, FolderKanban, Smartphone, Share2, Sparkles } from 'lucide-react';
+import {
+  CheckCircle2,
+  Circle,
+  ArrowRight,
+  Store,
+  UtensilsCrossed,
+  FolderKanban,
+  Smartphone,
+  Share2,
+  Sparkles,
+  Rocket
+} from 'lucide-react';
 
 export default function DashboardIsland() {
-  const { business, categories, products, isLoaded } = useCatalogStore();
+  const { business, categories, products, onboardingStages, toggleOnboardingStep, isLoaded } = useCatalogStore();
 
   if (!isLoaded) {
     return <div className="p-8 text-slate-400 text-sm">Cargando panel de control...</div>;
   }
 
-  const steps = [
-    { label: 'Información y branding del negocio configurados', completed: !!business.name && !!business.phone, href: '/admin/business' },
-    { label: 'Logo y portada agregados', completed: !!business.logoUrl, href: '/admin/business' },
-    { label: 'Al menos una categoría creada', completed: categories.length > 0, href: '/admin/categories' },
-    { label: 'Al menos un producto cargado con precio', completed: products.length > 0, href: '/admin/products' },
-    { label: 'Producto marcado como destacado para portada', completed: products.some(p => p.isFeatured), href: '/admin/products' },
-    { label: 'Variantes o modificadores configurados (ej. extras)', completed: products.some(p => (p.variants && p.variants.length > 0) || (p.modifiers && p.modifiers.length > 0)), href: '/admin/products' },
-    { label: 'Revisar vista previa móvil interactiva', completed: true, href: '/admin/preview' },
-    { label: 'Compartir enlace público con tus clientes', completed: true, href: `/menu/${business.slug}` },
-  ];
-
-  const completedCount = steps.filter((s) => s.completed).length;
-  const progressPercent = Math.round((completedCount / steps.length) * 100);
+  const allSteps = onboardingStages.flatMap((s) => s.steps);
+  const completedCount = allSteps.filter((s) => s.completed).length;
+  const totalSteps = allSteps.length || 17;
+  const progressPercent = Math.round((completedCount / totalSteps) * 100);
 
   return (
     <div className="space-y-8">
@@ -34,28 +36,28 @@ export default function DashboardIsland() {
               SaaS Multi-tenant v0.1 • Estilo OlaClick
             </div>
             <h1 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight">
-              Bienvenido, {business.name}
+              Bienvenido, Jonathan guerra 👋
             </h1>
-            <p className="text-slate-400 text-sm max-w-xl">
-              Tu menú digital está activo y listo para recibir clientes. Administra tus productos, categorías y pedidos desde aquí.
+            <p className="text-slate-300 text-sm max-w-xl">
+              Aquí encontrarás una guía sencilla para configurar tu panel. Sigue estos pasos para personalizar tu experiencia y aprovechar al máximo todas las funcionalidades.
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
             <a
-              href="/admin/preview"
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-medium border border-slate-700 transition"
+              href="/admin/onboarding"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-brand-500 to-amber-500 hover:from-brand-600 hover:to-amber-600 text-white text-sm font-bold shadow-lg shadow-brand-500/25 transition"
             >
-              <Smartphone className="w-4 h-4 text-brand-400" />
-              Vista Previa
+              <Rocket className="w-4 h-4" />
+              Ver Guía 4 Etapas ({completedCount}/{totalSteps})
             </a>
             <a
               href={`/menu/${business.slug}`}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-sm font-bold shadow-lg shadow-brand-500/25 transition"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-medium border border-slate-700 transition"
             >
-              <Share2 className="w-4 h-4" />
+              <Share2 className="w-4 h-4 text-brand-400" />
               Ver Menú Público
             </a>
           </div>
@@ -101,47 +103,112 @@ export default function DashboardIsland() {
         </div>
       </div>
 
-      {/* Onboarding Checklist (OlaClick inspired) */}
+      {/* Onboarding Checklist Summary */}
       <div className="p-6 rounded-2xl bg-slate-950 border border-slate-800">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-800">
           <div>
-            <h2 className="text-lg font-bold text-white flex items-center gap-2">
-              Guía de Configuración Inicial (Onboarding)
-            </h2>
-            <p className="text-xs text-slate-400 mt-0.5">
-              Completa estos pasos para tener tu catálogo y tienda al 100%.
+            <div className="flex items-center gap-2">
+              <span className="text-xl">🚀</span>
+              <span className="text-xl">😎</span>
+              <h2 className="text-lg font-bold text-white">
+                Pasos completados: {completedCount} de {totalSteps}
+              </h2>
+            </div>
+            <p className="text-xs text-slate-400 mt-1">
+              Guía de configuración en 4 etapas para poner en marcha tu restaurante.
             </p>
           </div>
           <div className="flex items-center gap-3">
-            <span className="text-sm font-bold text-brand-400">{completedCount} de {steps.length} completados</span>
             <div className="w-32 bg-slate-800 rounded-full h-2.5 overflow-hidden">
               <div
-                className="bg-gradient-to-r from-brand-500 to-amber-400 h-2.5 rounded-full transition-all duration-500"
+                className="bg-gradient-to-r from-brand-500 via-amber-400 to-emerald-400 h-2.5 rounded-full transition-all duration-500"
                 style={{ width: `${progressPercent}%` }}
               ></div>
             </div>
+            <a
+              href="/admin/onboarding"
+              className="text-xs font-bold text-brand-400 hover:text-brand-300 transition flex items-center gap-1 shrink-0"
+            >
+              <span>Ver todas las etapas</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </a>
           </div>
         </div>
 
-        <div className="divide-y divide-slate-800/60 mt-2">
-          {steps.map((step, idx) => (
-            <a
-              key={idx}
-              href={step.href}
-              className="py-3.5 px-2 flex items-center justify-between hover:bg-slate-900/60 rounded-xl transition group"
+        {/* 4 Stages Mini Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 mt-5">
+          {onboardingStages.map((stage) => {
+            const stageDone = stage.steps.filter((s) => s.completed).length;
+            const isAll = stageDone === stage.steps.length;
+
+            return (
+              <a
+                key={stage.id}
+                href="/admin/onboarding"
+                className="p-4 rounded-xl bg-slate-900/60 hover:bg-slate-900 border border-slate-800/80 hover:border-brand-500/30 transition group block"
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <span className={`text-xs font-extrabold px-2 py-0.5 rounded-md ${
+                    isAll
+                      ? 'bg-emerald-500/20 text-emerald-400'
+                      : 'bg-brand-500/20 text-brand-400'
+                  }`}>
+                    Etapa {stage.id}
+                  </span>
+                  <span className="text-xs font-bold text-slate-400 group-hover:text-slate-200">
+                    {stageDone}/{stage.steps.length}
+                  </span>
+                </div>
+                <h4 className="text-xs font-bold text-white group-hover:text-brand-300 transition line-clamp-1">
+                  {stage.title.replace(`Etapa ${stage.id}: `, '')}
+                </h4>
+                <div className="w-full bg-slate-800 rounded-full h-1 mt-2.5 overflow-hidden">
+                  <div
+                    className="bg-brand-500 h-full rounded-full transition-all"
+                    style={{ width: `${(stageDone / stage.steps.length) * 100}%` }}
+                  ></div>
+                </div>
+              </a>
+            );
+          })}
+        </div>
+
+        {/* First pending steps */}
+        <div className="divide-y divide-slate-800/60 mt-5 pt-4 border-t border-slate-800/60">
+          <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
+            Próximas acciones prioritarias:
+          </div>
+          {allSteps.slice(0, 5).map((step) => (
+            <div
+              key={step.id}
+              className="py-3 px-2 flex items-center justify-between hover:bg-slate-900/60 rounded-xl transition"
             >
-              <div className="flex items-center gap-3.5">
-                {step.completed ? (
-                  <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
-                ) : (
-                  <Circle className="w-5 h-5 text-slate-600 shrink-0" />
-                )}
-                <span className={`text-sm font-medium ${step.completed ? 'text-slate-200 line-through opacity-80' : 'text-slate-100 font-semibold'}`}>
-                  {step.label}
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => toggleOnboardingStep(step.id)}
+                  className="focus:outline-none"
+                >
+                  {step.completed ? (
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                  ) : (
+                    <Circle className="w-4 h-4 text-slate-600 shrink-0 hover:text-brand-400" />
+                  )}
+                </button>
+                <span className={`text-xs font-medium ${step.completed ? 'text-slate-400 line-through' : 'text-slate-200'}`}>
+                  {step.title}
                 </span>
               </div>
-              <ArrowRight className="w-4 h-4 text-slate-600 group-hover:text-brand-400 group-hover:translate-x-1 transition" />
-            </a>
+              {step.actionUrl && (
+                <a
+                  href={step.actionUrl}
+                  className="text-xs font-semibold text-brand-400 hover:text-brand-300 flex items-center gap-1 transition"
+                >
+                  <span>{step.actionLabel || 'Ir'}</span>
+                  <ArrowRight className="w-3 h-3" />
+                </a>
+              )}
+            </div>
           ))}
         </div>
       </div>
