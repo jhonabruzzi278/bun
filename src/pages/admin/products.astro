@@ -1,0 +1,8 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import ProductManagerIsland from '../../components/react/products/ProductManagerIsland';
+---
+
+<AdminLayout title="Catálogo de Productos" activePath="/admin/products">
+  <ProductManagerIsland client:load />
+</AdminLayout>
