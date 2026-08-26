@@ -24,15 +24,20 @@ export default function PublicMenuIsland() {
   const [orderType, setOrderType] = useState<'delivery' | 'takeaway' | 'dine_in'>('delivery');
 
   const [isReadOnly, setIsReadOnly] = useState(false);
+  const [viewMode, setViewMode] = useState<'welcome' | 'products'>('welcome');
 
-  // Detect query params (e.g. ?mesa=4, ?type=read)
+  // Detect query params (e.g. ?mesa=4, ?type=read, ?view=products)
   React.useEffect(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       const mesa = params.get('mesa');
       const tipo = params.get('tipo');
       const typeParam = params.get('type');
+      const viewParam = params.get('view');
 
+      if (viewParam === 'products') {
+        setViewMode('products');
+      }
       if (typeParam === 'read') {
         setIsReadOnly(true);
       }
@@ -44,6 +49,7 @@ export default function PublicMenuIsland() {
       }
     }
   }, []);
+
 
 
 

@@ -140,24 +140,42 @@ export default function QRGeneratorIsland() {
           </div>
         </div>
 
-        {/* Dos Mockups con Teléfonos */}
+        {/* Dos Mockups con Teléfonos Dinámicos del Cliente */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
           
           {/* Card Izquierda: Página de bienvenida */}
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 p-6 rounded-2xl bg-slate-900/50 border border-slate-800/80 hover:border-slate-700 transition">
             
-            {/* Phone Mini Mockup */}
-            <div className="w-36 h-60 bg-black rounded-[24px] p-2 border-2 border-slate-700 shadow-2xl shrink-0 flex flex-col justify-between overflow-hidden">
-              <div className="p-2 bg-slate-950 rounded-[18px] h-full flex flex-col items-center justify-between text-center">
-                <div className="space-y-1 mt-2">
-                  <div className="w-6 h-6 rounded-md bg-brand-500 mx-auto flex items-center justify-center text-xs">🍔</div>
-                  <p className="text-[10px] font-black text-white">{business.name || 'Burger Craft'}</p>
-                  <p className="text-[8px] text-emerald-400 font-bold">● Abierto</p>
+            {/* Phone Mini Mockup (Bienvenida) */}
+            <div className="w-40 h-64 bg-black rounded-[28px] p-2 border-2 border-slate-700 shadow-2xl shrink-0 flex flex-col justify-between overflow-hidden">
+              <div className="p-2.5 bg-slate-950 rounded-[22px] h-full flex flex-col items-center justify-between text-center relative overflow-hidden">
+                {/* Top Banner */}
+                <div className="w-full h-12 bg-slate-900 rounded-lg overflow-hidden absolute top-0 inset-x-0 opacity-40">
+                  {business.bannerUrl && <img src={business.bannerUrl} alt="Cover" className="w-full h-full object-cover" />}
                 </div>
-                <div className="w-full py-1.5 bg-brand-500 rounded-md text-[9px] font-bold text-white shadow">
-                  Ver Menú
+
+                <div className="space-y-1 mt-6 relative z-10">
+                  <div className="w-10 h-10 rounded-xl bg-slate-900 border-2 border-slate-800 mx-auto flex items-center justify-center text-sm overflow-hidden shadow">
+                    {business.logoUrl ? (
+                      <img src={business.logoUrl} alt="Logo" className="w-full h-full object-cover" />
+                    ) : (
+                      <span>🍔</span>
+                    )}
+                  </div>
+                  <p className="text-[11px] font-black text-white truncate max-w-[120px]">{business.name || 'Burger Craft'}</p>
+                  <p className="text-[8px] text-emerald-400 font-bold">● Abierto ahora</p>
                 </div>
-                <p className="text-[7px] text-slate-500">bun.app/menu/{slug}</p>
+
+                <div className="space-y-1 w-full relative z-10">
+                  <a
+                    href={welcomeUrl}
+                    target="_blank"
+                    className="w-full py-1.5 bg-brand-500 hover:bg-brand-600 rounded-lg text-[10px] font-bold text-white shadow block"
+                  >
+                    Ver Menú 🍔
+                  </a>
+                  <p className="text-[8px] text-slate-500 font-mono truncate">bun.app/menu/{slug}</p>
+                </div>
               </div>
             </div>
 
@@ -200,25 +218,33 @@ export default function QRGeneratorIsland() {
           {/* Card Derecha: Página de productos */}
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 p-6 rounded-2xl bg-slate-900/50 border border-slate-800/80 hover:border-slate-700 transition">
             
-            {/* Phone Mini Mockup */}
-            <div className="w-36 h-60 bg-black rounded-[24px] p-2 border-2 border-slate-700 shadow-2xl shrink-0 flex flex-col justify-between overflow-hidden">
-              <div className="p-2 bg-slate-950 rounded-[18px] h-full flex flex-col justify-between">
+            {/* Phone Mini Mockup (Productos) */}
+            <div className="w-40 h-64 bg-black rounded-[28px] p-2 border-2 border-slate-700 shadow-2xl shrink-0 flex flex-col justify-between overflow-hidden">
+              <div className="p-2.5 bg-slate-950 rounded-[22px] h-full flex flex-col justify-between">
                 <div className="space-y-1.5">
-                  <div className="flex items-center gap-1">
-                    <span className="text-[9px] font-bold text-white">Catálogo</span>
+                  <div className="flex items-center gap-1.5 pb-1 border-b border-slate-900">
+                    <div className="w-4 h-4 rounded bg-brand-500 text-[8px] flex items-center justify-center text-white font-bold">🍔</div>
+                    <span className="text-[9px] font-bold text-white truncate">{business.name || 'Menú'}</span>
                   </div>
-                  <div className="p-1.5 bg-slate-900 rounded border border-slate-800 space-y-1 text-left">
-                    <p className="text-[8px] font-bold text-white truncate">Double Bacon</p>
+                  
+                  <div className="p-1.5 bg-slate-900/80 rounded-lg border border-slate-800 space-y-0.5 text-left">
+                    <p className="text-[8px] font-bold text-white truncate">Doble Smash Burger</p>
                     <p className="text-[8px] font-black text-brand-400">$6.990</p>
                   </div>
-                  <div className="p-1.5 bg-slate-900 rounded border border-slate-800 space-y-1 text-left">
-                    <p className="text-[8px] font-bold text-white truncate">Papas Rústicas</p>
+                  
+                  <div className="p-1.5 bg-slate-900/80 rounded-lg border border-slate-800 space-y-0.5 text-left">
+                    <p className="text-[8px] font-bold text-white truncate">Papas Rústicas Crispy</p>
                     <p className="text-[8px] font-black text-brand-400">$2.990</p>
                   </div>
                 </div>
-                <div className="w-full py-1 bg-emerald-600 rounded text-[8px] font-bold text-white text-center">
-                  Pedir WhatsApp 💬
-                </div>
+
+                <a
+                  href={productsUrl}
+                  target="_blank"
+                  className="w-full py-1.5 bg-emerald-600 rounded-lg text-[9px] font-bold text-white text-center shadow"
+                >
+                  Pedir por WhatsApp 💬
+                </a>
               </div>
             </div>
 
@@ -259,6 +285,7 @@ export default function QRGeneratorIsland() {
           </div>
 
         </div>
+
       </div>
 
       {/* BLOQUE 2: Solo pedidos en el local */}
