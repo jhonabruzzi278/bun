@@ -1,14 +1,24 @@
-version: '3.8'
-
 services:
   postgres:
     image: postgres:16-alpine
     container_name: bun_postgres
-    restart: always
+    restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgrespassword
       POSTGRES_DB: bun_db
+      PGDATA: /var/lib/postgresql/data/pgdata
+    command: >
+      postgres -c shared_buffers=64MB
+               -c max_connections=40
+               -c work_mem=4MB
+               -c maintenance_work_mem=16MB
+               -c fsync=off
+               -c synchronous_commit=off
+    deploy:
+      resources:
+        limits:
+          memory: 256M
     ports:
       - '5432:5432'
     volumes:
@@ -16,3 +26,4 @@ services:
 
 volumes:
   postgres_data:
+
