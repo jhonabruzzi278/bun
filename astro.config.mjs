@@ -17,14 +17,12 @@ export default defineConfig({
   output: 'server',
   adapter: isVercel
     ? vercel({
-        webAnalytics: {
-          enabled: true,
-        },
         maxDuration: 60,
       })
     : node({
         mode: 'standalone',
       }),
+
 });
 
 

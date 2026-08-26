@@ -40,7 +40,7 @@ export function useCatalogStore() {
     });
   };
 
-  const addCategory = (cat: Omit<Category, 'id' | 'tenantId' | 'businessId'>) => {
+  const addCategory = (cat: Omit<Category, 'id' | 'tenantId' | 'businessId'>): Category => {
     const newCat: Category = {
       ...cat,
       id: `cat_${Date.now()}`,
@@ -53,6 +53,7 @@ export function useCatalogStore() {
       window.dispatchEvent(new Event('bun:data_updated'));
       return next;
     });
+    return newCat;
   };
 
   const updateCategory = (id: string, cat: Partial<Category>) => {
@@ -73,7 +74,7 @@ export function useCatalogStore() {
     });
   };
 
-  const addProduct = (prod: Omit<Product, 'id' | 'tenantId' | 'businessId'>) => {
+  const addProduct = (prod: Omit<Product, 'id' | 'tenantId' | 'businessId'>): Product => {
     const newProd: Product = {
       ...prod,
       id: `prod_${Date.now()}`,
@@ -86,7 +87,9 @@ export function useCatalogStore() {
       window.dispatchEvent(new Event('bun:data_updated'));
       return next;
     });
+    return newProd;
   };
+
 
   const updateProduct = (id: string, prod: Partial<Product>) => {
     setProductsState((prev) => {
