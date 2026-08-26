@@ -82,6 +82,8 @@ web_modules/
 # Astro build artifacts
 dist/
 .astro/
+.vercel/
+
 
 # IDE & OS files
 .DS_Store
