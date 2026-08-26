@@ -34,58 +34,61 @@ const navItems = [
   <body class="h-full flex overflow-hidden text-slate-100 font-sans">
     
     <!-- Sidebar -->
-    <aside class="w-64 bg-slate-950 border-r border-slate-800 flex flex-col justify-between shrink-0 hidden md:flex">
+    <aside class="w-64 bg-slate-950/90 backdrop-blur-xl border-r border-slate-800/80 flex flex-col justify-between shrink-0 hidden md:flex">
       <div>
         <!-- Logo -->
-        <div class="h-16 px-6 flex items-center gap-3 border-b border-slate-800/80">
-          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 to-brand-400 flex items-center justify-center font-black text-white shadow-lg shadow-brand-500/30 text-lg">
-            🍔
-          </div>
-          <div>
-            <span class="font-extrabold text-lg tracking-tight text-white">BUN</span>
-            <span class="text-[10px] uppercase font-bold tracking-widest bg-brand-500/20 text-brand-400 px-1.5 py-0.5 rounded ml-1.5">OlaClick style</span>
-          </div>
+        <div class="h-16 px-6 flex items-center justify-between border-b border-slate-800/80">
+          <a href="/admin" class="flex items-center gap-3 group">
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-brand-500 to-amber-400 flex items-center justify-center text-sm shadow-md shadow-brand-500/20 group-hover:scale-105 transition">
+              🍔
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span class="font-extrabold text-base tracking-tight text-white">BUN</span>
+              <span class="text-[9px] uppercase font-bold tracking-wider bg-brand-500/15 text-brand-400 px-1.5 py-0.5 rounded border border-brand-500/20">
+                PRO
+              </span>
+            </div>
+          </a>
         </div>
 
         <!-- Business Mini Card -->
-        <div class="p-4 mx-3 my-3 rounded-xl bg-slate-900/90 border border-slate-800 flex items-center gap-3">
-          <div class="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center text-xl overflow-hidden">
+        <div class="p-3 mx-3 my-3 rounded-2xl bg-slate-900/60 border border-slate-800/60 flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-slate-800 flex items-center justify-center text-lg shrink-0">
             🥩
           </div>
           <div class="flex-1 min-w-0">
-            <h4 class="text-sm font-semibold text-white truncate">Burger Craft & Co.</h4>
-            <span class="inline-flex items-center gap-1.5 text-[11px] text-emerald-400">
+            <h4 class="text-xs font-bold text-white truncate">Burger Craft & Co.</h4>
+            <span class="inline-flex items-center gap-1.5 text-[10px] text-emerald-400 font-medium">
               <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-              Abierto • En línea
+              En línea • Abierto
             </span>
           </div>
         </div>
 
         <!-- Navigation -->
-        <nav class="px-3 space-y-1 mt-2">
+        <nav class="px-3 space-y-1 mt-1">
           {navItems.map((item) => {
             const isActive = activePath === item.href;
             return (
               <a
                 href={item.href}
-                class={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                class={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all ${
                   isActive
-                    ? 'bg-brand-500 text-white font-semibold shadow-md shadow-brand-500/20'
-                    : 'text-slate-400 hover:text-slate-100 hover:bg-slate-900'
+                    ? 'bg-brand-500 text-white shadow-md shadow-brand-500/20'
+                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/80'
                 }`}
               >
                 <div class="flex items-center gap-3">
                   <span>{item.label}</span>
                 </div>
                 {item.isLive && (
-                  <span class={`text-[9px] font-extrabold px-1.5 py-0.5 rounded-md uppercase tracking-wider ${
-                    isActive ? 'bg-white/20 text-white' : 'bg-brand-500/20 text-brand-400'
+                  <span class={`text-[8px] font-black px-1.5 py-0.5 rounded uppercase tracking-wider ${
+                    isActive ? 'bg-white/20 text-white' : 'bg-brand-500/20 text-brand-400 border border-brand-500/30'
                   }`}>
                     LIVE
                   </span>
                 )}
               </a>
-
             );
           })}
         </nav>
@@ -96,17 +99,14 @@ const navItems = [
         <a
           href="/menu/burger-craft"
           target="_blank"
-          class="flex items-center justify-center gap-2 w-full py-2.5 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 text-xs font-semibold border border-slate-700 transition"
+          class="flex items-center justify-center gap-2 w-full py-2.5 px-3 rounded-xl bg-slate-900/80 hover:bg-slate-800 text-slate-200 text-xs font-bold border border-slate-800 hover:border-slate-700 transition shadow-sm"
         >
           <span>Ver Menú Público</span>
           <span class="text-xs">↗</span>
         </a>
-        <div class="flex items-center justify-between text-xs text-slate-500 px-1 pt-1">
-          <span>Tenant: <strong class="text-slate-400 font-mono">tenant_001</strong></span>
-          <span class="text-[10px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded">v0.1.0</span>
-        </div>
       </div>
     </aside>
+
 
     <!-- Main Content Area -->
     <div class="flex-1 flex flex-col min-w-0 bg-slate-900 overflow-y-auto">

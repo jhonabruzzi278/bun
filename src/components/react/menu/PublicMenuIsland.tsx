@@ -260,56 +260,71 @@ export default function PublicMenuIsland() {
           ))}
         </div>
 
-        {/* Products List */}
-        <div className="space-y-3">
-          {displayedProducts.map((p) => (
-            <div
-              key={p.id}
-              onClick={() => openProductDetail(p)}
-              className="p-3.5 rounded-2xl bg-slate-900/90 border border-slate-800 hover:border-slate-700 transition cursor-pointer flex gap-3.5 items-center justify-between group active:scale-[0.99]"
-            >
-              <div className="min-w-0 flex-1 space-y-1">
-                <div className="flex items-center gap-2">
-                  <h3 className="font-bold text-white text-sm truncate group-hover:text-brand-400 transition">
-                    {p.name}
-                  </h3>
+        {/* Products Grid */}
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {displayedProducts.map((p) => (
+              <div
+                key={p.id}
+                onClick={() => openProductDetail(p)}
+                className="p-3.5 rounded-3xl bg-slate-900/60 hover:bg-slate-900/90 border border-slate-800/80 hover:border-slate-700/80 shadow-md flex gap-4 cursor-pointer transition-all duration-200 group active:scale-[0.99] relative overflow-hidden"
+              >
+                {/* Product Image */}
+                <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl bg-slate-950 overflow-hidden shrink-0 relative">
+                  {p.imageUrl ? (
+                    <img
+                      src={p.imageUrl}
+                      alt={p.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-3xl">🍔</div>
+                  )}
                   {p.isFeatured && (
-                    <span className="text-[9px] bg-amber-500/20 text-amber-300 font-extrabold px-1.5 py-0.5 rounded">
-                      TOP
+                    <span className="absolute top-1.5 left-1.5 bg-amber-500 text-slate-950 text-[9px] font-black uppercase px-2 py-0.5 rounded-md shadow">
+                      ★ TOP
                     </span>
                   )}
                 </div>
-                <p className="text-xs text-slate-400 line-clamp-2">{p.description}</p>
-                <div className="flex items-baseline gap-2 pt-1">
-                  <span className="text-sm font-extrabold text-white">
-                    {business.currencySymbol}{p.price.toLocaleString('es-CL')}
-                  </span>
-                  {p.compareAtPrice && p.compareAtPrice > p.price && (
-                    <span className="text-xs text-slate-500 line-through">
-                      {business.currencySymbol}{p.compareAtPrice.toLocaleString('es-CL')}
+
+                {/* Product Text Details */}
+                <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
+                  <div className="space-y-1">
+                    <h3 className="font-extrabold text-sm sm:text-base text-white group-hover:text-brand-400 transition truncate">
+                      {p.name}
+                    </h3>
+                    <p className="text-xs text-slate-400 line-clamp-2 leading-relaxed font-normal">
+                      {p.description || 'Ingredientes frescos de la mejor calidad.'}
+                    </p>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-2">
+                    <span className="text-sm sm:text-base font-black text-brand-400 font-mono">
+                      {business.currencySymbol}{p.price.toLocaleString('es-CL')}
                     </span>
-                  )}
+                    <button
+                      type="button"
+                      className="px-3 py-1 rounded-xl bg-brand-500/10 group-hover:bg-brand-500 text-brand-400 group-hover:text-white border border-brand-500/20 text-xs font-bold transition flex items-center gap-1"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                      <span>Agregar</span>
+                    </button>
+                  </div>
                 </div>
               </div>
+            ))}
+          </div>
 
-              {p.imageUrl ? (
-                <div className="w-20 h-20 rounded-xl overflow-hidden bg-slate-950 shrink-0 border border-slate-800 relative">
-                  <img src={p.imageUrl} alt={p.name} className="w-full h-full object-cover" />
-                  <button
-                    className="absolute bottom-1 right-1 w-6 h-6 rounded-lg bg-brand-500 text-white flex items-center justify-center font-bold text-xs shadow"
-                  >
-                    +
-                  </button>
-                </div>
-              ) : (
-                <button className="w-8 h-8 rounded-xl bg-slate-800 group-hover:bg-brand-500 text-slate-300 group-hover:text-white flex items-center justify-center font-bold text-sm shrink-0 transition">
-                  +
-                </button>
-              )}
+          {displayedProducts.length === 0 && (
+            <div className="text-center py-16 bg-slate-900/30 rounded-3xl border border-dashed border-slate-800">
+              <span className="text-4xl">🔍</span>
+              <h3 className="text-sm font-bold text-white mt-3">No se encontraron productos</h3>
+              <p className="text-xs text-slate-500 mt-1">Prueba con otra palabra clave o selecciona otra categoría.</p>
             </div>
-          ))}
+          )}
         </div>
       </div>
+
 
       {/* Floating Cart Button */}
       {cart.length > 0 && (
