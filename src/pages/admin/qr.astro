@@ -1,0 +1,8 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import QRGeneratorIsland from '../../components/react/qr/QRGeneratorIsland';
+---
+
+<AdminLayout title="Generador de Códigos QR | BUN" activePath="/admin/qr">
+  <QRGeneratorIsland client:load />
+</AdminLayout>

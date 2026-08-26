@@ -20,7 +20,24 @@ export default function PublicMenuIsland() {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [customerName, setCustomerName] = useState('');
   const [customerAddress, setCustomerAddress] = useState('');
-  const [orderType, setOrderType] = useState<'delivery' | 'takeaway'>('delivery');
+  const [tableNumber, setTableNumber] = useState<string>('');
+  const [orderType, setOrderType] = useState<'delivery' | 'takeaway' | 'dine_in'>('delivery');
+
+  // Detect query params (e.g. ?mesa=4)
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const mesa = params.get('mesa');
+      const tipo = params.get('tipo');
+      if (mesa) {
+        setTableNumber(mesa);
+        setOrderType('dine_in');
+      } else if (tipo === 'delivery') {
+        setOrderType('delivery');
+      }
+    }
+  }, []);
+
 
   if (!isLoaded) {
     return (
@@ -120,10 +137,17 @@ export default function PublicMenuIsland() {
     message += `%0A💰 *TOTAL: ${business.currencySymbol}${cartTotal.toLocaleString('es-CL')}* %0A%0A`;
     message += `📍 *DATOS DE ENTREGA:*%0A`;
     message += `👤 *Cliente:* ${customerName}%0A`;
-    message += `🛵 *Tipo:* ${orderType === 'delivery' ? 'Delivery a Domicilio' : 'Retiro en Local'}%0A`;
+    message += `🛵 *Tipo:* ${
+      orderType === 'dine_in'
+        ? `🍽️ Consumo en Salón (Mesa #${tableNumber || 'Sin número'})`
+        : orderType === 'takeaway'
+        ? '🛍️ Retiro en Local'
+        : '🛵 Delivery a Domicilio'
+    }%0A`;
     if (orderType === 'delivery' && customerAddress) {
       message += `🏠 *Dirección:* ${customerAddress}%0A`;
     }
+
 
     const cleanPhone = business.phone.replace(/[^0-9]/g, '');
     const url = `https://wa.me/${cleanPhone}?text=${message}`;

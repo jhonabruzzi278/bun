@@ -11,11 +11,13 @@ const { title = 'Admin - BUN', activePath = '/admin' } = Astro.props;
 const navItems = [
   { label: 'Dashboard', href: '/admin', icon: 'LayoutDashboard' },
   { label: 'Cocina KDS', href: '/admin/kitchen', icon: 'ChefHat', isLive: true },
+  { label: 'Códigos QR Mesas', href: '/admin/qr', icon: 'QrCode' },
   { label: 'Mi Negocio', href: '/admin/business', icon: 'Store' },
   { label: 'Categorías', href: '/admin/categories', icon: 'FolderKanban' },
   { label: 'Productos', href: '/admin/products', icon: 'UtensilsCrossed' },
   { label: 'Vista Previa Móvil', href: '/admin/preview', icon: 'Smartphone' },
 ];
+
 
 ---
 
