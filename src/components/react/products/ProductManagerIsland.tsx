@@ -148,7 +148,7 @@ export default function ProductManagerIsland() {
         </button>
       </div>
 
-      <!-- Categories Filter Bar -->
+      {/* Categories Filter Bar */}
       <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
         <button
           onClick={() => setSelectedCategoryFilter('ALL')}
@@ -191,7 +191,7 @@ export default function ProductManagerIsland() {
         })}
       </div>
 
-      <!-- Products Grid -->
+      {/* Products Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredProducts.length === 0 ? (
           <div className="col-span-full p-12 text-center text-slate-500 bg-slate-950 border border-slate-800 rounded-2xl space-y-3">
@@ -209,7 +209,7 @@ export default function ProductManagerIsland() {
                 className="bg-slate-950 border border-slate-800 rounded-2xl overflow-hidden hover:border-slate-700 transition flex flex-col justify-between"
               >
                 <div>
-                  <!-- Image Header -->
+                  {/* Image Header */}
                   <div className="relative h-44 bg-slate-900 overflow-hidden">
                     {p.imageUrl ? (
                       <img src={p.imageUrl} alt={p.name} className="w-full h-full object-cover" />
@@ -219,7 +219,7 @@ export default function ProductManagerIsland() {
                       </div>
                     )}
 
-                    <!-- Badges -->
+                    {/* Badges */}
                     <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
                       {p.isFeatured && (
                         <span className="px-2 py-1 bg-amber-500/90 text-slate-950 text-[10px] font-extrabold rounded-md shadow flex items-center gap-1 backdrop-blur-sm">
@@ -249,7 +249,7 @@ export default function ProductManagerIsland() {
                     </div>
                   </div>
 
-                  <!-- Details -->
+                  {/* Details */}
                   <div className="p-4 space-y-2">
                     <div className="flex items-center justify-between gap-2">
                       <span className="text-[11px] font-semibold text-brand-400 uppercase tracking-wider">
@@ -261,7 +261,7 @@ export default function ProductManagerIsland() {
                     <h3 className="font-bold text-white text-base line-clamp-1">{p.name}</h3>
                     <p className="text-xs text-slate-400 line-clamp-2">{p.description || 'Sin descripción'}</p>
 
-                    <!-- Variants & Modifiers Chips -->
+                    {/* Variants & Modifiers Chips */}
                     <div className="flex flex-wrap gap-1.5 pt-1">
                       {p.variants && p.variants.length > 0 && (
                         <span className="text-[10px] bg-slate-900 border border-slate-800 text-slate-300 px-2 py-0.5 rounded-md flex items-center gap-1">
@@ -279,7 +279,7 @@ export default function ProductManagerIsland() {
                   </div>
                 </div>
 
-                <!-- Footer & Actions -->
+                {/* Footer & Actions */}
                 <div className="p-4 pt-0 border-t border-slate-900 mt-2 flex items-center justify-between">
                   <div>
                     <div className="flex items-baseline gap-2">
@@ -321,7 +321,7 @@ export default function ProductManagerIsland() {
         )}
       </div>
 
-      <!-- Modal Crear / Editar Producto con Variantes y Modificadores -->
+      {/* Modal Crear / Editar Producto con Variantes y Modificadores */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
           <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full p-6 shadow-2xl space-y-5 my-8">
@@ -424,7 +424,7 @@ export default function ProductManagerIsland() {
                 </div>
               </div>
 
-              <!-- Switches Destacado / Disponible -->
+              {/* Switches Destacado / Disponible */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3.5 rounded-xl bg-slate-950 border border-slate-800">
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
@@ -457,7 +457,7 @@ export default function ProductManagerIsland() {
                 </label>
               </div>
 
-              <!-- Variantes (Ej. Tamaños) -->
+              {/* Variantes (Ej. Tamaños) */}
               <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-white flex items-center gap-1.5">
@@ -507,7 +507,7 @@ export default function ProductManagerIsland() {
                 </div>
               </div>
 
-              <!-- Modificadores / Extras -->
+              {/* Modificadores / Extras */}
               <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-white flex items-center gap-1.5">
@@ -555,7 +555,7 @@ export default function ProductManagerIsland() {
                 </div>
               </div>
 
-              <!-- Submit Buttons -->
+              {/* Submit Buttons */}
               <div className="flex justify-end gap-3 pt-3 border-t border-slate-800">
                 <button
                   type="button"
@@ -578,3 +578,4 @@ export default function ProductManagerIsland() {
     </div>
   );
 }
+

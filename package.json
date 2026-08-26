@@ -13,6 +13,8 @@
     "db:seed": "tsx src/db/seed.ts"
   },
   "dependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@astrojs/node": "^9.1.0",
     "@astrojs/react": "^4.2.1",
     "@astrojs/tailwind": "^5.1.5",
     "@types/pg": "^8.11.11",
@@ -32,6 +34,6 @@
   "devDependencies": {
     "drizzle-kit": "^0.30.4",
     "tsx": "^4.19.3",
-    "typescript": "^5.7.3"
+    "typescript": "^5.9.3"
   }
 }

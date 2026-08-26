@@ -58,7 +58,7 @@ export default function BusinessSettingsIsland() {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <!-- Identidad del Negocio -->
+        {/* Identidad del Negocio */}
         <div className="p-6 rounded-2xl bg-slate-950 border border-slate-800 space-y-4">
           <h2 className="text-base font-bold text-white flex items-center gap-2">
             <Store className="w-4 h-4 text-brand-400" />
@@ -106,7 +106,7 @@ export default function BusinessSettingsIsland() {
           </div>
         </div>
 
-        <!-- Imágenes y Personalización Visual -->
+        {/* Imágenes y Personalización Visual */}
         <div className="p-6 rounded-2xl bg-slate-950 border border-slate-800 space-y-4">
           <h2 className="text-base font-bold text-white flex items-center gap-2">
             <Palette className="w-4 h-4 text-brand-400" />
@@ -160,7 +160,7 @@ export default function BusinessSettingsIsland() {
           </div>
         </div>
 
-        <!-- Contacto & Pedidos -->
+        {/* Contacto & Pedidos */}
         <div className="p-6 rounded-2xl bg-slate-950 border border-slate-800 space-y-4">
           <h2 className="text-base font-bold text-white flex items-center gap-2">
             <Phone className="w-4 h-4 text-brand-400" />

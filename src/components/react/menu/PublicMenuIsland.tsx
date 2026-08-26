@@ -132,7 +132,7 @@ export default function PublicMenuIsland() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 font-sans pb-28">
-      <!-- Business Cover Banner & Logo -->
+      {/* Business Cover Banner & Logo */}
       <div className="relative">
         <div className="h-44 md:h-64 w-full bg-slate-900 overflow-hidden relative">
           {business.bannerUrl && (
@@ -182,7 +182,7 @@ export default function PublicMenuIsland() {
       </div>
 
       <div className="max-w-3xl mx-auto px-4 mt-6 space-y-6">
-        <!-- Search Bar -->
+        {/* Search Bar */}
         <div className="relative">
           <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
           <input
@@ -194,7 +194,7 @@ export default function PublicMenuIsland() {
           />
         </div>
 
-        <!-- Sticky Categories Bar -->
+        {/* Sticky Categories Bar */}
         <div className="sticky top-0 z-30 bg-slate-950/90 backdrop-blur py-2 -mx-4 px-4 flex items-center gap-2 overflow-x-auto scrollbar-none border-b border-slate-900">
           <button
             onClick={() => setSelectedCategory('ALL')}
@@ -236,7 +236,7 @@ export default function PublicMenuIsland() {
           ))}
         </div>
 
-        <!-- Products List -->
+        {/* Products List */}
         <div className="space-y-3">
           {displayedProducts.map((p) => (
             <div
@@ -287,7 +287,7 @@ export default function PublicMenuIsland() {
         </div>
       </div>
 
-      <!-- Floating Cart Button -->
+      {/* Floating Cart Button */}
       {cart.length > 0 && (
         <div className="fixed bottom-4 inset-x-4 max-w-md mx-auto z-40">
           <button
@@ -305,11 +305,11 @@ export default function PublicMenuIsland() {
         </div>
       )}
 
-      <!-- Modal Detalle de Producto & Modificadores -->
+      {/* Modal Detalle de Producto & Modificadores */}
       {activeProductModal && (
         <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
           <div className="bg-slate-900 border border-slate-800 w-full max-w-lg rounded-t-3xl sm:rounded-2xl max-h-[90vh] flex flex-col overflow-hidden shadow-2xl animate-slide-up">
-            <!-- Header Image -->
+            {/* Header Image */}
             <div className="relative h-48 sm:h-56 bg-slate-950 shrink-0">
               {activeProductModal.imageUrl ? (
                 <img
@@ -328,7 +328,7 @@ export default function PublicMenuIsland() {
               </button>
             </div>
 
-            <!-- Body -->
+            {/* Body */}
             <div className="p-5 overflow-y-auto space-y-5 flex-1">
               <div>
                 <h3 className="text-lg font-black text-white">{activeProductModal.name}</h3>
@@ -338,7 +338,7 @@ export default function PublicMenuIsland() {
                 </span>
               </div>
 
-              <!-- Variantes -->
+              {/* Variantes */}
               {activeProductModal.variants && activeProductModal.variants.length > 0 && (
                 <div className="space-y-2">
                   <label className="text-xs font-bold text-slate-300">Selecciona una opción</label>
@@ -363,7 +363,7 @@ export default function PublicMenuIsland() {
                 </div>
               )}
 
-              <!-- Modificadores -->
+              {/* Modificadores */}
               {activeProductModal.modifiers && activeProductModal.modifiers.length > 0 && (
                 <div className="space-y-2">
                   <label className="text-xs font-bold text-slate-300">¿Deseas agregar extras?</label>
@@ -410,7 +410,7 @@ export default function PublicMenuIsland() {
                 </div>
               )}
 
-              <!-- Notes -->
+              {/* Notes */}
               <div>
                 <label className="text-xs font-bold text-slate-300 block mb-1">Instrucciones especiales</label>
                 <input
@@ -423,7 +423,7 @@ export default function PublicMenuIsland() {
               </div>
             </div>
 
-            <!-- Footer Actions -->
+            {/* Footer Actions */}
             <div className="p-4 border-t border-slate-800 bg-slate-950 flex items-center gap-3">
               <div className="flex items-center bg-slate-900 rounded-xl border border-slate-800 p-1">
                 <button
@@ -456,7 +456,7 @@ export default function PublicMenuIsland() {
         </div>
       )}
 
-      <!-- Modal Drawer Carrito & Pedido -->
+      {/* Modal Drawer Carrito & Pedido */}
       {isCartOpen && (
         <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex justify-end">
           <div className="bg-slate-900 border-l border-slate-800 w-full max-w-md h-full flex flex-col justify-between shadow-2xl animate-slide-left">
@@ -470,7 +470,7 @@ export default function PublicMenuIsland() {
               </button>
             </div>
 
-            <!-- Cart Items List -->
+            {/* Cart Items List */}
             <div className="p-5 overflow-y-auto flex-1 space-y-3">
               {cart.map((item, index) => (
                 <div key={item.id} className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
@@ -514,7 +514,7 @@ export default function PublicMenuIsland() {
                 </div>
               ))}
 
-              <!-- Customer Details Form -->
+              {/* Customer Details Form */}
               <div className="pt-4 border-t border-slate-800 space-y-3">
                 <h4 className="text-xs font-bold text-slate-200">Datos para la entrega</h4>
 
@@ -570,7 +570,7 @@ export default function PublicMenuIsland() {
               </div>
             </div>
 
-            <!-- Drawer Footer -->
+            {/* Drawer Footer */}
             <div className="p-5 border-t border-slate-800 bg-slate-950 space-y-3">
               <div className="flex items-center justify-between text-sm font-black text-white">
                 <span>Total a Pagar</span>

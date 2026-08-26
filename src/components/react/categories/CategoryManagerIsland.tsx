@@ -70,7 +70,7 @@ export default function CategoryManagerIsland() {
         </button>
       </div>
 
-      <!-- Categories List -->
+      {/* Categories List */}
       <div className="bg-slate-950 rounded-2xl border border-slate-800 divide-y divide-slate-800/80 overflow-hidden">
         {categories.length === 0 ? (
           <div className="p-12 text-center text-slate-500 space-y-3">
@@ -164,7 +164,7 @@ export default function CategoryManagerIsland() {
         )}
       </div>
 
-      <!-- Modal Crear / Editar Categoría -->
+      {/* Modal Crear / Editar Categoría */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">

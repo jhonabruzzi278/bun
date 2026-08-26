@@ -25,7 +25,7 @@ export default function DashboardIsland() {
 
   return (
     <div className="space-y-8">
-      <!-- Hero Welcome -->
+      {/* Hero Welcome */}
       <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 p-6 md:p-8 border border-slate-800 shadow-xl">
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2">
@@ -62,7 +62,7 @@ export default function DashboardIsland() {
         </div>
       </div>
 
-      <!-- Stats Grid -->
+      {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="p-5 rounded-xl bg-slate-950 border border-slate-800/80">
           <div className="flex items-center justify-between">
@@ -101,7 +101,7 @@ export default function DashboardIsland() {
         </div>
       </div>
 
-      <!-- Onboarding Checklist (OlaClick inspired) -->
+      {/* Onboarding Checklist (OlaClick inspired) */}
       <div className="p-6 rounded-2xl bg-slate-950 border border-slate-800">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-800">
           <div>

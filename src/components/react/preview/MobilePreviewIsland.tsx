@@ -41,22 +41,22 @@ export default function MobilePreviewIsland() {
         </div>
       </div>
 
-      <!-- Phone Frame Wrapper -->
+      {/* Phone Frame Wrapper */}
       <div className="flex justify-center py-6">
         <div className="relative w-full max-w-[390px] h-[780px] bg-black rounded-[48px] p-3.5 shadow-2xl shadow-black/80 ring-1 ring-slate-800 border-4 border-slate-800 flex flex-col">
           
-          <!-- Dynamic Island / Speaker Notch -->
+          {/* Dynamic Island / Speaker Notch */}
           <div className="absolute top-6 inset-x-0 mx-auto w-28 h-5 bg-black rounded-full z-50 flex items-center justify-center">
             <div className="w-3 h-3 rounded-full bg-slate-900 mr-2"></div>
             <div className="w-2 h-2 rounded-full bg-slate-800"></div>
           </div>
 
-          <!-- Screen Container with Scroll -->
+          {/* Screen Container with Scroll */}
           <div key={key} className="w-full h-full bg-slate-950 rounded-[38px] overflow-y-auto relative scrollbar-none pt-4">
             <PublicMenuIsland />
           </div>
 
-          <!-- Home Indicator Bar -->
+          {/* Home Indicator Bar */}
           <div className="absolute bottom-2 inset-x-0 mx-auto w-32 h-1 bg-slate-700 rounded-full"></div>
         </div>
       </div>
