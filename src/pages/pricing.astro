@@ -1,0 +1,31 @@
+---
+import '../styles/global.css';
+import LandingNavbar from '../components/react/landing/LandingNavbar';
+import FeaturesChecklistIsland from '../components/react/pricing/FeaturesChecklistIsland';
+import LandingFooter from '../components/react/landing/LandingFooter';
+---
+
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth bg-slate-950 text-slate-100 selection:bg-brand-500 selection:text-white">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Planes y Funcionalidades Completas | BUN</title>
+    <meta
+      name="description"
+      content="Comparativa completa de características de BUN: Menú digital, Dominio .com, Cocina KDS, Chatbot IA de WhatsApp, POS e impresión térmica."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  </head>
+  <body class="bg-slate-950 font-sans antialiased overflow-x-hidden min-h-screen flex flex-col justify-between">
+    <LandingNavbar client:load />
+    
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20 flex-1 w-full">
+      <FeaturesChecklistIsland client:load />
+    </main>
+
+    <LandingFooter client:load />
+  </body>
+</html>

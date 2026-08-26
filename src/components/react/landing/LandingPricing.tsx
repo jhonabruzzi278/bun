@@ -135,7 +135,19 @@ export default function LandingPricing() {
           ))}
         </div>
 
+        {/* Link to Full Matrix */}
+        <div className="text-center pt-4">
+          <a
+            href="/pricing"
+            className="inline-flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-slate-900 hover:bg-slate-850 text-brand-400 hover:text-brand-300 font-bold text-xs border border-slate-800 hover:border-slate-700 shadow-lg transition"
+          >
+            <span>Ver tabla comparativa completa con todas las funcionalidades e íconos (?)</span>
+            <ArrowRight className="w-4 h-4" />
+          </a>
+        </div>
+
       </div>
     </section>
+
   );
 }
