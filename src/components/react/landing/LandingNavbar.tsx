@@ -45,19 +45,20 @@ export default function LandingNavbar() {
         {/* Desktop CTAs */}
         <div className="hidden md:flex items-center gap-3">
           <a
-            href="/admin"
+            href="/auth/login"
             className="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-200 hover:text-white bg-slate-900 hover:bg-slate-800 border border-slate-700/80 transition"
           >
             Iniciar Sesión
           </a>
           <a
-            href="/admin"
+            href="/onboarding"
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-500 to-amber-500 hover:from-brand-600 hover:to-amber-600 text-white font-extrabold text-xs shadow-lg shadow-brand-500/25 transition group"
           >
             <span>Crear Menú Gratis</span>
             <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition" />
           </a>
         </div>
+
 
         {/* Mobile menu button */}
         <button

@@ -31,12 +31,13 @@ export default function LandingHero() {
           {/* Action CTAs */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
             <a
-              href="/admin"
+              href="/onboarding"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-brand-500 via-brand-600 to-amber-500 hover:from-brand-600 hover:to-amber-600 text-white font-extrabold text-base shadow-2xl shadow-brand-500/30 hover:scale-[1.02] transition active:scale-[0.98]"
             >
               <span>Comenzar Gratis en 2 Minutos</span>
               <ArrowRight className="w-5 h-5" />
             </a>
+
 
             <a
               href="/menu/burger-craft"

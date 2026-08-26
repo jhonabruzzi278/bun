@@ -1,0 +1,41 @@
+---
+import '../styles/global.css';
+import OnboardingWizardIsland from '../components/react/onboarding/OnboardingWizardIsland';
+---
+
+<!DOCTYPE html>
+<html lang="es" class="h-full bg-slate-950 text-slate-100 selection:bg-brand-500 selection:text-white">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Configura tu Restaurante | BUN</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  </head>
+  <body class="min-h-full flex flex-col justify-between p-4 sm:p-8 bg-slate-950 font-sans antialiased relative overflow-x-hidden">
+    <!-- Header -->
+    <header className="max-w-7xl mx-auto w-full flex items-center justify-between pb-6 border-b border-slate-800/80">
+      <a href="/" className="flex items-center gap-2">
+        <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-brand-600 to-amber-400 flex items-center justify-center text-base shadow-md shadow-brand-500/20">
+          🍔
+        </div>
+        <span className="text-xl font-black text-white tracking-tight">BUN</span>
+      </a>
+
+      <div className="flex items-center gap-3 text-xs text-slate-400">
+        <span>Asistente de configuración inicial</span>
+      </div>
+    </header>
+
+    <!-- Main Wizard -->
+    <main class="my-auto py-8">
+      <OnboardingWizardIsland client:load />
+    </main>
+
+    <!-- Footer note -->
+    <footer class="text-center text-xs text-slate-600 pt-6 border-t border-slate-900">
+      BUN Platform © {new Date().getFullYear()} • Tu restaurante listo en minutos
+    </footer>
+  </body>
+</html>
