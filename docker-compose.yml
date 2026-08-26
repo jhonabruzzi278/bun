@@ -1,4 +1,24 @@
 services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bun_app
+    restart: unless-stopped
+    ports:
+      - '4321:4321'
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://postgres:postgrespassword@postgres:5432/bun_db
+      - HOST=0.0.0.0
+      - PORT=4321
+    depends_on:
+      - postgres
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
   postgres:
     image: postgres:16-alpine
     container_name: bun_postgres
@@ -26,4 +46,3 @@ services:
 
 volumes:
   postgres_data:
-
