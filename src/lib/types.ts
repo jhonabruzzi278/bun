@@ -73,3 +73,59 @@ export interface CartItem {
   itemTotal: number;
   notes?: string;
 }
+
+export type KitchenStatus = 'PENDING' | 'PREPARING' | 'READY' | 'DELIVERED' | 'CANCELLED';
+
+export interface PrepStation {
+  id: string;
+  name: string;
+  code: string;
+  color: string;
+  isActive: boolean;
+}
+
+export interface KitchenTicketItem {
+  id: string;
+  ticketId: string;
+  productId?: string;
+  productName: string;
+  quantity: number;
+  variantName?: string;
+  modifiers?: string[]; // Extras agregados
+  notes?: string;
+  stationCode?: string; // 'GRILL', 'FRY', 'BAR'
+  status: 'PENDING' | 'PREPARING' | 'READY' | 'CANCELLED';
+}
+
+export interface PrepEvent {
+  id: string;
+  ticketId: string;
+  eventType: 'CREATED' | 'STARTED' | 'READY' | 'DELIVERED' | 'CANCELLED' | 'RESENT';
+  timestamp: string;
+  actorName: string;
+  metadata?: string;
+}
+
+export interface KitchenTicket {
+  id: string;
+  tenantId: string;
+  businessId: string;
+  orderId?: string;
+  stationId?: string;
+  ticketNumber: number;
+  orderType: 'delivery' | 'takeaway' | 'dine_in';
+  tableNumber?: string;
+  customerName: string;
+  status: KitchenStatus;
+  notes?: string;
+  targetMinutes: number;
+  items: KitchenTicketItem[];
+  prepStartedAt?: string;
+  readyAt?: string;
+  deliveredAt?: string;
+  cancelledAt?: string;
+  cancellationReason?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
