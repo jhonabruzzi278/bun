@@ -1,338 +1,531 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import QRCode from 'qrcode';
 import { useCatalogStore } from '@/lib/useCatalogStore';
-import { QrCode, Download, Printer, Copy, Check, Sparkles, Sliders, ExternalLink, Utensils, LayoutGrid } from 'lucide-react';
+import { 
+  QrCode, 
+  Share2, 
+  Download, 
+  ExternalLink, 
+  Globe, 
+  Sliders, 
+  Check, 
+  Copy, 
+  AlertTriangle, 
+  Store, 
+  Utensils, 
+  BookOpen, 
+  Settings, 
+  X,
+  Smartphone,
+  ChevronRight,
+  Printer
+} from 'lucide-react';
 
 export default function QRGeneratorIsland() {
   const { business } = useCatalogStore();
 
-  const [tableNumber, setTableNumber] = useState<string>('1');
-  const [qrType, setQrType] = useState<'GENERAL' | 'TABLE' | 'DELIVERY'>('TABLE');
-  const [qrColor, setQrColor] = useState<string>(business.primaryColor || '#0074FF');
-  const [qrBgColor, setQrBgColor] = useState<string>('#FFFFFF');
-  const [dataUrl, setDataUrl] = useState<string>('');
-  const [copied, setCopied] = useState(false);
-  const [numberOfTables, setNumberOfTables] = useState<number>(10);
-  const [multiTableQrs, setMultiTableQrs] = useState<{ table: number; dataUrl: string }[]>([]);
-  const [batchMode, setBatchMode] = useState(false);
+  const [activeTab, setActiveTab] = useState<'ALL' | 'DINE_IN' | 'READ_ONLY'>('ALL');
+  const [copiedLink, setCopiedLink] = useState<string | null>(null);
+  const [downloadModalQr, setDownloadModalQr] = useState<{ title: string; url: string; dataUrl: string } | null>(null);
+  const [dineInActive, setDineInActive] = useState<boolean>(true);
+  const [showDomainModal, setShowDomainModal] = useState<boolean>(false);
+  const [customDomain, setCustomDomain] = useState<string>('');
 
-  // Generate target URL
   const origin = typeof window !== 'undefined' ? window.location.origin : 'https://bun-cyan.vercel.app';
-  let targetUrl = `${origin}/menu/${business.slug || 'burger-craft'}`;
+  const slug = business.slug || 'burger-craft';
 
-  if (qrType === 'TABLE') {
-    targetUrl += `?mesa=${tableNumber}`;
-  } else if (qrType === 'DELIVERY') {
-    targetUrl += `?tipo=delivery`;
-  }
+  // URLs
+  const welcomeUrl = `${origin}/menu/${slug}`;
+  const productsUrl = `${origin}/menu/${slug}?view=products`;
+  const readWelcomeUrl = `${origin}/menu/${slug}?type=read`;
+  const readProductsUrl = `${origin}/menu/${slug}?type=read&view=products`;
 
-  // Generate Single QR
-  useEffect(() => {
-    QRCode.toDataURL(targetUrl, {
-      width: 400,
-      margin: 2,
-      color: {
-        dark: qrColor,
-        light: qrBgColor,
-      },
-    })
-      .then((url) => setDataUrl(url))
-      .catch((err) => console.error(err));
-  }, [targetUrl, qrColor, qrBgColor]);
-
-  // Generate Batch Table QRs
-  useEffect(() => {
-    if (!batchMode) return;
-
-    const generateBatch = async () => {
-      const results = [];
-      for (let i = 1; i <= numberOfTables; i++) {
-        const url = `${origin}/menu/${business.slug || 'burger-craft'}?mesa=${i}`;
-        const data = await QRCode.toDataURL(url, {
-          width: 300,
-          margin: 2,
-          color: { dark: qrColor, light: qrBgColor },
-        });
-        results.push({ table: i, dataUrl: data });
-      }
-      setMultiTableQrs(results);
-    };
-
-    generateBatch();
-  }, [batchMode, numberOfTables, business.slug, qrColor, qrBgColor, origin]);
-
-  const handleCopyLink = () => {
-    navigator.clipboard.writeText(targetUrl);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedLink(text);
+    setTimeout(() => setCopiedLink(null), 2000);
   };
 
-  const handlePrint = () => {
-    window.print();
+  const handleOpenDownloadModal = async (title: string, url: string) => {
+    try {
+      const dataUrl = await QRCode.toDataURL(url, {
+        width: 450,
+        margin: 2,
+        color: {
+          dark: business.primaryColor || '#0074FF',
+          light: '#FFFFFF',
+        },
+      });
+      setDownloadModalQr({ title, url, dataUrl });
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   return (
-    <div className="max-w-6xl mx-auto space-y-8 print:p-0">
+    <div className="max-w-6xl mx-auto space-y-6 pb-12">
       
-      {/* Header (Hidden on Print) */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-3xl bg-slate-950 border border-slate-800 shadow-2xl print:hidden">
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brand-600 to-amber-400 flex items-center justify-center text-2xl shadow-lg shadow-brand-500/25">
-            📱
+      {/* Title */}
+      <div>
+        <h1 className="text-2xl font-black text-white">Mis enlaces y códigos QR</h1>
+      </div>
+
+      {/* Banner 1: Cambia tu enlace a un dominio .com */}
+      <div className="p-4 sm:p-5 rounded-2xl bg-slate-950 border border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-lg">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-brand-500/10 border border-brand-500/20 text-brand-400 flex items-center justify-center text-lg shrink-0">
+            🔗
           </div>
           <div>
-            <h1 className="text-xl font-extrabold text-white">Generador de Códigos QR para Mesas</h1>
-            <p className="text-xs text-slate-400">
-              Personaliza, imprime y descarga los códigos QR para tus mesas, acrílicos o volantes.
+            <p className="text-xs sm:text-sm font-semibold text-slate-200">
+              Cambia tu enlace <strong className="text-white">"bun.app"</strong> a un dominio <strong className="text-white">".com"</strong> para que tus clientes lo recuerden fácilmente.
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5 w-full sm:w-auto">
           <button
             type="button"
-            onClick={() => setBatchMode(!batchMode)}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 ${
-              batchMode
-                ? 'bg-brand-500 text-white shadow-md shadow-brand-500/25'
-                : 'bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700'
-            }`}
+            onClick={() => setShowDomainModal(true)}
+            className="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-bold text-xs shadow-md shadow-brand-500/20 transition whitespace-nowrap flex items-center justify-center gap-1.5"
           >
-            <LayoutGrid className="w-4 h-4" />
-            <span>{batchMode ? 'Modo Individual' : 'Generar Lote de Mesas (1 a N)'}</span>
+            <Globe className="w-3.5 h-3.5" />
+            <span>Obtén tu propio dominio ".com"</span>
           </button>
+          
+          <span className="text-xs text-slate-500 font-bold hidden sm:inline">o</span>
 
-          <button
-            type="button"
-            onClick={handlePrint}
-            className="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs border border-slate-700 flex items-center gap-2 transition"
+          <a
+            href="/admin/business"
+            className="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 font-bold text-xs border border-slate-700 hover:border-slate-600 transition whitespace-nowrap text-center"
           >
-            <Printer className="w-4 h-4" />
-            <span>Imprimir</span>
-          </button>
+            Cambiar mi enlace
+          </a>
         </div>
       </div>
 
-      {/* SINGLE QR MODE */}
-      {!batchMode ? (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      {/* BLOQUE 1: Pedidos de todo tipos */}
+      <div className="p-6 sm:p-8 rounded-3xl bg-slate-950 border border-slate-800 shadow-xl space-y-6">
+        
+        {/* Header Bloque 1 */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-800/80">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-300">
+              📑
+            </div>
+            <h2 className="text-base sm:text-lg font-black text-white">Pedidos de todo tipos</h2>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+              🛵 Delivery Activo
+            </span>
+            <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+              🛍️ Retiro Activo
+            </span>
+            <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+              🍽️ En el local Activo
+            </span>
+
+            <a
+              href="/admin/business"
+              className="text-xs font-bold text-brand-400 hover:text-brand-300 flex items-center gap-1 ml-2"
+            >
+              <Settings className="w-3.5 h-3.5" />
+              <span>Configuración</span>
+            </a>
+          </div>
+        </div>
+
+        {/* Dos Mockups con Teléfonos */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
           
-          {/* Controls Form (Hidden on Print) */}
-          <div className="lg:col-span-6 p-6 sm:p-8 rounded-3xl bg-slate-950 border border-slate-800 shadow-xl space-y-6 print:hidden">
-            <h2 className="text-base font-extrabold text-white flex items-center gap-2 pb-3 border-b border-slate-800">
-              <Sliders className="w-4 h-4 text-brand-400" />
-              Configurar Código QR
-            </h2>
+          {/* Card Izquierda: Página de bienvenida */}
+          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 p-6 rounded-2xl bg-slate-900/50 border border-slate-800/80 hover:border-slate-700 transition">
+            
+            {/* Phone Mini Mockup */}
+            <div className="w-36 h-60 bg-black rounded-[24px] p-2 border-2 border-slate-700 shadow-2xl shrink-0 flex flex-col justify-between overflow-hidden">
+              <div className="p-2 bg-slate-950 rounded-[18px] h-full flex flex-col items-center justify-between text-center">
+                <div className="space-y-1 mt-2">
+                  <div className="w-6 h-6 rounded-md bg-brand-500 mx-auto flex items-center justify-center text-xs">🍔</div>
+                  <p className="text-[10px] font-black text-white">{business.name || 'Burger Craft'}</p>
+                  <p className="text-[8px] text-emerald-400 font-bold">● Abierto</p>
+                </div>
+                <div className="w-full py-1.5 bg-brand-500 rounded-md text-[9px] font-bold text-white shadow">
+                  Ver Menú
+                </div>
+                <p className="text-[7px] text-slate-500">bun.app/menu/{slug}</p>
+              </div>
+            </div>
 
-            {/* QR Type Selector */}
-            <div>
-              <label className="block text-xs font-bold text-slate-300 mb-2">Destino del Código QR</label>
-              <div className="grid grid-cols-3 gap-2">
+            {/* Content & Actions */}
+            <div className="flex-1 space-y-3 text-center sm:text-left">
+              <div>
+                <h3 className="text-base font-bold text-white">Página de bienvenida</h3>
+                <a
+                  href={welcomeUrl}
+                  target="_blank"
+                  className="text-xs font-semibold text-brand-400 hover:underline break-all block mt-0.5"
+                >
+                  {welcomeUrl}
+                </a>
+              </div>
+
+              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-2">
                 <button
                   type="button"
-                  onClick={() => setQrType('TABLE')}
-                  className={`p-3 rounded-xl text-xs font-bold border transition text-center ${
-                    qrType === 'TABLE'
-                      ? 'bg-brand-500/10 border-brand-500 text-brand-400 shadow-sm'
-                      : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-white'
-                  }`}
+                  onClick={() => copyToClipboard(welcomeUrl)}
+                  className="px-3.5 py-2 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm transition"
                 >
-                  🍽️ Mesa Específica
+                  <Share2 className="w-3.5 h-3.5" />
+                  <span>{copiedLink === welcomeUrl ? '¡Copiado!' : 'Compartir'}</span>
                 </button>
 
                 <button
                   type="button"
-                  onClick={() => setQrType('GENERAL')}
-                  className={`p-3 rounded-xl text-xs font-bold border transition text-center ${
-                    qrType === 'GENERAL'
-                      ? 'bg-brand-500/10 border-brand-500 text-brand-400 shadow-sm'
-                      : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-white'
-                  }`}
+                  onClick={() => handleOpenDownloadModal('Página de Bienvenida', welcomeUrl)}
+                  className="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 font-bold text-xs border border-slate-700 flex items-center gap-1.5 transition"
                 >
-                  🌐 Menú General
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setQrType('DELIVERY')}
-                  className={`p-3 rounded-xl text-xs font-bold border transition text-center ${
-                    qrType === 'DELIVERY'
-                      ? 'bg-brand-500/10 border-brand-500 text-brand-400 shadow-sm'
-                      : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-white'
-                  }`}
-                >
-                  🛵 Delivery
+                  <QrCode className="w-3.5 h-3.5" />
+                  <span>Descargar QR</span>
                 </button>
               </div>
             </div>
 
-            {/* Table Number Input */}
-            {qrType === 'TABLE' && (
+          </div>
+
+          {/* Card Derecha: Página de productos */}
+          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 p-6 rounded-2xl bg-slate-900/50 border border-slate-800/80 hover:border-slate-700 transition">
+            
+            {/* Phone Mini Mockup */}
+            <div className="w-36 h-60 bg-black rounded-[24px] p-2 border-2 border-slate-700 shadow-2xl shrink-0 flex flex-col justify-between overflow-hidden">
+              <div className="p-2 bg-slate-950 rounded-[18px] h-full flex flex-col justify-between">
+                <div className="space-y-1.5">
+                  <div className="flex items-center gap-1">
+                    <span className="text-[9px] font-bold text-white">Catálogo</span>
+                  </div>
+                  <div className="p-1.5 bg-slate-900 rounded border border-slate-800 space-y-1 text-left">
+                    <p className="text-[8px] font-bold text-white truncate">Double Bacon</p>
+                    <p className="text-[8px] font-black text-brand-400">$6.990</p>
+                  </div>
+                  <div className="p-1.5 bg-slate-900 rounded border border-slate-800 space-y-1 text-left">
+                    <p className="text-[8px] font-bold text-white truncate">Papas Rústicas</p>
+                    <p className="text-[8px] font-black text-brand-400">$2.990</p>
+                  </div>
+                </div>
+                <div className="w-full py-1 bg-emerald-600 rounded text-[8px] font-bold text-white text-center">
+                  Pedir WhatsApp 💬
+                </div>
+              </div>
+            </div>
+
+            {/* Content & Actions */}
+            <div className="flex-1 space-y-3 text-center sm:text-left">
               <div>
-                <label className="block text-xs font-bold text-slate-300 mb-1.5">Número / Nombre de la Mesa</label>
-                <input
-                  type="text"
-                  value={tableNumber}
-                  onChange={(e) => setTableNumber(e.target.value)}
-                  placeholder="Ej. 1, 2, Terraza 5, Barra"
-                  className="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-800 text-white text-xs font-bold font-mono focus:border-brand-500 focus:outline-none"
-                />
-                <span className="text-[10px] text-slate-500 mt-1 block">
-                  Los pedidos escaneados desde este QR llegarán automáticamente a la Cocina KDS con la etiqueta #{tableNumber}.
+                <h3 className="text-base font-bold text-white">Página de productos</h3>
+                <a
+                  href={productsUrl}
+                  target="_blank"
+                  className="text-xs font-semibold text-brand-400 hover:underline break-all block mt-0.5"
+                >
+                  {productsUrl}
+                </a>
+              </div>
+
+              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => copyToClipboard(productsUrl)}
+                  className="px-3.5 py-2 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-bold text-xs flex items-center gap-1.5 shadow-sm transition"
+                >
+                  <Share2 className="w-3.5 h-3.5" />
+                  <span>{copiedLink === productsUrl ? '¡Copiado!' : 'Compartir'}</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleOpenDownloadModal('Página de Productos', productsUrl)}
+                  className="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 font-bold text-xs border border-slate-700 flex items-center gap-1.5 transition"
+                >
+                  <QrCode className="w-3.5 h-3.5" />
+                  <span>Descargar QR</span>
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+      {/* BLOQUE 2: Solo pedidos en el local */}
+      <div className="p-6 sm:p-8 rounded-3xl bg-slate-950 border border-slate-800 shadow-xl space-y-5">
+        <div className="flex items-center justify-between pb-4 border-b border-slate-800/80">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-300">
+              🛎️
+            </div>
+            <h2 className="text-base sm:text-lg font-black text-white">Solo pedidos en el local</h2>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => setDineInActive(!dineInActive)}
+              className={`inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full border transition ${
+                dineInActive
+                  ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                  : 'bg-rose-500/10 text-rose-400 border-rose-500/20'
+              }`}
+            >
+              <span className={`w-1.5 h-1.5 rounded-full ${dineInActive ? 'bg-emerald-400' : 'bg-rose-400'}`}></span>
+              <span>{dineInActive ? 'Activo' : 'Inactivo'}</span>
+            </button>
+
+            <a href="/admin/business" className="text-xs font-bold text-brand-400 hover:underline">
+              Configuración de pedidos
+            </a>
+          </div>
+        </div>
+
+        {/* Warning Banner */}
+        {!dineInActive && (
+          <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs flex items-start gap-2.5">
+            <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
+            <p>
+              Tu menú digital para pedidos en el local está pausado. ¡Para habilitar los pedidos en mesa, haz clic en activar!
+            </p>
+          </div>
+        )}
+
+        {/* Local QR Features & Actions */}
+        <div className="space-y-3">
+          <h3 className="text-sm font-extrabold text-white">
+            ¡Descarga QR's específicos para servicio en el local (Mesas, habitaciones o Barra)!
+          </h3>
+          <ul className="space-y-1 text-xs text-slate-400">
+            <li>• Perfecto para que restaurantes ofrezcan pedidos desde la mesa sin esperar atención de meseros.</li>
+            <li>• Tus clientes hacen pedidos de forma remota y llegan en tiempo real al Tablero de Cocina KDS.</li>
+            <li>• Acepta pagos y pedidos organizados por zona o número de mesa.</li>
+          </ul>
+
+          <div className="pt-3 flex flex-wrap gap-3">
+            <a
+              href="/admin/qr"
+              onClick={(e) => {
+                e.preventDefault();
+                handleOpenDownloadModal('Código QR Mesa 1', `${welcomeUrl}?mesa=1`);
+              }}
+              className="px-4 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-bold text-xs shadow-md shadow-brand-500/20 transition"
+            >
+              Configurar mis QR en el local
+            </a>
+
+            <button
+              type="button"
+              onClick={() => handleOpenDownloadModal('QR Salón Principal', `${welcomeUrl}?zona=salon`)}
+              className="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 font-bold text-xs border border-slate-700 transition"
+            >
+              Añadir zonas y QR's
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* BLOQUE 3: Solo lectura */}
+      <div className="p-6 sm:p-8 rounded-3xl bg-slate-950 border border-slate-800 shadow-xl space-y-6">
+        <div className="flex items-center gap-3 pb-4 border-b border-slate-800/80">
+          <div className="w-8 h-8 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-300">
+            📖
+          </div>
+          <h2 className="text-base sm:text-lg font-black text-white">Solo lectura</h2>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          
+          {/* Left Image Mockup (Hand holding phone / Coffee) */}
+          <div className="lg:col-span-5 rounded-2xl overflow-hidden bg-slate-900 border border-slate-800 shadow-xl relative group">
+            <img
+              src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=700&q=80"
+              alt="Cliente viendo menú"
+              className="w-full h-56 object-cover opacity-80 group-hover:scale-105 transition duration-500"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent flex items-end p-4">
+              <div className="space-y-1">
+                <span className="text-[9px] font-black uppercase px-2 py-0.5 rounded bg-amber-500 text-slate-950">
+                  MODO CARTA / LECTURA
                 </span>
+                <p className="text-xs font-bold text-white">Menú informativo sin carrito de compra</p>
               </div>
-            )}
-
-            {/* Colors */}
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-bold text-slate-300 mb-1.5">Color del QR</label>
-                <div className="flex items-center gap-2">
-                  <input
-                    type="color"
-                    value={qrColor}
-                    onChange={(e) => setQrColor(e.target.value)}
-                    className="w-8 h-8 rounded-lg bg-transparent border-0 cursor-pointer"
-                  />
-                  <span className="text-xs font-mono text-slate-400 uppercase">{qrColor}</span>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-300 mb-1.5">Color de Fondo</label>
-                <div className="flex items-center gap-2">
-                  <input
-                    type="color"
-                    value={qrBgColor}
-                    onChange={(e) => setQrBgColor(e.target.value)}
-                    className="w-8 h-8 rounded-lg bg-transparent border-0 cursor-pointer"
-                  />
-                  <span className="text-xs font-mono text-slate-400 uppercase">{qrBgColor}</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Link Preview & Copy */}
-            <div className="p-3.5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-2">
-              <div className="flex items-center justify-between text-[11px]">
-                <span className="font-bold text-slate-400">Enlace Destino</span>
-                <button
-                  type="button"
-                  onClick={handleCopyLink}
-                  className="text-brand-400 hover:text-brand-300 font-semibold flex items-center gap-1"
-                >
-                  {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                  <span>{copied ? '¡Copiado!' : 'Copiar'}</span>
-                </button>
-              </div>
-              <p className="text-xs font-mono text-white truncate">{targetUrl}</p>
             </div>
           </div>
 
-          {/* Stand Acrílico / Imprimible Preview */}
-          <div className="lg:col-span-6 flex flex-col items-center justify-center">
-            <div
-              id="printable-card"
-              className="w-full max-w-sm rounded-[32px] p-8 text-center shadow-2xl border-4 border-slate-800 space-y-6 transition-all"
-              style={{ backgroundColor: qrBgColor, color: qrColor === '#FFFFFF' ? '#000000' : qrColor }}
-            >
-              {/* Card Header */}
-              <div className="space-y-1">
-                <div className="w-12 h-12 rounded-2xl bg-black/5 mx-auto flex items-center justify-center text-2xl">
-                  🍔
+          {/* Right Info & Links */}
+          <div className="lg:col-span-7 space-y-4">
+            <div>
+              <h3 className="text-lg font-black text-white">¡Usa tu menú digital en modo solo lectura!</h3>
+              <p className="text-xs text-slate-400 mt-1">
+                Muestra códigos QR que permiten a los clientes ver el menú, fotos y precios pero no realizar pedidos digitales.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+              {/* Bienvenida Read Only */}
+              <div className="p-4 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-2">
+                <h4 className="text-xs font-bold text-white">Página de bienvenida</h4>
+                <p className="text-[11px] font-mono text-slate-400 truncate">{readWelcomeUrl}</p>
+                <div className="flex gap-2 pt-1">
+                  <button
+                    type="button"
+                    onClick={() => copyToClipboard(readWelcomeUrl)}
+                    className="flex-1 py-1.5 rounded-lg bg-brand-500 hover:bg-brand-600 text-white font-bold text-[11px] flex items-center justify-center gap-1 shadow-sm"
+                  >
+                    <Share2 className="w-3 h-3" />
+                    <span>{copiedLink === readWelcomeUrl ? '¡Copiado!' : 'Compartir'}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleOpenDownloadModal('Bienvenida (Solo Lectura)', readWelcomeUrl)}
+                    className="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-[11px] border border-slate-700"
+                  >
+                    <QrCode className="w-3 h-3" />
+                  </button>
                 </div>
-                <h3 className="text-xl font-black tracking-tight" style={{ color: qrColor === '#FFFFFF' ? '#000' : qrColor }}>
-                  {business.name || 'Burger Craft'}
-                </h3>
-                <p className="text-xs font-bold text-slate-600 uppercase tracking-widest">
-                  {qrType === 'TABLE' ? `Mesa #${tableNumber}` : qrType === 'DELIVERY' ? 'Menú Delivery' : 'Menú Digital QR'}
-                </p>
               </div>
 
-              {/* QR Image */}
-              <div className="p-4 bg-white rounded-2xl shadow-inner border border-slate-200 inline-block mx-auto">
-                {dataUrl && <img src={dataUrl} alt="QR Code" className="w-48 h-48 mx-auto" />}
-              </div>
-
-              {/* Call to action */}
-              <div className="space-y-1 text-slate-800">
-                <p className="text-sm font-black uppercase tracking-wider">Escanea con tu cámara</p>
-                <p className="text-[11px] font-semibold text-slate-600">
-                  Pide directamente a la cocina sin esperar mesero
-                </p>
-              </div>
-
-              <div className="pt-2 text-[10px] font-mono text-slate-500">
-                bun-platform.app/menu/{business.slug}
+              {/* Productos Read Only */}
+              <div className="p-4 rounded-2xl bg-slate-900/60 border border-slate-800 space-y-2">
+                <h4 className="text-xs font-bold text-white">Página de productos</h4>
+                <p className="text-[11px] font-mono text-slate-400 truncate">{readProductsUrl}</p>
+                <div className="flex gap-2 pt-1">
+                  <button
+                    type="button"
+                    onClick={() => copyToClipboard(readProductsUrl)}
+                    className="flex-1 py-1.5 rounded-lg bg-brand-500 hover:bg-brand-600 text-white font-bold text-[11px] flex items-center justify-center gap-1 shadow-sm"
+                  >
+                    <Share2 className="w-3 h-3" />
+                    <span>{copiedLink === readProductsUrl ? '¡Copiado!' : 'Compartir'}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleOpenDownloadModal('Productos (Solo Lectura)', readProductsUrl)}
+                    className="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-[11px] border border-slate-700"
+                  >
+                    <QrCode className="w-3 h-3" />
+                  </button>
+                </div>
               </div>
             </div>
 
-            {/* Action Download Buttons */}
-            <div className="flex items-center gap-3 mt-6 print:hidden">
+          </div>
+
+        </div>
+      </div>
+
+      {/* MODAL DE DESCARGA DE QR */}
+      {downloadModalQr && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-slate-900 border border-slate-800 rounded-3xl max-w-sm w-full p-6 space-y-6 shadow-2xl animate-scale-in text-center">
+            <div className="flex items-center justify-between pb-2 border-b border-slate-800">
+              <h3 className="font-extrabold text-white text-sm">{downloadModalQr.title}</h3>
+              <button
+                onClick={() => setDownloadModalQr(null)}
+                className="p-1 text-slate-400 hover:text-white rounded-lg"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="p-4 bg-white rounded-2xl inline-block shadow-inner">
+              <img src={downloadModalQr.dataUrl} alt="QR" className="w-48 h-48 mx-auto" />
+            </div>
+
+            <p className="text-xs font-mono text-slate-400 break-all">{downloadModalQr.url}</p>
+
+            <div className="flex gap-2">
               <a
-                href={dataUrl}
-                download={`qr-${business.slug || 'menu'}-${qrType === 'TABLE' ? `mesa-${tableNumber}` : 'general'}.png`}
-                className="px-5 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-bold text-xs shadow-lg shadow-brand-500/25 flex items-center gap-2 transition active:scale-95"
+                href={downloadModalQr.dataUrl}
+                download={`qr-${slug}.png`}
+                className="flex-1 py-3 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-extrabold text-xs shadow-md shadow-brand-500/25 flex items-center justify-center gap-1.5"
               >
                 <Download className="w-4 h-4" />
-                <span>Descargar PNG HD</span>
+                <span>Descargar PNG</span>
               </a>
 
               <button
                 type="button"
-                onClick={handlePrint}
-                className="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs border border-slate-700 flex items-center gap-2 transition"
+                onClick={() => window.print()}
+                className="px-4 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs border border-slate-700 flex items-center justify-center gap-1.5"
               >
                 <Printer className="w-4 h-4" />
-                <span>Imprimir Tarjeta</span>
               </button>
             </div>
           </div>
-
         </div>
-      ) : (
-        /* BATCH MULTI-TABLE MODE */
-        <div className="space-y-6">
-          <div className="p-6 rounded-3xl bg-slate-950 border border-slate-800 flex items-center justify-between gap-4 print:hidden">
-            <div>
-              <h2 className="text-base font-extrabold text-white">Generar Lote de Mesas</h2>
-              <p className="text-xs text-slate-400">Genera e imprime los QR de todas tus mesas en una sola hoja.</p>
-            </div>
+      )}
 
-            <div className="flex items-center gap-3">
-              <label className="text-xs font-bold text-slate-300">Cantidad de Mesas:</label>
-              <input
-                type="number"
-                min="1"
-                max="50"
-                value={numberOfTables}
-                onChange={(e) => setNumberOfTables(Number(e.target.value) || 1)}
-                className="w-20 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs font-bold text-center"
-              />
-            </div>
-          </div>
-
-          {/* Grid of Printable Table Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {multiTableQrs.map((item) => (
-              <div
-                key={item.table}
-                className="p-6 rounded-3xl bg-white text-slate-900 shadow-xl border-2 border-slate-300 text-center space-y-3 page-break-inside-avoid"
+      {/* MODAL DE DOMINIO .COM */}
+      {showDomainModal && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-slate-900 border border-slate-800 rounded-3xl max-w-md w-full p-6 space-y-6 shadow-2xl animate-scale-in">
+            <div className="flex items-center justify-between pb-2 border-b border-slate-800">
+              <h3 className="font-extrabold text-white text-sm flex items-center gap-2">
+                <Globe className="w-4 h-4 text-brand-400" />
+                Conectar Dominio Personalizado
+              </h3>
+              <button
+                onClick={() => setShowDomainModal(false)}
+                className="p-1 text-slate-400 hover:text-white rounded-lg"
               >
-                <div className="space-y-0.5">
-                  <h4 className="font-extrabold text-sm">{business.name || 'Burger Craft'}</h4>
-                  <p className="text-xs font-black text-brand-600 uppercase tracking-widest bg-brand-50 rounded-lg py-1">
-                    Mesa #{item.table}
-                  </p>
-                </div>
+                <X className="w-4 h-4" />
+              </button>
+            </div>
 
-                <div className="p-2 bg-slate-50 rounded-xl border border-slate-200">
-                  <img src={item.dataUrl} alt={`QR Mesa ${item.table}`} className="w-36 h-36 mx-auto" />
-                </div>
-
-                <p className="text-[10px] font-bold text-slate-600">Escanea para pedir a cocina 📲</p>
+            <div className="space-y-3 text-xs text-slate-300">
+              <p>
+                Puedes usar tu propio dominio (ej. <strong>burgercraft.com</strong> o <strong>burgercraft.cl</strong>) para que tus clientes no vean enlaces de terceros.
+              </p>
+              <div>
+                <label className="block text-xs font-bold text-slate-300 mb-1.5">Tu Dominio</label>
+                <input
+                  type="text"
+                  placeholder="tudominio.com"
+                  value={customDomain}
+                  onChange={(e) => setCustomDomain(e.target.value)}
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white font-mono text-xs focus:border-brand-500 focus:outline-none"
+                />
               </div>
-            ))}
+
+              <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1 font-mono text-[11px]">
+                <p className="text-brand-400 font-bold">Configuración DNS requerida:</p>
+                <p className="text-slate-400">Tipo: <strong className="text-white">CNAME</strong></p>
+                <p className="text-slate-400">Host: <strong className="text-white">@ / www</strong></p>
+                <p className="text-slate-400">Valor: <strong className="text-white">cname.vercel-dns.com</strong> (o IP VPS)</p>
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setShowDomainModal(false)}
+                className="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 font-bold text-xs"
+              >
+                Cerrar
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  alert('Dominio guardado. La propagación DNS puede tomar hasta 24 horas.');
+                  setShowDomainModal(false);
+                }}
+                className="px-5 py-2 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-extrabold text-xs shadow-md shadow-brand-500/25"
+              >
+                Guardar Dominio
+              </button>
+            </div>
           </div>
         </div>
       )}

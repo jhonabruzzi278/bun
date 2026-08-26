@@ -23,12 +23,19 @@ export default function PublicMenuIsland() {
   const [tableNumber, setTableNumber] = useState<string>('');
   const [orderType, setOrderType] = useState<'delivery' | 'takeaway' | 'dine_in'>('delivery');
 
-  // Detect query params (e.g. ?mesa=4)
+  const [isReadOnly, setIsReadOnly] = useState(false);
+
+  // Detect query params (e.g. ?mesa=4, ?type=read)
   React.useEffect(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       const mesa = params.get('mesa');
       const tipo = params.get('tipo');
+      const typeParam = params.get('type');
+
+      if (typeParam === 'read') {
+        setIsReadOnly(true);
+      }
       if (mesa) {
         setTableNumber(mesa);
         setOrderType('dine_in');
@@ -37,6 +44,7 @@ export default function PublicMenuIsland() {
       }
     }
   }, []);
+
 
 
   if (!isLoaded) {
@@ -326,8 +334,15 @@ export default function PublicMenuIsland() {
       </div>
 
 
+        {/* Read Only Banner */}
+        {isReadOnly && (
+          <div className="p-3 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-semibold text-center">
+            📖 <strong>Menú en Modo Solo Lectura:</strong> Los precios e ingredientes están disponibles para consulta.
+          </div>
+        )}
+
       {/* Floating Cart Button */}
-      {cart.length > 0 && (
+      {!isReadOnly && cart.length > 0 && (
         <div className="fixed bottom-4 inset-x-4 max-w-md mx-auto z-40">
           <button
             onClick={() => setIsCartOpen(true)}
@@ -343,6 +358,7 @@ export default function PublicMenuIsland() {
           </button>
         </div>
       )}
+
 
       {/* Modal Detalle de Producto & Modificadores */}
       {activeProductModal && (
