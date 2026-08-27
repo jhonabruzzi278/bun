@@ -4,19 +4,26 @@ import AuthIsland from '../../components/react/auth/AuthIsland';
 ---
 
 <!DOCTYPE html>
-<html lang="es" class="h-full bg-slate-950 text-slate-100 selection:bg-brand-500 selection:text-white">
+<html lang="es" class="h-full bg-[#F9F6F0] dark:bg-[#170D0B] text-coffee-950 dark:text-[#E8DFD8]">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Iniciar Sesión | BUN - Software para Restaurantes</title>
+    <title>Iniciar Sesión | Pidelisto</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <script is:inline>
+      try {
+        const theme = localStorage.getItem('bun_theme');
+        if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      } catch (e) {}
+    </script>
   </head>
-  <body class="min-h-full flex items-center justify-center p-4 sm:p-6 bg-slate-950 font-sans antialiased relative overflow-x-hidden">
-    <!-- Glow Orbs -->
-    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-brand-500/10 rounded-full blur-[140px] pointer-events-none -z-10"></div>
-
+  <body class="min-h-full flex items-center justify-center p-4 sm:p-6 bg-[#F9F6F0] dark:bg-[#170D0B] font-sans antialiased relative overflow-x-hidden transition-colors">
     <AuthIsland initialMode="login" client:load />
   </body>
 </html>

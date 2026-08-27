@@ -4,42 +4,91 @@
 
 @layer base {
   body {
-    @apply antialiased font-sans selection:bg-brand-500 selection:text-white;
+    @apply antialiased font-sans bg-[#F9F6F0] text-coffee-950 selection:bg-color4 selection:text-white transition-colors duration-200;
+  }
+
+  html.dark body {
+    background-color: #170D0B;
+    color: #F5EFE8;
   }
 }
 
-/* Glassmorphism & Modern UI utilities */
-.glass-panel {
-  background: rgba(15, 23, 42, 0.75);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+/* Colores Solicitados por el Usuario */
+.color1 { color: #BEC483; }
+.color2 { color: #C7B140; }
+.color3 { color: #B1813B; }
+.color4 { color: #774C3B; }
+.color5 { color: #522B2B; }
+
+.bg-color1 { background-color: #BEC483; }
+.bg-color2 { background-color: #C7B140; }
+.bg-color3 { background-color: #B1813B; }
+.bg-color4 { background-color: #774C3B; }
+.bg-color5 { background-color: #522B2B; }
+
+.border-color1 { border-color: #BEC483; }
+.border-color2 { border-color: #C7B140; }
+.border-color3 { border-color: #B1813B; }
+.border-color4 { border-color: #774C3B; }
+.border-color5 { border-color: #522B2B; }
+
+/* Paneles y Tarjetas Cálidas Modo Claro (Latte) */
+.coffee-card {
+  @apply bg-white border border-[#ECE4DA] rounded-2xl shadow-coffee-sm transition-all;
 }
 
-.glass-card {
-  background: rgba(30, 41, 59, 0.6);
+.coffee-card-hover {
+  @apply bg-white border border-[#ECE4DA] rounded-2xl shadow-coffee-sm hover:shadow-coffee-md hover:border-[#DFD4C7] transition-all;
+}
+
+.coffee-panel {
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid #ECE4DA;
 }
 
-.glow-brand {
-  box-shadow: 0 0 35px -5px rgba(254, 95, 85, 0.25);
+/* Modo Oscuro (Espresso / Tostado Profundo) */
+.dark .coffee-card {
+  background-color: #241512;
+  border-color: #3D2420;
+  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.3);
 }
 
-/* Custom Scrollbar */
+.dark .coffee-card-hover {
+  background-color: #241512;
+  border-color: #3D2420;
+  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.3);
+}
+.dark .coffee-card-hover:hover {
+  border-color: #5C3832;
+  box-shadow: 0 8px 20px -3px rgba(0, 0, 0, 0.4);
+}
+
+.dark .coffee-panel {
+  background: rgba(36, 21, 18, 0.95);
+  border-color: #3D2420;
+}
+
+/* Custom Scrollbar en tonos café */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.3);
+  background: #D7C7B5;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(148, 163, 184, 0.6);
+  background: #B1813B;
 }
 
+.dark ::-webkit-scrollbar-thumb {
+  background: #4A2B25;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #774C3B;
+}

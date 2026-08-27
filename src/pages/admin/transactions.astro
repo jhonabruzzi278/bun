@@ -1,20 +1,24 @@
 ---
 import AdminLayout from '../../layouts/AdminLayout.astro';
-import { DollarSign, ArrowDownRight, ArrowUpRight, Plus, Download, CreditCard, Banknote } from 'lucide-react';
+import { DollarSign, Plus } from 'lucide-react';
 ---
 
 <AdminLayout title="Registros Financieros" activePath="/admin/transactions">
   <div class="max-w-6xl mx-auto space-y-6 pb-16">
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
       <div>
-        <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Registros Financieros</h1>
-        <p class="text-xs sm:text-sm text-slate-400 mt-1">Control de ingresos, egresos, propinas acumuladas y comisiones.</p>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-coffee-950 dark:text-white tracking-tight">
+          Registros Financieros
+        </h1>
+        <p class="text-xs sm:text-sm text-[#70645A] dark:text-[#A8988B] mt-1">
+          Control de ingresos, egresos, propinas acumuladas y comisiones.
+        </p>
       </div>
 
       <div class="flex items-center gap-2">
         <button
           type="button"
-          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-bold text-xs shadow-lg transition"
+          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-color4 hover:bg-[#522B2B] text-white font-bold text-xs shadow-coffee-sm transition"
         >
           <Plus className="w-4 h-4" />
           <span>Registrar Movimiento</span>
@@ -24,20 +28,20 @@ import { DollarSign, ArrowDownRight, ArrowUpRight, Plus, Download, CreditCard, B
 
     <!-- Summary cards -->
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-      <div class="p-5 rounded-2xl bg-slate-950 border border-slate-800 space-y-1">
-        <span class="text-xs text-slate-400 font-medium">Ingresos Totales (Mes)</span>
-        <h3 class="text-2xl font-extrabold text-emerald-400 font-mono">$2.300.000</h3>
-        <span class="text-[10px] text-slate-400">Bruto cobrado</span>
+      <div class="p-5 rounded-2xl bg-white dark:bg-[#241512] border border-[#EAE1D6] dark:border-[#3D2420] shadow-coffee-sm space-y-1 transition-colors">
+        <span class="text-xs text-[#70645A] dark:text-[#A8988B] font-medium">Ingresos Totales (Mes)</span>
+        <h3 class="text-2xl font-extrabold text-[#2E7D32] dark:text-[#4ADE80] font-mono">$2.300.000</h3>
+        <span class="text-[10px] text-[#70645A] dark:text-[#A8988B]">Bruto cobrado en salón y web</span>
       </div>
-      <div class="p-5 rounded-2xl bg-slate-950 border border-slate-800 space-y-1">
-        <span class="text-xs text-slate-400 font-medium">Propinas Acumuladas</span>
-        <h3 class="text-2xl font-extrabold text-amber-400 font-mono">$115.000</h3>
-        <span class="text-[10px] text-slate-400">Por repartir al equipo</span>
+      <div class="p-5 rounded-2xl bg-white dark:bg-[#241512] border border-[#EAE1D6] dark:border-[#3D2420] shadow-coffee-sm space-y-1 transition-colors">
+        <span class="text-xs text-[#70645A] dark:text-[#A8988B] font-medium">Propinas Acumuladas</span>
+        <h3 class="text-2xl font-extrabold text-color3 dark:text-color2 font-mono">$115.000</h3>
+        <span class="text-[10px] text-[#70645A] dark:text-[#A8988B]">Por repartir al equipo</span>
       </div>
-      <div class="p-5 rounded-2xl bg-slate-950 border border-slate-800 space-y-1">
-        <span class="text-xs text-slate-400 font-medium">Tarifas de Delivery</span>
-        <h3 class="text-2xl font-extrabold text-blue-400 font-mono">$84.500</h3>
-        <span class="text-[10px] text-slate-400">Cobros por envío</span>
+      <div class="p-5 rounded-2xl bg-white dark:bg-[#241512] border border-[#EAE1D6] dark:border-[#3D2420] shadow-coffee-sm space-y-1 transition-colors">
+        <span class="text-xs text-[#70645A] dark:text-[#A8988B] font-medium">Tarifas de Delivery</span>
+        <h3 class="text-2xl font-extrabold text-color4 dark:text-color2 font-mono">$84.500</h3>
+        <span class="text-[10px] text-[#70645A] dark:text-[#A8988B]">Cobros por despacho</span>
       </div>
     </div>
   </div>

@@ -1,31 +1,39 @@
-# Metadatos del Proyecto BUN (OlaClick Replica SaaS)
+# Metadatos del Proyecto BUN / PIDELISTO (Plataforma Híbrida Gastronómica)
 
 ## Definición del documento
-- **Para qué sirve:** Resume la identidad, fase y estado documental del proyecto bajo el ciclo AI-DLC.
+- **Para qué sirve:** Resume la identidad, alcance, fase y estado documental del proyecto bajo el ciclo AI-DLC integrando los requerimientos de `Pidelisto.docx`.
 - **Cuándo se crea o actualiza:** Durante cada auditoría AI-DLC o cambio estructural de arquitectura.
-- **Qué debe contener:** Nombre, responsable, fechas, fase, completitud de módulos y enlaces.
+- **Qué contiene:** Nombre, responsable, fechas, fase, completitud de módulos, matriz de arquitectura y enlaces operativos.
 
 ---
 
-- **Nombre del Proyecto:** BUN (Plataforma de Menú Digital, QR, KDS y POS estilo OlaClick)
+- **Nombre del Proyecto:** BUN / PIDELISTO.CL (Plataforma Híbrida de Autoatención, Reservas, KDS, POS y Floor Manager con IA)
 - **Responsable:** Jonathan Guerra (@jhonabruzzi278)
 - **Analizado el:** 26 de Agosto de 2026
 - **Fase actual:** **Construcción Media / Avanzada**
 - **Última actualización:** 26 de Agosto de 2026
 
 ## Estado Documental y Operativo
-- [x] **Iniciación:** Completa (Requisitos, visión, planes y funcionalidades definidos)
-- [x] **Construcción:** Parcial / Avanzada (Frontend interactivo 100%, Stores reactivos, KDS con audio, QR Generator, falta POS completo y WebSockets)
-- [ ] **Operaciones:** En progreso (Dockerfile multi-stage listo para Coolify, despliegue continuo en Vercel activo)
+- [x] **Iniciación:** Completa (Requisitos de `Pidelisto.docx`, casos de uso de clientes espontáneos/planificadores y arquitectura de módulos consolidada).
+- [x] **Construcción:** Avanzada (Frontend interactivo, Drizzle ORM + PostgreSQL Multi-tenant, KDS y POS base, Generador QR dinámico).
+- [ ] **Operaciones:** En progreso (Despliegue continuo en Vercel activo, Dockerfile para Coolify VPS).
+
+## Ecosistema de Módulos (Pidelisto)
+1. **Módulo 1: Portal Cliente (PWA Guest-First)** -> Menú QR, Split Bill, Llamar Garzón, Venta de Entradas QR.
+2. **Módulo 2: Motor de Confirmación IA & Tolerancia** -> Reservas, Pre-pedidos, Voice Bot IA (Vapi/Bland), WhatsApp Reminders, Saldo a Favor, Timer 15 min.
+3. **Módulo 3: Red de Dashboards Operativos** -> KDS Cocina, KDS Bar, Caja/Recepción, Floor Manager 2D de mesas.
+4. **Módulo 4: Capa de Inteligencia & CRM Implícito** -> Identificación por teléfono/fingerprint, Analítica RFM, Rotación de mesas.
+5. **Módulo 5: Motor Transaccional** -> Pagos agnósticos (Mercado Pago, Webpay, Stripe) con Failover automático.
 
 ## Enlaces Rápidos
-- **Hoja de Ruta (Roadmap):** [HOJA_RUTA.md](file:///c:/Trabajos/bun/HOJA_RUTA.md)
-- **Punto de Venta (PDV):** [/admin/pos](http://localhost:4321/admin/pos)
-- **Guía de Configuración (Onboarding 17 pasos):** [/admin/onboarding](http://localhost:4321/admin/onboarding)
-- **Configuración General & Canales:** [/admin/settings](http://localhost:4321/admin/settings)
-- **Historial de Ventas:** [/admin/sales](http://localhost:4321/admin/sales)
-- **Reportes & Estadísticas:** [/admin/reports](http://localhost:4321/admin/reports)
+- **Hoja de Ruta Completa (Roadmap):** [HOJA_RUTA.md](file:///c:/Trabajos/bun/HOJA_RUTA.md)
+- **Especificación Original:** [Pidelisto.docx](file:///c:/Trabajos/bun/documentacion-aidlc/Pidelisto.docx)
 - **Cocina KDS:** [/admin/kitchen](http://localhost:4321/admin/kitchen)
+- **Punto de Venta (PDV / POS):** [/admin/pos](http://localhost:4321/admin/pos)
+- **Plano de Mesas (Floor Manager):** [/admin/floor](http://localhost:4321/admin/floor)
+- **Caja & Cierre de Turno:** [/admin/cashier](http://localhost:4321/admin/cashier)
 - **Mis Enlaces y Códigos QR:** [/admin/qr](http://localhost:4321/admin/qr)
-- **Matriz de Funcionalidades:** [/pricing](http://localhost:4321/pricing)
+- **Guía de Configuración Onboarding:** [/admin/onboarding](http://localhost:4321/admin/onboarding)
+- **Configuración General & Canales:** [/admin/settings](http://localhost:4321/admin/settings)
+- **Reportes & Estadísticas:** [/admin/reports](http://localhost:4321/admin/reports)
 - **Despliegue Vercel:** [https://bun-cyan.vercel.app](https://bun-cyan.vercel.app)

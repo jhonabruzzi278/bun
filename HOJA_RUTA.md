@@ -1,108 +1,258 @@
-# Hoja de Ruta (Roadmap) - Plataforma BUN (OlaClick SaaS)
+# 🗺️ Hoja de Ruta (Roadmap) - Ecosistema BUN / PIDELISTO.CL
 
-## Definición del documento
-- **Para qué sirve:** Define los objetivos estratégicos, estado actual de entrega, roadmap por horizontes y backlog técnico priorizado bajo el ciclo de desarrollo AI-DLC.
-- **Cuándo se crea o actualiza:** Se actualiza al completar hitos, bolts de desarrollo o incorporar nuevos requisitos del negocio.
-- **Qué debe contener:** Matriz de funcionalidades terminadas vs por desarrollar, arquitectura del backend ligero (Node.js/NestJS en Coolify) y próximos horizontes.
+> **Sistema Híbrido de Gestión Gastronómica, Autoatención "Guest-First", KDS en Tiempo Real y Confirmación de Reservas con Inteligencia Artificial.**
 
 ---
 
-## 🧭 Resumen Ejecutivo y Estado del Proyecto
+## 📌 1. Ficha Técnica y Visión del Proyecto
 
-- **Fase AI-DLC:** **Construcción Media / Avanzada** (Frontend y maquetación interactiva 100% fiel a OlaClick, persistencia reactiva Local First, Dockerfile standalone listo para Coolify).
-- **Entorno Actual:** Local (`localhost:4321`) y Staging en Vercel (`https://bun-cyan.vercel.app`).
-- **Destino Productivo Backend:** VPS autohospedado con **Coolify** (Node.js standalone + PostgreSQL).
-
----
-
-## 📊 Matriz Detallada: Funcionalidades Listas vs Por Desarrollar
-
-### ✅ **1. FUNCIONALIDADES LISTAS (Completadas al 100% y Operativas)**
-
-| Módulo / Funcionalidad | Descripción | Enlace Local |
-|---|---|---|
-| **Menú Digital Público Responsive** | E-commerce móvil con carrito flotante, cálculo de subtotales, extras/modificadores y checkout a WhatsApp. | [`/menu/burger-craft`](http://localhost:4321/menu/burger-craft) |
-| **Modo Solo Lectura** | Modalidad para consultar cartas informativas en mesa sin botón de compra (`?type=read`). | [`/menu/burger-craft?type=read`](http://localhost:4321/menu/burger-craft?type=read) |
-| **Guía de Onboarding 17 Pasos** | Checklist interactivo con 4 etapas de OlaClick, cálculo porcentual y widget de cohete 🚀 en Sidebar. | [`/admin/onboarding`](http://localhost:4321/admin/onboarding) |
-| **Sidebar con Acordeón 'Configuraciones'** | Menú desplegable con indicador visual cian activo y enlaces a 6 sub-módulos. | En todo [`/admin`](http://localhost:4321/admin) |
-| **Configuración General (4 Pestañas)** | Canales de venta (Web, PDV, Chatbot, QR, Apps), Tipos de Servicio, Coberturas e Impulso de Ventas. | [`/admin/settings`](http://localhost:4321/admin/settings) |
-| **Tipos de Servicio y Canales** | Delivery a domicilio, Para llevar (Pick-up), En el local, En mesa (solo PDV) y Propinas voluntarias. | [`/admin/services`](http://localhost:4321/admin/services) |
-| **Precios y Coberturas de Envío** | 6 métodos de cálculo: Sin precio ($0), Fijo, Barrio, Distancia (km GPS), Polígonos de mapa y Rangos. | [`/admin/settings#coverage`](http://localhost:4321/admin/settings) |
-| **Impulso de Ventas (Cross-selling & Re-order)** | Sistema de recomendación de productos complementarios en carrito y sugerencia inteligente de último pedido. | [`/admin/settings#growth`](http://localhost:4321/admin/settings) |
-| **Gestión de Equipo y Roles (Crear Usuario)** | Modal de creación de usuarios con roles dedicados (Admin, Mesero, Cajero, Cocinero, Repartidor). | [`/admin/team`](http://localhost:4321/admin/team) |
-| **Generador de Enlaces y Códigos QR** | 3 bloques idénticos a OlaClick (Menú general, Mesas con selector 1-20 y Solo lectura) con descarga SVG/PNG. | [`/admin/qr`](http://localhost:4321/admin/qr) |
-| **Cocina KDS en Vivo con Audio Web API** | Kanban de comandas (Pendiente, En preparación, Listo), temporizadores de target minutes y alertas de audio. | [`/admin/kitchen`](http://localhost:4321/admin/kitchen) |
-| **Gestión de Catálogo y Modificadores** | Categorías, Productos con fotos, precios comparativos, variantes (Simple/Doble) y grupos de extras/toppings. | [`/admin/products`](http://localhost:4321/admin/products) |
-| **Personalización de Marca y Negocio** | Subida de Logo, Banner de portada, selector de paleta de colores y moneda local (CLP, USD, etc.). | [`/admin/business`](http://localhost:4321/admin/business) |
-| **Matriz de Funcionalidades & Precios** | Comparativa de planes (Free, Starter, Pro) con tooltips explicativos (?) en cada característica. | [`/pricing`](http://localhost:4321/pricing) |
+* **Nombre del Producto:** PIDELISTO.CL / BUN Platform
+* **Filosofía Principal:** **"Guest-First"** (Cero fricción: los clientes acceden, piden, dividen la cuenta y reservan sin registrar cuentas ni contraseñas).
+* **Fase Actual:** **Construcción Avanzada** (Estructura Multi-Tenant, Drizzle ORM + PostgreSQL, KDS Base, POS Base y Menú Público operativos).
+* **Stack Tecnológico:**
+  * **Frontend:** Astro 5 SSR + React 19 + TailwindCSS + Lucide Icons.
+  * **Backend & Datos:** Node.js (Astro API Endpoints) + PostgreSQL + Drizzle ORM + Redis (en vivo).
+  * **Tiempo Real:** Server-Sent Events (SSE) / WebSockets para sincronización en milisegundos.
+  * **Comunicaciones & IA:** WhatsApp Cloud API (Meta) + Voice Bots con IA (Vapi.ai / Bland.ai).
+  * **Pasarelas de Pago:** Capa agnóstica multi-proveedor (Mercado Pago, Webpay Plus Transbank, Stripe).
+  * **Despliegue:** Vercel (Staging) y VPS Coolify (Producción Docker Multi-stage).
 
 ---
 
-### 🟡 **2. FUNCIONALIDADES EN ROADMAP INMEDIATO (Por Desarrollar / Próximo Bolt)**
+## 🏗️ 2. Arquitectura Global del Ecosistema
 
-| Módulo / Funcionalidad | Descripción | Prioridad |
-|---|---|---|
-| **Punto de Venta POS Táctil (`/admin/pos`)** | Pantalla de venta rápida en mostrador/mesas para cajeros y meseros con cobro en efectivo/tarjeta y envío a cocina. | 🔥 **Alta (Siguiente Paso)** |
-| **Chatbot WhatsApp con IA (`/admin/chatbot`)** | Centro de configuración de mensajes automáticos: bienvenida, horarios, carrito abandonado, seguimiento de pedidos y recuperador de ventas. | 🔥 **Alta** |
-| **Marketing: Cupones y Fidelidad (`/admin/marketing`)** | Generador de cupones de descuento (% o monto fijo), programa de cashback y recompensas automáticas por puntos. | 🟡 **Media** |
-| **Visibilidad Dual de Catálogo (WEB vs PDV)** | Configuración de disponibilidad: mostrar productos ocultos en PDV, venta de productos agotados con advertencia. | 🟡 **Media** |
-| **Conexión de Impresoras Térmicas (`/admin/printers`)** | Impresión directa de tickets de comanda (58mm / 80mm ESC/POS) para cocina y cierre de caja. | 🟡 **Media** |
+```mermaid
+flowchart TB
+    subgraph CLIENTES["📱 Experiencia del Cliente (Guest-First)"]
+        QR["Escaneo QR en Mesa"] --> PWA["Portal Web / PWA"]
+        WEB["Sitio Web / Enlace"] --> PWA
+        PWA --> FLOW_MESA["Flujo Mesa: Menú + Split Bill + Llamar Garzón"]
+        PWA --> FLOW_RES["Flujo Reservas: Pre-pedido + Magic Link"]
+        PWA --> FLOW_TICKETS["Flujo Eventos: Compra Entradas QR"]
+    end
 
----
+    subgraph CORE["⚙️ Core Backend & Datos"]
+        API["API Gateway / Astro SSR"]
+        DB[(PostgreSQL + Drizzle)]
+        REDIS[(Redis State & Carts)]
+        IA["Motor IA: WhatsApp + Voice Bot"]
+        PAY["Capa Agnóstica de Pagos (Failover)"]
+    end
 
-### 🔵 **3. BACKEND & INFRAESTRUCTURA PRODUCTIVA (Coolify VPS)**
+    subgraph DASHBOARDS["🖥️ Red de Dashboards Operativos (Salón, Barra y Cocina)"]
+        FLOOR["Floor Manager 2D: Plano de Mesas Interactivo"]
+        KDS_KITCHEN["KDS Cocina: Comandas y Tiempos"]
+        KDS_BAR["KDS Bar: Despacho Bebidas"]
+        POS["Terminal POS / Caja / Cierres"]
+        CRM["CRM Implícito & Analítica RFM"]
+    end
 
-| Componente | Estado | Descripción |
-|---|---|---|
-| **Dockerfile Multi-stage** | ✅ **Listo** | Contenedor Node.js standalone ultra ligero optimizado para memoria (<50MB RAM). |
-| **Drizzle ORM + PostgreSQL** | 🟡 **Esquema Creado** | Tablas de tenants, categories, products, orders, kitchen_tickets migradas. |
-| **API Endpoints & Sincronización** | 🟡 **Por conectar** | Endpoints REST en Astro Node para reemplazar `localStorage` por PostgreSQL en Coolify. |
-| **WebSockets / SSE Tickets KDS** | 🔵 **Planificado** | Notificación en tiempo real cuando ingresa un pedido desde WhatsApp o Menú Web a la Cocina KDS. |
+    FLOW_MESA --> API
+    FLOW_RES --> API
+    FLOW_TICKETS --> API
 
----
+    API <--> DB
+    API <--> REDIS
+    API <--> PAY
+    API <--> IA
 
-## 🗺️ Hoja de Ruta por Horizontes
-
-```text
-┌─────────────────────────────────────────────────────────────────────────────┐
-│ HORIZONTE 1: Consolidación Total de Módulos Frontend OlaClick (ACTUAL)      │
-├─────────────────────────────────────────────────────────────────────────────┤
-│  ✅ 1.1 Menú digital público responsive con carrito y checkout WhatsApp.    │
-│  ✅ 1.2 Subida local de imágenes (Logo/Banner) y personalización de marca.   │
-│  ✅ 1.3 Generador de Códigos QR para mesas y modo Solo Lectura.             │
-│  ✅ 1.4 Guía Paso a Paso de 17 Pasos (4 Etapas) con cohete 🚀 en Sidebar.   │
-│  ✅ 1.5 Configuración General (Canales, Servicios, Coberturas, Impulso).    │
-│  ✅ 1.6 Módulo de Creación de Usuarios y Roles de Equipo.                   │
-│  ✅ 1.7 Tablero de Cocina KDS en vivo con Web Audio API.                    │
-│  🔄 1.8 Pantalla Punto de Venta (POS) para cobros en barra y salón.         │
-│  🔄 1.9 Módulo de Chatbot WhatsApp con editor de plantillas de mensajes.    │
-│  🔄 1.10 Módulo de Marketing (Cupones de descuento y Fidelidad).             │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                      │
-                                      ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│ HORIZONTE 2: Backend Ligero & Despliegue en Coolify (VPS)                  │
-├─────────────────────────────────────────────────────────────────────────────┤
-│  ⚡ 2.1 Conexión API REST con PostgreSQL y Drizzle ORM.                     │
-│  ⚡ 2.2 Despliegue en Coolify con Dockerfile multi-stage.                   │
-│  ⚡ 2.3 WebSockets / SSE para tickets de cocina en vivo.                    │
-│  ⚡ 2.4 Impresión térmica ESC/POS para comandas físicas.                    │
-└─────────────────────────────────────────────────────────────────────────────┘
-                                      │
-                                      ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│ HORIZONTE 3: Automatización IA & Integraciones Delivery                      │
-├─────────────────────────────────────────────────────────────────────────────┤
-│  🤖 3.1 Agente de IA para WhatsApp Cloud API con toma de pedidos natural.   │
-│  🛵 3.2 App PWA para Repartidores con cálculo de ruta por GPS.              │
-│  🌐 3.3 Sincronización con Google My Business y Delivery Apps externas.      │
-└─────────────────────────────────────────────────────────────────────────────┘
+    API -->|Tiempo Real: SSE/WS| FLOOR
+    API -->|Tiempo Real: SSE/WS| KDS_KITCHEN
+    API -->|Tiempo Real: SSE/WS| KDS_BAR
+    API -->|Tiempo Real: SSE/WS| POS
+    DB --> CRM
 ```
 
 ---
 
-## 🎯 Próximas Acciones Priorizadas:
+## 👥 3. Flujos de Usuario Principales (Casos de Uso)
 
-1. **Punto de Venta POS (`/admin/pos`):** Interfaz táctil de cobro en mostrador y mesas.
-2. **Centro de Chatbot WhatsApp (`/admin/chatbot`):** Simulador de chat en vivo y editor de los mensajes automáticos (Bienvenida, Horarios, Carrito abandonado, Estados de pedido).
-3. **Marketing & Fidelización (`/admin/marketing`):** Cupones de descuento y programa de puntos.
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Cliente as 👤 Cliente en Mesa
+    participant QR as 📱 QR / Menú PWA
+    participant Backend as ⚙️ Servidor / API
+    actor Garzon as 🤵 Floor Manager (Garzón)
+    actor Cocina as 👨‍🍳 KDS Cocina / Bar
+    actor Caja as 💳 POS / Caja
+
+    Note over Cliente,QR: CASO A: Cliente Espontáneo en Salón
+    Cliente->>QR: Escanea QR de la Mesa
+    QR->>Cliente: Pide solo Nombre y Teléfono (Sin Login)
+    Cliente->>QR: Selecciona platos + Opciones de Split Bill
+    alt Paga en Línea
+        Cliente->>QR: Paga vía Mercado Pago / Webpay
+    else Paga en Efectivo / Llama Garzón
+        Cliente->>QR: Pulsa "Llamar al Garzón" o "Pagar Efectivo"
+        QR->>Garzon: Alerta visual parpadeante en Plano 2D
+    end
+    QR->>Backend: Envía comanda
+    Backend->>Cocina: Ticket ingresa a KDS (Alerta sonora)
+    Backend->>Garzon: Mesa cambia a estado 'Ocupada' (Rojo)
+    Backend->>Caja: Comanda vinculada a la mesa en POS
+```
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Planificador as 📅 Cliente Planificador
+    participant Web as 🌐 Web Reservas
+    participant IA_Engine as 🤖 Motor IA (WhatsApp / Voz)
+    participant Core as ⚙️ Sistema Pidelisto
+    actor Salon as 🏢 Recepción / Floor Manager
+
+    Note over Planificador,Salon: CASO B: Reservas con Pre-pedido e IA
+    Planificador->>Web: Elige Fecha, Hora, Personas y arma Pre-pedido
+    Planificador->>Web: Paga abono/total por pasarela
+    Web->>Planificador: Envía Magic Link por WhatsApp/SMS
+    Note over IA_Engine: 2 horas antes de la reserva
+    IA_Engine->>Planificador: Mensaje WhatsApp de confirmación
+    alt No responde a la hora límite (-1.5 hrs)
+        IA_Engine->>Planificador: Voice Bot IA llama por teléfono y conversa en lenguaje natural
+    end
+    Planificador->>IA_Engine: Confirma o Cancela
+    alt Cancela a tiempo
+        Core->>Planificador: Genera Cupón "Saldo a Favor" asociado a su Teléfono
+    else Confirma
+        Core->>Salon: Bloquea mesa y programa comanda en KDS
+    end
+```
+
+---
+
+## 📦 4. Detalle Exhaustivo de Módulos y Funcionalidades
+
+### 📱 MÓDULO 1: Portal Cliente (PWA Guest-First & Autoatención)
+*Diseñado para eliminar fricciones y agilizar la rotación de mesas mediante autoservicio móvil.*
+
+| Funcionalidad | Descripción Detallada | Estado | Ruta / Enlace |
+| :--- | :--- | :---: | :--- |
+| **Menú Digital Interactivo** | Catálogo dinámico con fotos, categorías (Comida, Bar, Promos), modificadores (extras, salsas), variantes y control de stock en tiempo real. | ✅ **Listo** | [`/menu/burger-craft`](http://localhost:4321/menu/burger-craft) |
+| **Sesión de Mesa Guest-First** | Ingreso al menú vinculando número de mesa escaneada. Solicita únicamente **Nombre y Teléfono** (sin contraseñas) creando una sesión temporal. | 🔄 **En Progreso** | [`/menu/[slug]?table=X`](http://localhost:4321/menu/burger-craft) |
+| **División de Cuenta (Split Bill)** | Permite a varios comensales en la misma mesa pagar sus propios productos de forma independiente o dividir el total en partes iguales desde sus propios teléfonos. | 🔄 **En Progreso** | En Menú PWA |
+| **Botones de Asistencia en Mesa** | Botones de acción directa: **"Llamar al Garzón"** (para consultas) y **"Pagar en Efectivo / POS Físico"**, disparando alertas visuales inmediatas en salón. | 🔄 **En Progreso** | En Menú PWA |
+| **Venta de Entradas para Eventos** | Módulo de ticketing para eventos y shows: selección de fecha, compra de entradas con QR dinámico por email/WhatsApp y lector para control de aforo en puerta. | 📋 **Planificado** | [`/admin/events`](http://localhost:4321/admin) |
+| **Modo Carta Informativa (Solo Lectura)** | Modo de visualización estática para clientes que solo desean ver precios y platos sin interactuar con el carrito (`?type=read`). | ✅ **Listo** | [`/menu/burger-craft?type=read`](http://localhost:4321/menu/burger-craft?type=read) |
+
+---
+
+### 🤖 MÓDULO 2: Motor de Reservas, Pre-pedidos & Confirmación IA
+*Sistema inteligente para maximizar la ocupación del local y erradicar el ausentismo (No-Show).*
+
+| Funcionalidad | Descripción Detallada | Estado | Ruta / Enlace |
+| :--- | :--- | :---: | :--- |
+| **Reservas Web con Pre-pedido** | Widget para reservar fecha, hora y comensales con la opción de armar el pedido de comida/bebida por adelantado, pagando un abono o el total. | 📋 **Planificado** | [`/reservations`](http://localhost:4321) |
+| **Magic Link de Reserva** | Generación de enlace seguro enviado por WhatsApp/SMS con el detalle, estado y acceso para modificar o cancelar la reserva sin requerir usuario/clave. | 📋 **Planificado** | Servicio `lib/magic-links` |
+| **Recordatorio WhatsApp (-2 hrs)** | Envío automático de mensaje interactivo por Meta WhatsApp Cloud API pidiendo confirmación con botones (Confirmar / Cancelar). | 📋 **Planificado** | Worker / Cron Job |
+| **Voice Bot IA Telefónico (-1.5 hrs)** | Si no hay confirmación digital a la hora límite, un agente de voz con IA (Vapi.ai / Bland.ai) llama al cliente y conversa en lenguaje natural para confirmar o reprogramar. | 📋 **Planificado** | Webhook `/api/webhooks/voice-bot` |
+| **Política Flex / Saldo a Favor** | Si el cliente cancela antes del límite, el pago no se devuelve bancariamente, sino que se transforma automáticamente en un **Cupón / Saldo a Favor** asociado a su teléfono. | 📋 **Planificado** | [`/admin/marketing`](http://localhost:4321/admin) |
+| **Tolerancia en Salón (15 min)** | Contador regresivo visual en el mapa de mesas al llegar la hora de la reserva. Si se vence el tiempo, la mesa se libera y se frena la comanda en cocina. | 📋 **Planificado** | En Floor Manager |
+
+---
+
+### 🖥️ MÓDULO 3: Red de Dashboards Operativos en Tiempo Real
+*Interfaces táctiles sincronizadas para optimizar la velocidad del servicio en salón, barra y cocina.*
+
+| Funcionalidad | Descripción Detallada | Estado | Ruta / Enlace |
+| :--- | :--- | :---: | :--- |
+| **Floor Manager 2D (Plano de Mesas)** | Vista gráfica 2D con *Drag & Drop* para organizar mesas, asignar garzones y visualizar estados por color: **Verde** (Libre), **Rojo** (Ocupada), **Parpadeante** (Llama garzón), **Amarillo** (Tolerancia). | 🔄 **En Progreso** | [`/admin/floor`](http://localhost:4321/admin/floor) |
+| **KDS Cocina (Pantalla de Comandas)** | Pantalla táctil para cocineros: comandas ordenadas por antigüedad, semáforo de retrasos (+15 min en rojo), etapas de preparación y priorización de pre-pedidos. | ✅ **Listo (Base)** | [`/admin/kitchen`](http://localhost:4321/admin/kitchen) |
+| **KDS Bar (Despacho de Bebidas)** | Pantalla especializada para barra que filtra automáticamente solo productos de coctelería y bebidas para despachos ultrarrápidos. | 🔄 **En Progreso** | [`/admin/kitchen?station=bar`](http://localhost:4321/admin/kitchen) |
+| **Punto de Venta POS (`/admin/pos`)** | Terminal táctil de caja para toma de pedidos presenciales, cobro en mostrador, asignación de mesas y facturación. | 🔄 **En Progreso** | [`/admin/pos`](http://localhost:4321/admin/pos) |
+| **Caja y Cierres de Turno (`/admin/cashier`)** | Módulo para apertura/cierre de caja, arqueo de dinero en efectivo, balance de tarjetas y registro de egresos. | ✅ **Listo (Base)** | [`/admin/cashier`](http://localhost:4321/admin/cashier) |
+| **Sincronización en Tiempo Real** | Conexión bidireccional mediante SSE / WebSockets para que las órdenes de los clientes impacten al instante en KDS, POS y Floor Manager sin refrescar. | 🔄 **En Progreso** | Endpoint `/api/realtime` |
+| **Impresión Térmica ESC/POS** | Módulo de conexión e impresión física de comandas en impresoras de 58mm y 80mm en cocina, barra y recibos de caja. | 📋 **Planificado** | [`/admin/printers`](http://localhost:4321/admin/printers) |
+
+---
+
+### 💳 MÓDULO 4: Motor Transaccional de Pagos Agnósticos
+*Infraestructura de pagos resiliente con múltiples procesadores y alta disponibilidad.*
+
+| Funcionalidad | Descripción Detallada | Estado | Ruta / Enlace |
+| :--- | :--- | :---: | :--- |
+| **Capa Agnóstica de Pagos (Adapter Pattern)** | Arquitectura desacoplada que permite procesar pagos a través de múltiples pasarelas mediante una interfaz unificada (`PaymentGateway`). | 📋 **Planificado** | `src/lib/payments/*` |
+| **Integración Mercado Pago** | Cobro con Checkout Pro, QR dinámico y tarjetas de crédito/débito en Chile y Latinoamérica. | 📋 **Planificado** | Adaptador Mercado Pago |
+| **Integración Webpay Plus (Transbank)** | Pasarela oficial para pagos con tarjetas bancarias y Redcompra en Chile. | 📋 **Planificado** | Adaptador Transbank |
+| **Integración Stripe** | Cobros internacionales multidivisa para turistas y reservas extranjeras. | 📋 **Planificado** | Adaptador Stripe |
+| **Failover Automático** | Conmutación inteligente: si una pasarela reporta caídas o rechazos recurrentes, el sistema desvía los cobros automáticamente a la pasarela de respaldo. | 📋 **Planificado** | Orquestador de Pagos |
+| **Pagos Fraccionados (Split Payments)** | Lógica transaccional para liquidar comandas con múltiples tarjetas o combinación de métodos de pago (ej. Mitad Webpay, mitad Efectivo). | 📋 **Planificado** | En POS y Checkout |
+
+---
+
+### 📊 MÓDULO 5: CRM Implícito, Fidelización & Analítica
+*Inteligencia de negocio automatizada sin necesidad de formularios invasivos para el comensal.*
+
+| Funcionalidad | Descripción Detallada | Estado | Ruta / Enlace |
+| :--- | :--- | :---: | :--- |
+| **Identificación por Anclas** | Construcción automática del perfil de consumo del cliente vinculando su número de teléfono y Device Fingerprint a su historial de comandas. | 📋 **Planificado** | Modelo `customers` |
+| **Analítica de Rotación de Mesas** | Métricas del tiempo promedio desde que el cliente se sienta, ordena, come y desocupa la mesa. | 📋 **Planificado** | [`/admin/reports`](http://localhost:4321/admin/reports) |
+| **Tiempos de Cocina y Despacho** | Medición exacta de tiempos de preparación por estación (Plancha, Frituras, Bar) detectando cuellos de botella con `prep_events`. | ✅ **Listo (Base)** | [`/admin/reports`](http://localhost:4321/admin/reports) |
+| **Segmentación RFM (Recencia, Frecuencia, Monto)** | Clasificación de clientes (VIP, Frecuentes, En Riesgo, Perdidos) para campañas automáticas de re-activación. | 📋 **Planificado** | [`/admin/marketing`](http://localhost:4321/admin) |
+| **Matriz BCG de Productos** | Clasificación de platos y bebidas según volumen de ventas y margen de rentabilidad (Estrella, Vaca, Incógnita, Perro). | 📋 **Planificado** | [`/admin/reports`](http://localhost:4321/admin/reports) |
+
+---
+
+### ⚙️ MÓDULO 6: Gestión SaaS, Configuración & Operación
+*Módulos administrativos para la gestión de locales, personal y personalización de marca.*
+
+| Funcionalidad | Descripción Detallada | Estado | Ruta / Enlace |
+| :--- | :--- | :---: | :--- |
+| **Generador de Enlaces y Códigos QR** | Generador de QR dinámicos para mesas (1 a 20), QR de barra y QR general con descarga SVG y PNG. | ✅ **Listo** | [`/admin/qr`](http://localhost:4321/admin/qr) |
+| **Guía de Onboarding 17 Pasos** | Asistente de configuración guiada para nuevos restaurantes con barra de progreso y widget 🚀 en Sidebar. | ✅ **Listo** | [`/admin/onboarding`](http://localhost:4321/admin/onboarding) |
+| **Gestión de Roles y Equipo** | Creación y permisos de personal (Administrador, Mesero, Cajero, Cocinero, Repartidor). | ✅ **Listo** | [`/admin/team`](http://localhost:4321/admin/team) |
+| **Configuración de Canales y Servicios** | Habilitación de Delivery, Para Llevar, Consumo en Local, Cobro de Propinas y Zonas de Cobertura. | ✅ **Listo** | [`/admin/settings`](http://localhost:4321/admin/settings) |
+| **Personalización de Marca (Branding)** | Logotipo, banner de portada, paletas de colores, moneda e información de contacto del restaurante. | ✅ **Listo** | [`/admin/business`](http://localhost:4321/admin/business) |
+| **Matriz de Planes SaaS y Precios** | Página de precios comparativa entre planes (Free, Starter, Pro) con tooltips explicativos. | ✅ **Listo** | [`/pricing`](http://localhost:4321/pricing) |
+| **Modo Contingencia Offline (LAN Backup)** | Servidor local de respaldo para que la operación interna (KDS, Caja, Floor Manager) continúe funcionando si cae el proveedor de internet. | 📋 **Planificado** | Módulo de Red Local |
+
+---
+
+## 🚀 5. Cronograma de Fases de Desarrollo
+
+```mermaid
+gantt
+    title Cronograma de Implementación Pidelisto / BUN
+    dateFormat  YYYY-MM-DD
+    section Fase 1: Salón y Mesas
+    Floor Manager 2D (Mesas Drag & Drop)       :active, f1_1, 2026-08-26, 7d
+    Flujo Guest-First en Mesa (Nombre/Tel)      :active, f1_2, 2026-08-28, 5d
+    Split Bill & Llamar Garzón                  :f1_3, after f1_2, 5d
+    Sincronización Tiempo Real (SSE/WS)         :f1_4, after f1_1, 6d
+    section Fase 2: KDS & Operación
+    KDS Bar y Cocina Especializados             :f2_1, after f1_4, 5d
+    Punto de Venta POS Táctil Completo          :f2_2, after f2_1, 7d
+    Impresión Térmica ESC/POS                   :f2_3, after f2_2, 4d
+    section Fase 3: Pasarelas de Pago
+    Capa Agnóstica de Pagos (Adapter)           :f3_1, after f2_2, 6d
+    Integración Mercado Pago & Webpay Plus      :f3_2, after f3_1, 7d
+    Failover Automático y Split Payments        :f3_3, after f3_2, 5d
+    section Fase 4: Reservas e IA
+    Módulo Web de Reservas con Pre-pedido       :f4_1, after f3_2, 7d
+    Integración WhatsApp Cloud API (-2h)        :f4_2, after f4_1, 5d
+    Voice Bot Telefónico con IA (-1.5h)         :f4_3, after f4_2, 6d
+    Saldo a Favor / Wallet por Teléfono         :f4_4, after f4_1, 4d
+    Timer de Tolerancia 15 min en Salón         :f4_5, after f4_4, 3d
+    section Fase 5: Fidelización y Eventos
+    Venta de Entradas para Eventos con QR       :f5_1, after f4_3, 6d
+    CRM Implícito y Segmentación RFM            :f5_2, after f5_1, 5d
+    Contingencia LAN Offline (Backup Local)     :f5_3, after f5_2, 7d
+```
+
+---
+
+## 🎯 6. Backlog Inmediato (Próximas Tareas de Código)
+
+1. 🟢 **Tarea 1 - Floor Manager 2D (`/admin/floor`):**
+   * Crear el canvas interactivo con drag & drop de mesas.
+   * Representación visual de estados: Libre (Verde), Ocupada (Rojo), Llamando Garzón (Parpadeo) y Reserva (Amarillo).
+   * Asignación rápida de garzones por zona.
+
+2. 🟢 **Tarea 2 - Flujo Mesa Guest-First (`/menu/[slug]?table=X`):**
+   * Modal de bienvenida ligero que pide Nombre y Teléfono.
+   * Selector para pagar individualmente o dividir la cuenta (*Split Bill*).
+   * Botón interactivo de "Llamar al Garzón" con confirmación en pantalla.
+
+3. 🟢 **Tarea 3 - Capa de Conectividad en Tiempo Real:**
+   * Crear el endpoint SSE (`/api/realtime/events`) para despachar eventos de nuevas comandas, cambios de estado en cocina y llamados de asistencia.
+   * Conectar `PosDisplayIsland`, `KitchenDisplayIsland` y `FloorManagerIsland` a la fuente de eventos.

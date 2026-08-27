@@ -1,165 +1,119 @@
 import React, { useState } from 'react';
 import {
   LayoutDashboard,
-  Rocket,
+  Receipt,
+  UtensilsCrossed,
+  Users,
+  Settings,
   ChefHat,
   QrCode,
   FolderKanban,
-  UtensilsCrossed,
-  Smartphone,
-  Settings,
   ChevronDown,
   ChevronUp,
-  Receipt,
-  TrendingUp,
-  History,
-  BarChart3,
-  DollarSign,
-  Landmark,
-  PiggyBank
+  Store
 } from 'lucide-react';
 
 interface NavItem {
   label: string;
   href: string;
-  iconName: string;
-  isLive?: boolean;
+  icon: React.ElementType;
+  badge?: string;
 }
 
-const iconMap: Record<string, React.ElementType> = {
-  LayoutDashboard,
-  Rocket,
-  ChefHat,
-  QrCode,
-  FolderKanban,
-  UtensilsCrossed,
-  Smartphone,
-  Settings,
-  Receipt,
-  TrendingUp,
-};
-
 export default function AdminSidebarNav({ activePath = '/admin' }: { activePath?: string }) {
-  const isSettingsActive = [
-    '/admin/settings',
-    '/admin/services',
-    '/admin/payments',
-    '/admin/business',
-    '/admin/team',
-    '/admin/printers',
-  ].some((path) => activePath.startsWith(path));
+  const [settingsOpen, setSettingsOpen] = useState(
+    ['/admin/settings', '/admin/services', '/admin/payments', '/admin/business', '/admin/team', '/admin/printers'].some(
+      (path) => activePath.startsWith(path)
+    )
+  );
 
-  const isSalesActive = [
-    '/admin/sales',
-    '/admin/reports',
-    '/admin/transactions',
-    '/admin/cashier',
-  ].some((path) => activePath.startsWith(path));
-
-  const [settingsOpen, setSettingsOpen] = useState<boolean>(isSettingsActive || true);
-  const [salesOpen, setSalesOpen] = useState<boolean>(isSalesActive || true);
-
-  const mainTopItems: NavItem[] = [
-    { label: 'Dashboard', href: '/admin', iconName: 'LayoutDashboard' },
-    { label: 'Guía de Pasos 🚀', href: '/admin/onboarding', iconName: 'Rocket' },
-    { label: 'Punto de Venta (PDV)', href: '/admin/pos', iconName: 'Receipt', isLive: true },
-    { label: 'Cocina KDS', href: '/admin/kitchen', iconName: 'ChefHat', isLive: true },
-    { label: 'Códigos QR Mesas', href: '/admin/qr', iconName: 'QrCode' },
-    { label: 'Categorías', href: '/admin/categories', iconName: 'FolderKanban' },
-    { label: 'Productos', href: '/admin/products', iconName: 'UtensilsCrossed' },
-    { label: 'Vista Previa Móvil', href: '/admin/preview', iconName: 'Smartphone' },
+  const primaryNavItems: NavItem[] = [
+    { label: 'Panel', href: '/admin', icon: LayoutDashboard },
+    { label: 'Órdenes', href: '/admin/sales', icon: Receipt },
+    { label: 'Menú & Platos', href: '/admin/products', icon: UtensilsCrossed },
+    { label: 'Categorías', href: '/admin/categories', icon: FolderKanban },
+    { label: 'Punto de Venta (POS)', href: '/admin/pos', icon: Store, badge: 'EN VIVO' },
+    { label: 'Cocina KDS', href: '/admin/kitchen', icon: ChefHat, badge: 'AUTO' },
+    { label: 'Mesas & QR', href: '/admin/qr', icon: QrCode },
+    { label: 'Clientes & Reportes', href: '/admin/reports', icon: Users },
   ];
 
-  const salesSubItems = [
-    { label: 'Historial de pedidos', href: '/admin/sales' },
-    { label: 'Reportes', href: '/admin/reports' },
-    { label: 'Registros financieros', href: '/admin/transactions' },
-    { label: 'Cajas', href: '/admin/cashier' },
-  ];
-
-  const configSubItems = [
-    { label: 'Configuración general', href: '/admin/settings' },
-    { label: 'Tipos de servicio', href: '/admin/services' },
-    { label: 'Métodos de pago', href: '/admin/payments' },
-    { label: 'Información del negocio', href: '/admin/business' },
-    { label: 'Equipo y roles', href: '/admin/team' },
-    { label: 'Impresoras y tickets', href: '/admin/printers' },
+  const settingsSubItems = [
+    { label: 'General & Canales', href: '/admin/settings' },
+    { label: 'Información del Negocio', href: '/admin/business' },
+    { label: 'Equipo & Roles', href: '/admin/team' },
+    { label: 'Tipos de Servicio', href: '/admin/services' },
+    { label: 'Pasarelas de Pago', href: '/admin/payments' },
+    { label: 'Impresoras Térmicas', href: '/admin/printers' },
   ];
 
   return (
-    <nav className="px-3 space-y-1 mt-1 pb-10">
-      {mainTopItems.map((item) => {
-        const Icon = iconMap[item.iconName] || LayoutDashboard;
+    <nav className="px-3 space-y-1.5 mt-2 pb-6">
+      {/* Primary Items */}
+      {primaryNavItems.map((item) => {
+        const Icon = item.icon;
         const isActive = activePath === item.href;
 
         return (
           <a
             key={item.href}
             href={item.href}
-            className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all ${
+            className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
               isActive
-                ? 'bg-brand-500 text-white shadow-md shadow-brand-500/20'
-                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/80'
+                ? 'bg-color4 dark:bg-color3 text-white shadow-coffee-sm font-bold'
+                : 'text-[#635A52] dark:text-[#A8988B] hover:bg-[#F3EDE3] dark:hover:bg-[#2D1B18] hover:text-coffee-950 dark:hover:text-white'
             }`}
           >
             <div className="flex items-center gap-3">
-              <Icon className="w-4 h-4 shrink-0" />
+              <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-[#8C7E73] dark:text-[#A8988B]'}`} />
               <span>{item.label}</span>
             </div>
-            {item.isLive && (
-              <span
-                className={`text-[8px] font-black px-1.5 py-0.5 rounded uppercase tracking-wider ${
-                  isActive
-                    ? 'bg-white/20 text-white'
-                    : 'bg-brand-500/20 text-brand-400 border border-brand-500/30'
-                }`}
-              >
-                LIVE
+
+            {item.badge && !isActive && (
+              <span className="text-[9px] px-1.5 py-0.5 rounded font-mono font-bold bg-[#E7F3E8] dark:bg-[#1C3322] text-[#2E7D32] dark:text-[#4ADE80] border border-[#D0EBD2] dark:border-[#2E5936]">
+                {item.badge}
               </span>
             )}
           </a>
         );
       })}
 
-      {/* Accordion Group 1: Ventas */}
+      {/* Accordion: Ajustes */}
       <div className="pt-2">
         <button
           type="button"
-          onClick={() => setSalesOpen(!salesOpen)}
-          className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all ${
-            isSalesActive
-              ? 'bg-slate-900 text-white'
-              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/80'
+          onClick={() => setSettingsOpen(!settingsOpen)}
+          className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+            settingsOpen
+              ? 'border border-[#EAE1D6] dark:border-[#3D2420] bg-white dark:bg-[#241512] text-coffee-950 dark:text-white shadow-coffee-sm'
+              : 'text-[#635A52] dark:text-[#A8988B] hover:bg-[#F3EDE3] dark:hover:bg-[#2D1B18] hover:text-coffee-950 dark:hover:text-white'
           }`}
         >
           <div className="flex items-center gap-3">
-            <TrendingUp className={`w-4 h-4 shrink-0 ${isSalesActive ? 'text-brand-400' : ''}`} />
-            <span>Ventas</span>
+            <Settings className="w-4 h-4 text-[#8C7E73] dark:text-[#A8988B]" />
+            <span>Ajustes</span>
           </div>
-          {salesOpen ? (
-            <ChevronUp className="w-4 h-4 text-slate-400" />
+          {settingsOpen ? (
+            <ChevronUp className="w-3.5 h-3.5 text-[#8C7E73] dark:text-[#A8988B]" />
           ) : (
-            <ChevronDown className="w-4 h-4 text-slate-400" />
+            <ChevronDown className="w-3.5 h-3.5 text-[#8C7E73] dark:text-[#A8988B]" />
           )}
         </button>
 
-        {salesOpen && (
-          <div className="mt-1 ml-3 pl-3 border-l-2 border-slate-800 space-y-0.5 py-1">
-            {salesSubItems.map((sub) => {
+        {settingsOpen && (
+          <div className="pl-9 pr-2 py-1.5 space-y-1 mt-1">
+            {settingsSubItems.map((sub) => {
               const isSubActive = activePath === sub.href;
               return (
                 <a
                   key={sub.href}
                   href={sub.href}
-                  className={`block relative px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
+                  className={`block py-1.5 px-2.5 rounded-lg text-[11px] transition ${
                     isSubActive
-                      ? 'text-white bg-brand-500/15 font-bold'
-                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/50'
+                      ? 'bg-[#F3EDE3] dark:bg-[#38201C] text-color4 dark:text-color2 font-bold'
+                      : 'text-[#70645A] dark:text-[#A8988B] hover:text-coffee-950 dark:hover:text-white hover:bg-[#FAF7F2] dark:hover:bg-[#2D1B18]'
                   }`}
                 >
-                  {isSubActive && (
-                    <span className="absolute -left-[14px] top-1.5 bottom-1.5 w-1 rounded-r bg-brand-400"></span>
-                  )}
                   {sub.label}
                 </a>
               );
@@ -168,51 +122,39 @@ export default function AdminSidebarNav({ activePath = '/admin' }: { activePath?
         )}
       </div>
 
-      {/* Accordion Group 2: Configuraciones */}
-      <div className="pt-1">
-        <button
-          type="button"
-          onClick={() => setSettingsOpen(!settingsOpen)}
-          className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all ${
-            isSettingsActive
-              ? 'bg-slate-900 text-white'
-              : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/80'
+      {/* Mascot AI Assistant Card (Under Settings) */}
+      <div className="pt-4">
+        <a
+          href="/admin/ai"
+          className={`block p-3 rounded-2xl border transition-all group relative overflow-hidden ${
+            activePath === '/admin/ai'
+              ? 'bg-color4 text-white border-transparent shadow-coffee-sm'
+              : 'bg-white dark:bg-[#241512] hover:bg-[#FAF7F2] dark:hover:bg-[#2D1B18] border-[#EAE1D6] dark:border-[#3D2420] text-coffee-950 dark:text-white'
           }`}
         >
           <div className="flex items-center gap-3">
-            <Settings className={`w-4 h-4 shrink-0 ${isSettingsActive ? 'text-brand-400' : ''}`} />
-            <span>Configuraciones</span>
-          </div>
-          {settingsOpen ? (
-            <ChevronUp className="w-4 h-4 text-slate-400" />
-          ) : (
-            <ChevronDown className="w-4 h-4 text-slate-400" />
-          )}
-        </button>
+            <div className="relative shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-[#FAF7F2] dark:bg-[#180E0C] border border-[#EAE1D6] dark:border-[#4D2D26] flex items-center justify-center text-xl shadow-inner">
+                🐻‍🍳
+              </div>
+              <span className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-500 border-2 border-white dark:border-[#241512]"></span>
+            </div>
 
-        {settingsOpen && (
-          <div className="mt-1 ml-3 pl-3 border-l-2 border-slate-800 space-y-0.5 py-1">
-            {configSubItems.map((sub) => {
-              const isSubActive = activePath === sub.href;
-              return (
-                <a
-                  key={sub.href}
-                  href={sub.href}
-                  className={`block relative px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
-                    isSubActive
-                      ? 'text-white bg-brand-500/15 font-bold'
-                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/50'
-                  }`}
-                >
-                  {isSubActive && (
-                    <span className="absolute -left-[14px] top-1.5 bottom-1.5 w-1 rounded-r bg-brand-400"></span>
-                  )}
-                  {sub.label}
-                </a>
-              );
-            })}
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center justify-between">
+                <span className={`text-xs font-black truncate ${activePath === '/admin/ai' ? 'text-white' : 'text-coffee-950 dark:text-white'}`}>
+                  Chef Bunito IA
+                </span>
+                <span className="text-[9px] font-bold px-1.5 py-0.2 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300">
+                  ACTIVO
+                </span>
+              </div>
+              <p className={`text-[10px] truncate mt-0.5 ${activePath === '/admin/ai' ? 'text-white/80' : 'text-[#8C7E73] dark:text-[#A8988B]'}`}>
+                3 sugerencias de margen
+              </p>
+            </div>
           </div>
-        )}
+        </a>
       </div>
     </nav>
   );

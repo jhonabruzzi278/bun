@@ -56,8 +56,19 @@ export function useCatalogStore() {
           },
         });
       }
-      if (storedCats) setCategoriesState(JSON.parse(storedCats));
-      if (storedProds) setProductsState(JSON.parse(storedProds));
+      if (storedCats) {
+        const parsedCats = JSON.parse(storedCats);
+        setCategoriesState(parsedCats.length >= INITIAL_CATEGORIES.length ? parsedCats : INITIAL_CATEGORIES);
+      } else {
+        setCategoriesState(INITIAL_CATEGORIES);
+      }
+
+      if (storedProds) {
+        const parsedProds = JSON.parse(storedProds);
+        setProductsState(parsedProds.length >= INITIAL_PRODUCTS.length ? parsedProds : INITIAL_PRODUCTS);
+      } else {
+        setProductsState(INITIAL_PRODUCTS);
+      }
       if (storedOnboarding) {
         setOnboardingStages(JSON.parse(storedOnboarding));
       } else {
@@ -161,6 +172,13 @@ export function useCatalogStore() {
     });
   };
 
+  const reorderCategories = (newCategories: Category[]) => {
+    const next = newCategories.map((c, index) => ({ ...c, position: index + 1 }));
+    setCategoriesState(next);
+    localStorage.setItem(STORAGE_KEYS.CATEGORIES, JSON.stringify(next));
+    window.dispatchEvent(new Event('bun:data_updated'));
+  };
+
   const addProduct = (prod: Omit<Product, 'id' | 'tenantId' | 'businessId'>): Product => {
     const newProd: Product = {
       ...prod,
@@ -219,6 +237,7 @@ export function useCatalogStore() {
     addCategory,
     updateCategory,
     deleteCategory,
+    reorderCategories,
     addProduct,
     updateProduct,
     deleteProduct,

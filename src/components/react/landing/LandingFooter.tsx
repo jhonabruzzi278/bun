@@ -60,7 +60,7 @@ export default function LandingFooter() {
             <ul className="space-y-1.5">
               <li><a href="#" className="hover:text-brand-400">Términos de Servicio</a></li>
               <li><a href="#" className="hover:text-brand-400">Política de Privacidad</a></li>
-              <li><a href="https://wa.me/56912345678" target="_blank" className="hover:text-brand-400">Soporte WhatsApp</a></li>
+              <li><a href="https://wa.me/56938980598" target="_blank" className="hover:text-brand-400">Soporte WhatsApp</a></li>
             </ul>
           </div>
         </div>

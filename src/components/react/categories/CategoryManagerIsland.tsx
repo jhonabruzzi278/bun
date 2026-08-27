@@ -1,12 +1,26 @@
 import React, { useState } from 'react';
 import { useCatalogStore } from '@/lib/useCatalogStore';
 import type { Category } from '@/lib/types';
-import { Plus, Edit2, Trash2, Eye, EyeOff, FolderKanban, GripVertical, Check, X } from 'lucide-react';
+import {
+  Plus,
+  Edit2,
+  Trash2,
+  Eye,
+  EyeOff,
+  FolderKanban,
+  GripVertical,
+  X,
+  ChevronUp,
+  ChevronDown
+} from 'lucide-react';
 
 export default function CategoryManagerIsland() {
-  const { categories, products, addCategory, updateCategory, deleteCategory, isLoaded } = useCatalogStore();
+  const { categories, products, addCategory, updateCategory, deleteCategory, reorderCategories, isLoaded } = useCatalogStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
+
   const [formData, setFormData] = useState({
     name: '',
     slug: '',
@@ -15,7 +29,7 @@ export default function CategoryManagerIsland() {
     isVisible: true,
   });
 
-  if (!isLoaded) return <div className="text-slate-400 text-sm">Cargando categorías...</div>;
+  if (!isLoaded) return <div className="text-[#8C7E73] dark:text-[#A8988B] text-sm">Cargando categorías...</div>;
 
   const handleOpenCreate = () => {
     setEditingCategory(null);
@@ -53,32 +67,74 @@ export default function CategoryManagerIsland() {
     setIsModalOpen(false);
   };
 
+  // Reordering functions
+  const handleMove = (index: number, direction: 'up' | 'down') => {
+    const newIndex = direction === 'up' ? index - 1 : index + 1;
+    if (newIndex < 0 || newIndex >= categories.length) return;
+
+    const updated = [...categories];
+    const [moved] = updated.splice(index, 1);
+    updated.splice(newIndex, 0, moved);
+    reorderCategories(updated);
+  };
+
+  const handleDragStart = (index: number) => {
+    setDraggedIndex(index);
+  };
+
+  const handleDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    setDragOverIndex(index);
+  };
+
+  const handleDrop = (index: number) => {
+    if (draggedIndex === null || draggedIndex === index) {
+      setDraggedIndex(null);
+      setDragOverIndex(null);
+      return;
+    }
+
+    const updated = [...categories];
+    const [moved] = updated.splice(draggedIndex, 1);
+    updated.splice(index, 0, moved);
+    reorderCategories(updated);
+
+    setDraggedIndex(null);
+    setDragOverIndex(null);
+  };
+
   return (
-    <div className="space-y-6 max-w-5xl mx-auto">
+    <div className="space-y-6 max-w-5xl mx-auto pb-12">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-extrabold text-white">Categorías del Menú</h1>
-          <p className="text-sm text-slate-400">Organiza los platos y productos de tu carta digital.</p>
+          <h1 className="text-2xl font-extrabold text-coffee-950 dark:text-white">
+            Categorías del Menú
+          </h1>
+          <p className="text-xs sm:text-sm text-[#70645A] dark:text-[#A8988B] mt-0.5">
+            Organiza el orden de aparición de los platos en tu carta digital arrastrando o usando las flechas.
+          </p>
         </div>
 
         <button
+          type="button"
           onClick={handleOpenCreate}
-          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-bold text-sm shadow-lg shadow-brand-500/25 transition self-start sm:self-auto"
+          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-color4 hover:bg-[#522B2B] dark:bg-color3 dark:hover:bg-color4 text-white font-bold text-xs shadow-coffee-sm transition self-start sm:self-auto"
         >
           <Plus className="w-4 h-4" />
-          Nueva Categoría
+          <span>Nueva Categoría</span>
         </button>
       </div>
 
       {/* Categories List */}
-      <div className="bg-slate-950 rounded-2xl border border-slate-800 divide-y divide-slate-800/80 overflow-hidden">
+      <div className="bg-white dark:bg-[#241512] rounded-2xl border border-[#EAE1D6] dark:border-[#3D2420] shadow-coffee-sm divide-y divide-[#F4EFEA] dark:divide-[#331C18] overflow-hidden transition-colors">
         {categories.length === 0 ? (
-          <div className="p-12 text-center text-slate-500 space-y-3">
-            <FolderKanban className="w-10 h-10 mx-auto text-slate-600" />
+          <div className="p-12 text-center text-[#8C7E73] dark:text-[#A8988B] space-y-3">
+            <FolderKanban className="w-10 h-10 mx-auto text-[#D7C7B5]" />
             <p className="text-sm">No has creado categorías todavía.</p>
             <button
+              type="button"
               onClick={handleOpenCreate}
-              className="text-xs text-brand-400 hover:underline font-semibold"
+              className="text-xs text-color3 font-bold hover:underline"
             >
               Crear tu primera categoría
             </button>
@@ -86,41 +142,83 @@ export default function CategoryManagerIsland() {
         ) : (
           categories.map((cat, index) => {
             const productCount = products.filter((p) => p.categoryId === cat.id).length;
+            const isDragging = draggedIndex === index;
+            const isTarget = dragOverIndex === index && draggedIndex !== index;
+
             return (
               <div
                 key={cat.id}
-                className="p-4 sm:px-6 flex items-center justify-between hover:bg-slate-900/50 transition group"
+                draggable
+                onDragStart={() => handleDragStart(index)}
+                onDragOver={(e) => handleDragOver(e, index)}
+                onDragLeave={() => setDragOverIndex(null)}
+                onDrop={() => handleDrop(index)}
+                className={`p-4 sm:px-6 flex items-center justify-between transition-all group ${
+                  isDragging ? 'opacity-40 bg-[#FAF7F2] dark:bg-[#180E0C]' : ''
+                } ${isTarget ? 'border-t-2 border-color4 bg-color4/5' : 'hover:bg-[#FAF7F2] dark:hover:bg-[#2F1B17]'}`}
               >
-                <div className="flex items-center gap-4 min-w-0">
-                  <div className="text-slate-600 group-hover:text-slate-400 cursor-grab hidden sm:block">
-                    <GripVertical className="w-4 h-4" />
+                <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+                  {/* Grip & Reorder Buttons */}
+                  <div className="flex items-center gap-1">
+                    <div
+                      title="Arrastrar para ordenar"
+                      className="text-[#8C7E73] dark:text-[#A8988B] cursor-grab active:cursor-grabbing p-1 rounded hover:bg-[#EAE1D6] dark:hover:bg-[#3D2420] transition"
+                    >
+                      <GripVertical className="w-4 h-4" />
+                    </div>
+
+                    <div className="flex flex-col">
+                      <button
+                        type="button"
+                        disabled={index === 0}
+                        onClick={() => handleMove(index, 'up')}
+                        title="Subir posición"
+                        className="text-[#8C7E73] hover:text-coffee-950 dark:hover:text-white disabled:opacity-20 p-0.5 transition"
+                      >
+                        <ChevronUp className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        type="button"
+                        disabled={index === categories.length - 1}
+                        onClick={() => handleMove(index, 'down')}
+                        title="Bajar posición"
+                        className="text-[#8C7E73] hover:text-coffee-950 dark:hover:text-white disabled:opacity-20 p-0.5 transition"
+                      >
+                        <ChevronDown className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
                   </div>
 
+                  {/* Category Image */}
                   {cat.imageUrl ? (
                     <img
                       src={cat.imageUrl}
                       alt={cat.name}
-                      className="w-12 h-12 rounded-xl object-cover border border-slate-800 shrink-0"
+                      className="w-12 h-12 rounded-xl object-cover border border-[#EAE1D6] dark:border-[#3D2420] shrink-0"
                     />
                   ) : (
-                    <div className="w-12 h-12 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-lg shrink-0 text-slate-400">
+                    <div className="w-12 h-12 rounded-xl bg-[#FAF7F2] dark:bg-[#2F1B17] border border-[#EAE1D6] dark:border-[#3D2420] flex items-center justify-center text-lg shrink-0 text-[#8C7E73]">
                       📁
                     </div>
                   )}
 
+                  {/* Category Info */}
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
-                      <h3 className="font-bold text-white text-sm truncate">{cat.name}</h3>
+                      <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-[#FAF7F2] dark:bg-[#180E0C] text-[#8C7E73]">
+                        #{index + 1}
+                      </span>
+                      <h3 className="font-bold text-coffee-950 dark:text-white text-sm truncate">{cat.name}</h3>
                       {!cat.isVisible && (
-                        <span className="text-[10px] bg-amber-500/10 text-amber-400 border border-amber-500/30 px-1.5 py-0.5 rounded font-medium">
+                        <span className="text-[10px] bg-[#FEF8E3] dark:bg-[#33220E] text-[#A0740E] dark:text-[#FBBF24] border border-[#FDECB8] dark:border-[#593E1A] px-1.5 py-0.5 rounded font-medium">
                           Oculta
                         </span>
                       )}
                     </div>
-                    <p className="text-xs text-slate-400 truncate max-w-md mt-0.5">
+                    <p className="text-xs text-[#70645A] dark:text-[#A8988B] truncate max-w-md mt-0.5">
                       {cat.description || 'Sin descripción'}
                     </p>
-                    <span className="text-[11px] text-slate-500 mt-1 block">
+                    <span className="text-[11px] text-[#8C7E73] dark:text-[#A8988B] mt-1 block font-medium">
                       {productCount} {productCount === 1 ? 'producto' : 'productos'} vinculados
                     </span>
                   </div>
@@ -131,16 +229,16 @@ export default function CategoryManagerIsland() {
                     type="button"
                     onClick={() => updateCategory(cat.id, { isVisible: !cat.isVisible })}
                     title={cat.isVisible ? 'Ocultar categoría' : 'Mostrar categoría'}
-                    className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition"
+                    className="p-2 rounded-lg text-[#8C7E73] dark:text-[#A8988B] hover:text-coffee-950 dark:hover:text-white hover:bg-[#FAF7F2] dark:hover:bg-[#38201C] transition"
                   >
-                    {cat.isVisible ? <Eye className="w-4 h-4 text-emerald-400" /> : <EyeOff className="w-4 h-4 text-slate-500" />}
+                    {cat.isVisible ? <Eye className="w-4 h-4 text-[#2E7D32]" /> : <EyeOff className="w-4 h-4 text-[#8C7E73]" />}
                   </button>
 
                   <button
                     type="button"
                     onClick={() => handleOpenEdit(cat)}
                     title="Editar categoría"
-                    className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition"
+                    className="p-2 rounded-lg text-[#8C7E73] dark:text-[#A8988B] hover:text-coffee-950 dark:hover:text-white hover:bg-[#FAF7F2] dark:hover:bg-[#38201C] transition"
                   >
                     <Edit2 className="w-4 h-4" />
                   </button>
@@ -153,7 +251,7 @@ export default function CategoryManagerIsland() {
                       }
                     }}
                     title="Eliminar categoría"
-                    className="p-2 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition"
+                    className="p-2 rounded-lg text-[#8C7E73] hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/20 transition"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -166,15 +264,16 @@ export default function CategoryManagerIsland() {
 
       {/* Modal Crear / Editar Categoría */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-              <h3 className="font-bold text-white text-base">
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-[#241512] border border-[#EAE1D6] dark:border-[#3D2420] rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4 transition-colors">
+            <div className="flex items-center justify-between pb-3 border-b border-[#EAE1D6] dark:border-[#3D2420]">
+              <h3 className="font-bold text-coffee-950 dark:text-white text-base">
                 {editingCategory ? 'Editar Categoría' : 'Nueva Categoría'}
               </h3>
               <button
+                type="button"
                 onClick={() => setIsModalOpen(false)}
-                className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800"
+                className="text-[#8C7E73] hover:text-coffee-950 dark:hover:text-white p-1 rounded-lg hover:bg-[#FAF7F2] dark:hover:bg-[#38201C]"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -182,75 +281,74 @@ export default function CategoryManagerIsland() {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Nombre de la Categoría</label>
+                <label className="block text-xs font-semibold text-coffee-950 dark:text-[#E8DFD8] mb-1">Nombre de la Categoría</label>
                 <input
                   type="text"
                   required
                   value={formData.name}
                   onChange={(e) => handleNameChange(e.target.value)}
                   placeholder="ej. Hamburguesas Smash"
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white text-sm focus:outline-none focus:border-brand-500"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#FAF7F2] dark:bg-[#180E0C] border border-[#EAE1D6] dark:border-[#3D2420] text-coffee-950 dark:text-white text-xs focus:outline-none focus:border-color4"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Slug URL</label>
+                <label className="block text-xs font-semibold text-coffee-950 dark:text-[#E8DFD8] mb-1">Slug URL</label>
                 <input
                   type="text"
                   required
                   value={formData.slug}
                   onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
                   placeholder="hamburguesas-smash"
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white text-xs font-mono focus:outline-none focus:border-brand-500"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#FAF7F2] dark:bg-[#180E0C] border border-[#EAE1D6] dark:border-[#3D2420] text-coffee-950 dark:text-white text-xs font-mono focus:outline-none focus:border-color4"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">Descripción corta</label>
+                <label className="block text-xs font-semibold text-coffee-950 dark:text-[#E8DFD8] mb-1">Descripción</label>
                 <textarea
                   rows={2}
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  placeholder="ej. Carne 100% Angus smash, pan brioche tostado..."
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white text-sm focus:outline-none focus:border-brand-500"
+                  placeholder="ej. Nuestras famosas hamburguesas dobles y triples con papas..."
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#FAF7F2] dark:bg-[#180E0C] border border-[#EAE1D6] dark:border-[#3D2420] text-coffee-950 dark:text-white text-xs focus:outline-none focus:border-color4"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1">URL de Imagen (Opcional)</label>
+                <label className="block text-xs font-semibold text-coffee-950 dark:text-[#E8DFD8] mb-1">URL de la Imagen / Ícono</label>
                 <input
                   type="url"
                   value={formData.imageUrl}
                   onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
                   placeholder="https://images.unsplash.com/..."
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white text-sm focus:outline-none focus:border-brand-500"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-[#FAF7F2] dark:bg-[#180E0C] border border-[#EAE1D6] dark:border-[#3D2420] text-coffee-950 dark:text-white text-xs focus:outline-none focus:border-color4"
                 />
               </div>
 
-              <div className="flex items-center gap-2 pt-2">
-                <input
-                  type="checkbox"
-                  id="catVisible"
-                  checked={formData.isVisible}
-                  onChange={(e) => setFormData({ ...formData, isVisible: e.target.checked })}
-                  className="w-4 h-4 text-brand-500 rounded border-slate-700 bg-slate-950 focus:ring-brand-500"
-                />
-                <label htmlFor="catVisible" className="text-xs font-medium text-slate-300 cursor-pointer">
-                  Visible en el menú público
+              <div className="pt-2">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={formData.isVisible}
+                    onChange={(e) => setFormData({ ...formData, isVisible: e.target.checked })}
+                    className="w-4 h-4 text-color4 rounded border-[#EAE1D6] bg-white focus:ring-color4"
+                  />
+                  <span className="text-xs text-coffee-950 dark:text-[#E8DFD8] font-medium">Visible en Carta Digital</span>
                 </label>
               </div>
 
-              <div className="flex justify-end gap-3 pt-3">
+              <div className="flex justify-end gap-3 pt-3 border-t border-[#EAE1D6] dark:border-[#3D2420]">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2.5 rounded-xl bg-slate-800 text-slate-300 text-xs font-semibold hover:bg-slate-700 transition"
+                  className="px-4 py-2 rounded-xl bg-[#FAF7F2] dark:bg-[#2F1B17] text-coffee-800 dark:text-[#E8DFD8] text-xs font-semibold hover:bg-[#F3EDE3] transition"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-xs font-bold shadow-md shadow-brand-500/20 transition"
+                  className="px-5 py-2 rounded-xl bg-color4 hover:bg-[#522B2B] dark:bg-color3 dark:hover:bg-color4 text-white text-xs font-bold shadow-md transition"
                 >
                   {editingCategory ? 'Guardar Cambios' : 'Crear Categoría'}
                 </button>

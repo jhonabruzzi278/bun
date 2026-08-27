@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useCatalogStore } from '@/lib/useCatalogStore';
-import { Store, Save, Phone, MapPin, DollarSign, Palette, CheckCircle2, RotateCcw } from 'lucide-react';
+import { Store, Save, Phone, Palette, CheckCircle2, RotateCcw } from 'lucide-react';
 
 export default function BusinessSettingsIsland() {
   const { business, updateBusiness, resetToDemo, isLoaded } = useCatalogStore();
@@ -13,7 +13,7 @@ export default function BusinessSettingsIsland() {
     }
   }, [isLoaded, business]);
 
-  if (!isLoaded) return <div className="text-slate-400 text-sm">Cargando datos...</div>;
+  if (!isLoaded) return <div className="text-[#8C7E73] dark:text-[#A8988B] text-sm">Cargando datos...</div>;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
@@ -33,17 +33,17 @@ export default function BusinessSettingsIsland() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <div className="max-w-4xl mx-auto space-y-8 pb-12">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-extrabold text-white">Configuración del Negocio</h1>
-          <p className="text-sm text-slate-400">Personaliza la identidad, colores y datos de contacto de tu local.</p>
+          <h1 className="text-2xl font-extrabold text-coffee-950 dark:text-white">Configuración del Negocio</h1>
+          <p className="text-xs sm:text-sm text-[#70645A] dark:text-[#A8988B] mt-0.5">Personaliza la identidad, colores y datos de contacto de tu local.</p>
         </div>
 
         <button
           type="button"
           onClick={resetToDemo}
-          className="inline-flex items-center gap-2 px-3 py-2 text-xs font-medium text-slate-400 hover:text-white bg-slate-800/80 hover:bg-slate-800 rounded-lg border border-slate-700 transition"
+          className="inline-flex items-center gap-2 px-3 py-2 text-xs font-medium text-coffee-800 dark:text-[#E8DFD8] bg-white dark:bg-[#241512] hover:bg-[#FAF7F2] rounded-xl border border-[#EAE1D6] dark:border-[#3D2420] transition"
         >
           <RotateCcw className="w-3.5 h-3.5" />
           Restablecer a Demo
@@ -51,76 +51,74 @@ export default function BusinessSettingsIsland() {
       </div>
 
       {savedMessage && (
-        <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-sm flex items-center gap-2 animate-fade-in">
+        <div className="p-4 rounded-xl bg-[#E7F3E8] dark:bg-[#1A3320] border border-[#D0EBD2] dark:border-[#2C5935] text-[#2E7D32] dark:text-[#4ADE80] text-sm flex items-center gap-2 animate-fade-in shadow-sm font-semibold">
           <CheckCircle2 className="w-4 h-4" />
-          ¡Configuración guardada correctamente! Los cambios ya se reflejan en el menú público.
+          ¡Configuración guardada correctamente! Los cambios ya se reflejan en la carta digital.
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Identidad del Negocio */}
-        <div className="p-6 rounded-2xl bg-slate-950 border border-slate-800 space-y-4">
-          <h2 className="text-base font-bold text-white flex items-center gap-2">
-            <Store className="w-4 h-4 text-brand-400" />
+        <div className="p-6 rounded-2xl bg-white dark:bg-[#241512] border border-[#EAE1D6] dark:border-[#3D2420] shadow-coffee-sm space-y-4 transition-colors">
+          <h2 className="text-base font-bold text-coffee-950 dark:text-white flex items-center gap-2">
+            <Store className="w-4 h-4 text-color4 dark:text-color2" />
             Identidad General
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">Nombre del Local / Restaurante</label>
+              <label className="block text-xs font-semibold text-coffee-950 dark:text-[#E8DFD8] mb-1">Nombre del Local / Restaurante</label>
               <input
                 type="text"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm focus:outline-none focus:border-brand-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-[#FAF7F2] dark:bg-[#180E0C] border border-[#EAE1D6] dark:border-[#3D2420] text-coffee-950 dark:text-white text-xs focus:outline-none focus:border-color4"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">Slug URL (Subdominio / Enlace)</label>
+              <label className="block text-xs font-semibold text-coffee-950 dark:text-[#E8DFD8] mb-1">Slug URL (Enlace del Menú)</label>
               <div className="flex items-center">
-                <span className="px-3 py-2.5 bg-slate-900 border border-r-0 border-slate-700 text-slate-400 text-xs rounded-l-xl">/menu/</span>
+                <span className="px-3 py-2.5 bg-[#FAF7F2] dark:bg-[#180E0C] border border-r-0 border-[#EAE1D6] dark:border-[#3D2420] text-[#70645A] dark:text-[#A8988B] text-xs rounded-l-xl">/menu/</span>
                 <input
                   type="text"
                   name="slug"
                   value={formData.slug}
                   onChange={handleChange}
                   required
-                  className="w-full px-3 py-2.5 rounded-r-xl bg-slate-900 border border-slate-700 text-white text-sm focus:outline-none focus:border-brand-500 font-mono"
+                  className="w-full px-3 py-2.5 rounded-r-xl bg-[#FAF7F2] dark:bg-[#180E0C] border border-[#EAE1D6] dark:border-[#3D2420] text-coffee-950 dark:text-white text-xs focus:outline-none focus:border-color4 font-mono font-bold"
                 />
               </div>
             </div>
 
             <div className="md:col-span-2">
-              <label className="block text-xs font-semibold text-slate-300 mb-1">Descripción / Eslogan</label>
+              <label className="block text-xs font-semibold text-coffee-950 dark:text-[#E8DFD8] mb-1">Descripción / Eslogan</label>
               <textarea
                 name="description"
                 rows={2}
                 value={formData.description}
                 onChange={handleChange}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm focus:outline-none focus:border-brand-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-[#FAF7F2] dark:bg-[#180E0C] border border-[#EAE1D6] dark:border-[#3D2420] text-coffee-950 dark:text-white text-xs focus:outline-none focus:border-color4"
               />
             </div>
           </div>
         </div>
 
-        {/* Imágenes y Personalización Visual */}
-        <div className="p-6 rounded-2xl bg-slate-950 border border-slate-800 space-y-6">
-          <h2 className="text-base font-bold text-white flex items-center gap-2">
-            <Palette className="w-4 h-4 text-brand-400" />
-            Logo, Portada & Color de Marca
+        {/* Imágenes y Color */}
+        <div className="p-6 rounded-2xl bg-white dark:bg-[#241512] border border-[#EAE1D6] dark:border-[#3D2420] shadow-coffee-sm space-y-6 transition-colors">
+          <h2 className="text-base font-bold text-coffee-950 dark:text-white flex items-center gap-2">
+            <Palette className="w-4 h-4 text-color4 dark:text-color2" />
+            Logo & Portada
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            
-            {/* Logo Upload & Preview */}
+            {/* Logo */}
             <div className="space-y-3">
-              <label className="block text-xs font-bold text-slate-300">Logo del Restaurante</label>
-              
+              <label className="block text-xs font-bold text-coffee-950 dark:text-[#E8DFD8]">Logo del Restaurante</label>
               <div className="flex items-center gap-4">
-                <div className="w-20 h-20 rounded-2xl bg-slate-900 border-2 border-dashed border-slate-700 overflow-hidden flex items-center justify-center shrink-0 relative group">
+                <div className="w-16 h-16 rounded-2xl bg-[#FAF7F2] dark:bg-[#180E0C] border-2 border-dashed border-[#EAE1D6] dark:border-[#3D2420] overflow-hidden flex items-center justify-center shrink-0">
                   {formData.logoUrl ? (
                     <img src={formData.logoUrl} alt="Logo" className="w-full h-full object-cover" />
                   ) : (
@@ -128,140 +126,71 @@ export default function BusinessSettingsIsland() {
                   )}
                 </div>
 
-                <div className="space-y-2 flex-1">
-                  <label className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-xs font-bold cursor-pointer transition shadow-md shadow-brand-500/20 active:scale-95">
-                    <span>Subir Logo desde el PC</span>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (file) {
-                          const reader = new FileReader();
-                          reader.onloadend = () => {
-                            setFormData((prev) => ({ ...prev, logoUrl: reader.result as string }));
-                          };
-                          reader.readAsDataURL(file);
-                        }
-                      }}
-                    />
-                  </label>
-
-                  <input
-                    type="url"
-                    name="logoUrl"
-                    value={formData.logoUrl || ''}
-                    onChange={handleChange}
-                    placeholder="O pega una URL: https://..."
-                    className="w-full px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-[11px] placeholder:text-slate-600 focus:outline-none focus:border-brand-500"
-                  />
-                </div>
+                <input
+                  type="url"
+                  name="logoUrl"
+                  value={formData.logoUrl || ''}
+                  onChange={handleChange}
+                  placeholder="URL del logo: https://..."
+                  className="flex-1 px-3 py-2 rounded-xl bg-[#FAF7F2] dark:bg-[#180E0C] border border-[#EAE1D6] dark:border-[#3D2420] text-coffee-950 dark:text-white text-xs focus:outline-none focus:border-color4"
+                />
               </div>
             </div>
 
-            {/* Banner / Portada Upload & Preview */}
+            {/* Banner */}
             <div className="space-y-3">
-              <label className="block text-xs font-bold text-slate-300">Imagen de Portada / Banner</label>
-              
-              <div className="space-y-2">
-                <div className="h-20 w-full rounded-2xl bg-slate-900 border-2 border-dashed border-slate-700 overflow-hidden flex items-center justify-center relative">
+              <label className="block text-xs font-bold text-coffee-950 dark:text-[#E8DFD8]">Banner de Portada</label>
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 rounded-2xl bg-[#FAF7F2] dark:bg-[#180E0C] border-2 border-dashed border-[#EAE1D6] dark:border-[#3D2420] overflow-hidden flex items-center justify-center shrink-0">
                   {formData.bannerUrl ? (
                     <img src={formData.bannerUrl} alt="Banner" className="w-full h-full object-cover" />
                   ) : (
-                    <span className="text-xs text-slate-500 font-semibold">Sin imagen de portada</span>
+                    <span className="text-xs text-[#8C7E73]">Foto</span>
                   )}
                 </div>
 
-                <div className="flex items-center gap-2">
-                  <label className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold cursor-pointer transition whitespace-nowrap border border-slate-700">
-                    <span>Subir Portada</span>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (file) {
-                          const reader = new FileReader();
-                          reader.onloadend = () => {
-                            setFormData((prev) => ({ ...prev, bannerUrl: reader.result as string }));
-                          };
-                          reader.readAsDataURL(file);
-                        }
-                      }}
-                    />
-                  </label>
-
-                  <input
-                    type="url"
-                    name="bannerUrl"
-                    value={formData.bannerUrl || ''}
-                    onChange={handleChange}
-                    placeholder="O pega una URL: https://..."
-                    className="w-full px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-[11px] placeholder:text-slate-600 focus:outline-none focus:border-brand-500"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Color de Marca */}
-            <div className="md:col-span-2 pt-2 border-t border-slate-800 flex items-center justify-between">
-              <div>
-                <label className="block text-xs font-bold text-slate-300">Color Primario de tu Menú</label>
-                <span className="text-[10px] text-slate-500">Se aplicará a botones, destacados y acentos visuales.</span>
-              </div>
-              <div className="flex items-center gap-3">
                 <input
-                  type="color"
-                  name="primaryColor"
-                  value={formData.primaryColor || '#0074FF'}
+                  type="url"
+                  name="bannerUrl"
+                  value={formData.bannerUrl || ''}
                   onChange={handleChange}
-                  className="w-10 h-10 rounded-xl border-0 bg-transparent cursor-pointer"
-                />
-                <input
-                  type="text"
-                  name="primaryColor"
-                  value={formData.primaryColor || '#0074FF'}
-                  onChange={handleChange}
-                  className="w-28 px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs font-mono text-center font-bold"
+                  placeholder="URL del banner: https://..."
+                  className="flex-1 px-3 py-2 rounded-xl bg-[#FAF7F2] dark:bg-[#180E0C] border border-[#EAE1D6] dark:border-[#3D2420] text-coffee-950 dark:text-white text-xs focus:outline-none focus:border-color4"
                 />
               </div>
             </div>
-
           </div>
         </div>
 
-
-        {/* Contacto & Pedidos */}
-        <div className="p-6 rounded-2xl bg-slate-950 border border-slate-800 space-y-4">
-          <h2 className="text-base font-bold text-white flex items-center gap-2">
-            <Phone className="w-4 h-4 text-brand-400" />
+        {/* Contacto */}
+        <div className="p-6 rounded-2xl bg-white dark:bg-[#241512] border border-[#EAE1D6] dark:border-[#3D2420] shadow-coffee-sm space-y-4 transition-colors">
+          <h2 className="text-base font-bold text-coffee-950 dark:text-white flex items-center gap-2">
+            <Phone className="w-4 h-4 text-color4 dark:text-color2" />
             Contacto & Pedidos por WhatsApp
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">Número de WhatsApp (con código de país)</label>
+              <label className="block text-xs font-semibold text-coffee-950 dark:text-[#E8DFD8] mb-1">WhatsApp (+56...)</label>
               <input
                 type="text"
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
                 placeholder="+56912345678"
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm focus:outline-none focus:border-brand-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-[#FAF7F2] dark:bg-[#180E0C] border border-[#EAE1D6] dark:border-[#3D2420] text-coffee-950 dark:text-white text-xs focus:outline-none focus:border-color4"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1">Dirección Física</label>
+              <label className="block text-xs font-semibold text-coffee-950 dark:text-[#E8DFD8] mb-1">Dirección Física</label>
               <input
                 type="text"
                 name="address"
                 value={formData.address}
                 onChange={handleChange}
                 placeholder="Av. Providencia 1240..."
-                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm focus:outline-none focus:border-brand-500"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-[#FAF7F2] dark:bg-[#180E0C] border border-[#EAE1D6] dark:border-[#3D2420] text-coffee-950 dark:text-white text-xs focus:outline-none focus:border-color4"
               />
             </div>
 
@@ -272,9 +201,9 @@ export default function BusinessSettingsIsland() {
                 name="whatsappOrders"
                 checked={formData.whatsappOrders}
                 onChange={handleChange}
-                className="w-4 h-4 text-brand-500 rounded border-slate-700 bg-slate-900 focus:ring-brand-500"
+                className="w-4 h-4 text-color4 rounded border-[#EAE1D6] bg-[#FAF7F2] focus:ring-color4"
               />
-              <label htmlFor="whatsappOrders" className="text-xs font-medium text-slate-300 cursor-pointer">
+              <label htmlFor="whatsappOrders" className="text-xs font-medium text-coffee-950 dark:text-[#D4C5B9] cursor-pointer">
                 Habilitar recepción de pedidos directamente por WhatsApp
               </label>
             </div>
@@ -284,7 +213,7 @@ export default function BusinessSettingsIsland() {
         <div className="flex justify-end gap-3 pt-4">
           <button
             type="submit"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-bold text-sm shadow-lg shadow-brand-500/25 transition"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-color4 hover:bg-[#522B2B] dark:bg-color3 dark:hover:bg-color4 text-white font-bold text-xs shadow-coffee-sm transition"
           >
             <Save className="w-4 h-4" />
             Guardar Cambios
