@@ -1,18 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   IconMenu2,
   IconX,
   IconArrowUpRight,
-  IconSparkles,
   IconChefHat,
-  IconDeviceMobile,
-  IconBrandWhatsapp,
   IconLogin,
-  IconBeer
 } from '@tabler/icons-react';
+import { LogOut, User } from 'lucide-react';
 
 export default function LandingNavbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [clerkUser, setClerkUser] = useState<{
+    name: string;
+    imageUrl?: string;
+  } | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const checkClerk = () => {
+        const w = window as any;
+        if (w.Clerk?.user) {
+          const u = w.Clerk.user;
+          setClerkUser({
+            name: u.firstName || u.fullName || 'Mi Cuenta',
+            imageUrl: u.imageUrl,
+          });
+        } else {
+          setClerkUser(null);
+        }
+      };
+
+      checkClerk();
+      const interval = setInterval(checkClerk, 1000);
+      return () => clearInterval(interval);
+    }
+  }, []);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-white/[0.08] bg-[#09090B]/85 backdrop-blur-xl font-mono">
@@ -59,20 +81,45 @@ export default function LandingNavbar() {
 
         {/* Desktop CTAs */}
         <div className="hidden md:flex items-center gap-3">
-          <a
-            href="/sign-in"
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[4px] border border-white/[0.08] text-xs font-mono uppercase tracking-wider text-zinc-300 hover:text-white hover:border-white/20 transition-colors"
-          >
-            <IconLogin className="w-3.5 h-3.5" />
-            <span>Acceso</span>
-          </a>
-          <a
-            href="/admin"
-            className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-[4px] bg-white text-black hover:bg-zinc-200 text-xs font-mono uppercase tracking-wider font-semibold transition-colors"
-          >
-            <span>Panel Control</span>
-            <span className="text-amber-600">✦</span>
-          </a>
+          {clerkUser ? (
+            <>
+              <a
+                href="/admin"
+                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-[4px] bg-amber-500 text-black hover:bg-amber-400 text-xs font-mono uppercase tracking-wider font-bold transition-colors"
+              >
+                {clerkUser.imageUrl && (
+                  <img src={clerkUser.imageUrl} alt={clerkUser.name} className="w-4 h-4 rounded-full object-cover" />
+                )}
+                <span>Mi Panel</span>
+                <span className="text-black/60">✦</span>
+              </a>
+              <a
+                href="/sign-out"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[4px] border border-white/[0.1] text-xs font-mono text-zinc-400 hover:text-rose-400 hover:border-rose-500/30 transition-colors"
+                title="Cerrar Sesión"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+                <span>Salir</span>
+              </a>
+            </>
+          ) : (
+            <>
+              <a
+                href="/sign-in"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[4px] border border-white/[0.08] text-xs font-mono uppercase tracking-wider text-zinc-300 hover:text-white hover:border-white/20 transition-colors"
+              >
+                <IconLogin className="w-3.5 h-3.5" />
+                <span>Acceso</span>
+              </a>
+              <a
+                href="/admin"
+                className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-[4px] bg-white text-black hover:bg-zinc-200 text-xs font-mono uppercase tracking-wider font-semibold transition-colors"
+              >
+                <span>Panel Control</span>
+                <span className="text-amber-600">✦</span>
+              </a>
+            </>
+          )}
         </div>
 
         {/* Mobile menu toggle */}
@@ -123,18 +170,37 @@ export default function LandingNavbar() {
             </a>
           </nav>
           <div className="pt-4 border-t border-white/[0.08] flex flex-col gap-2">
-            <a
-              href="/sign-in"
-              className="w-full text-center py-2 rounded-[4px] border border-white/[0.08] text-xs uppercase tracking-wider text-zinc-300"
-            >
-              Iniciar Sesión
-            </a>
-            <a
-              href="/admin"
-              className="w-full text-center py-2 rounded-[4px] bg-white text-black font-semibold text-xs uppercase tracking-wider"
-            >
-              Entrar al Panel
-            </a>
+            {clerkUser ? (
+              <>
+                <a
+                  href="/admin"
+                  className="w-full text-center py-2.5 rounded-[4px] bg-amber-500 text-black font-bold text-xs uppercase tracking-wider"
+                >
+                  Ir a mi Panel ({clerkUser.name})
+                </a>
+                <a
+                  href="/sign-out"
+                  className="w-full text-center py-2 rounded-[4px] border border-rose-500/30 text-rose-400 text-xs uppercase tracking-wider"
+                >
+                  Cerrar Sesión
+                </a>
+              </>
+            ) : (
+              <>
+                <a
+                  href="/sign-in"
+                  className="w-full text-center py-2 rounded-[4px] border border-white/[0.08] text-xs uppercase tracking-wider text-zinc-300"
+                >
+                  Iniciar Sesión
+                </a>
+                <a
+                  href="/admin"
+                  className="w-full text-center py-2 rounded-[4px] bg-white text-black font-semibold text-xs uppercase tracking-wider"
+                >
+                  Entrar al Panel
+                </a>
+              </>
+            )}
           </div>
         </div>
       )}

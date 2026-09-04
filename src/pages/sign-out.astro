@@ -1,0 +1,56 @@
+---
+import '../styles/global.css';
+---
+
+<!DOCTYPE html>
+<html lang="es" class="dark h-full bg-[#09090B]">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cerrando Sesión - brew.cl</title>
+    <link rel="icon" type="image/jpeg" href="/images/brew-mascot.jpg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  </head>
+  <body class="h-full flex items-center justify-center p-4 bg-[#09090B] text-white font-sans antialiased">
+    <div class="text-center space-y-4">
+      <div class="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-500/40 text-amber-400 flex items-center justify-center font-black text-xl mx-auto shadow-inner animate-pulse">
+        🔒
+      </div>
+      <div class="space-y-1">
+        <h2 class="text-sm font-bold text-white tracking-tight">Cerrando tu sesión de brew.cl...</h2>
+        <p class="text-xs text-zinc-500 font-mono">Limpiando credenciales y redirigiendo con seguridad</p>
+      </div>
+    </div>
+
+    <script>
+      async function executeSignOut() {
+        try {
+          const w = window as any;
+          if (w.Clerk) {
+            await w.Clerk.signOut();
+          }
+        } catch (err) {
+          console.warn('Sign out warning:', err);
+        }
+        window.location.href = '/sign-in';
+      }
+
+      const checkAndExit = () => {
+        const w = window as any;
+        if (w.Clerk && w.Clerk.loaded) {
+          executeSignOut();
+        } else {
+          setTimeout(executeSignOut, 400);
+        }
+      };
+
+      if (document.readyState === 'complete') {
+        checkAndExit();
+      } else {
+        window.addEventListener('load', checkAndExit);
+      }
+    </script>
+  </body>
+</html>

@@ -1,6 +1,14 @@
 ---
 import '../../styles/global.css';
 import { SignUp } from '@clerk/astro/components';
+
+// If already logged in, redirect straight to admin panel without friction
+try {
+  const authObj = Astro.locals.auth?.();
+  if (authObj?.userId) {
+    return Astro.redirect('/admin');
+  }
+} catch (e) {}
 ---
 
 <!DOCTYPE html>
@@ -35,8 +43,14 @@ import { SignUp } from '@clerk/astro/components';
       </div>
 
       {/* Clerk Sign-Up Component Container */}
-      <div class="flex justify-center">
-        <SignUp routing="path" path="/sign-up" signInUrl="/sign-in" />
+      <div className="flex justify-center">
+        <SignUp
+          routing="path"
+          path="/sign-up"
+          signInUrl="/sign-in"
+          fallbackRedirectUrl="/admin/onboarding"
+          forceRedirectUrl="/admin/onboarding"
+        />
       </div>
 
       {/* Footer */}

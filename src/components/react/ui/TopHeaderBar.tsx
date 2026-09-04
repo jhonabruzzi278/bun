@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Bell, ChevronDown, Sparkles, Sun, Moon, Check, User, ShieldCheck } from 'lucide-react';
+import { Search, Bell, ChevronDown, Sparkles, Sun, Moon, Check, User, ShieldCheck, LogOut, UserCheck } from 'lucide-react';
 
 interface TopHeaderBarProps {
   userName?: string;
@@ -19,6 +19,44 @@ export const TopHeaderBar: React.FC<TopHeaderBarProps> = ({
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [clerkUser, setClerkUser] = useState<{
+    name: string;
+    email: string;
+    imageUrl?: string;
+  } | null>(null);
+
+  // Sync real Clerk session details
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const syncUser = () => {
+        const w = window as any;
+        if (w.Clerk?.user) {
+          const u = w.Clerk.user;
+          setClerkUser({
+            name: u.fullName || u.firstName || u.username || userName,
+            email: u.primaryEmailAddress?.emailAddress || 'admin@brew.cl',
+            imageUrl: u.imageUrl,
+          });
+        }
+      };
+
+      syncUser();
+      const interval = setInterval(syncUser, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [userName]);
+
+  const handleSignOut = async () => {
+    try {
+      const w = window as any;
+      if (w.Clerk) {
+        await w.Clerk.signOut();
+      }
+    } catch (e) {
+      console.warn('Sign out warning:', e);
+    }
+    window.location.href = '/sign-in';
+  };
 
   // Initialize theme from localStorage or document class
   useEffect(() => {
@@ -157,15 +195,25 @@ export const TopHeaderBar: React.FC<TopHeaderBarProps> = ({
             }}
             className="flex items-center gap-2.5 pl-1.5 pr-2.5 py-1 rounded-xl bg-[#FAF7F2] dark:bg-[#2A1916] border border-[#EAE1D6] dark:border-[#422722] hover:bg-[#F3EDE3] dark:hover:bg-[#38201C] cursor-pointer transition"
           >
-            <div className="w-7 h-7 rounded-full bg-color4 text-white font-bold text-xs flex items-center justify-center shadow-sm">
-              {userName
-                .split(' ')
-                .map((n) => n[0])
-                .join('')
-                .toUpperCase()}
-            </div>
+            {clerkUser?.imageUrl ? (
+              <img
+                src={clerkUser.imageUrl}
+                alt={clerkUser.name}
+                className="w-7 h-7 rounded-full object-cover shadow-sm border border-amber-500/40"
+              />
+            ) : (
+              <div className="w-7 h-7 rounded-full bg-amber-500 text-black font-black text-xs flex items-center justify-center shadow-sm">
+                {(clerkUser?.name || userName)
+                  .split(' ')
+                  .map((n) => n[0])
+                  .join('')
+                  .toUpperCase()}
+              </div>
+            )}
             <div className="hidden sm:block text-left">
-              <h5 className="text-xs font-bold text-coffee-950 dark:text-white leading-none">{userName}</h5>
+              <h5 className="text-xs font-bold text-coffee-950 dark:text-white leading-none">
+                {clerkUser?.name || userName}
+              </h5>
               <span className="text-[10px] text-[#70645A] dark:text-[#A8988B] font-medium">{userRole}</span>
             </div>
             <ChevronDown className="w-3 h-3 text-[#8C7E73] dark:text-[#A8988B] hidden sm:block" />
@@ -173,21 +221,44 @@ export const TopHeaderBar: React.FC<TopHeaderBarProps> = ({
 
           {/* Profile Dropdown */}
           {showProfileMenu && (
-            <div className="absolute right-0 mt-2 w-52 bg-white dark:bg-[#241512] border border-[#EAE1D6] dark:border-[#3D2420] rounded-2xl shadow-coffee-lg p-2 z-50">
-              <div className="px-3 py-2 border-b border-[#EAE1D6] dark:border-[#3D2420]">
-                <p className="text-xs font-bold text-coffee-950 dark:text-white">{businessName}</p>
-                <p className="text-[10px] text-[#70645A] dark:text-[#A8988B]">admin@brew.cl</p>
+            <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-[#1C1210] border border-[#EAE1D6] dark:border-[#3D2420] rounded-2xl shadow-xl p-2 z-50 animate-in fade-in slide-in-from-top-2">
+              <div className="px-3 py-2 border-b border-[#EAE1D6] dark:border-[#3D2420]/80">
+                <div className="flex items-center gap-2 mb-1">
+                  <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <p className="text-xs font-black text-coffee-950 dark:text-white truncate">
+                    {clerkUser?.name || userName}
+                  </p>
+                </div>
+                <p className="text-[10px] text-[#70645A] dark:text-zinc-400 truncate">
+                  {clerkUser?.email || 'admin@brew.cl'}
+                </p>
               </div>
-              <div className="py-1">
-                <a href="/admin/settings" className="block px-3 py-1.5 text-xs text-coffee-800 dark:text-[#E8DFD8] hover:bg-[#FAF7F2] dark:hover:bg-[#2D1B18] rounded-lg">
+
+              <div className="py-1.5 space-y-0.5">
+                <a
+                  href="/admin/settings"
+                  className="block px-3 py-1.5 text-xs text-coffee-800 dark:text-[#E8DFD8] hover:bg-[#FAF7F2] dark:hover:bg-[#2D1B18] rounded-lg transition"
+                >
                   Configuración del Local
                 </a>
-                <a href="/sign-in" className="block px-3 py-1.5 text-xs text-amber-500 font-bold hover:bg-[#FAF7F2] dark:hover:bg-[#2D1B18] rounded-lg">
-                  Cuenta Clerk (Sign In) 🔒
+                <a
+                  href="/menu/burger-craft"
+                  target="_blank"
+                  className="block px-3 py-1.5 text-xs text-amber-500 font-bold hover:bg-[#FAF7F2] dark:hover:bg-[#2D1B18] rounded-lg transition"
+                >
+                  Ver Carta Digital ↗
                 </a>
-                <a href="/menu/burger-craft" target="_blank" className="block px-3 py-1.5 text-xs text-color3 font-bold hover:bg-[#FAF7F2] dark:hover:bg-[#2D1B18] rounded-lg">
-                  Ver Carta Pública ↗
-                </a>
+              </div>
+
+              <div className="pt-1 border-t border-[#EAE1D6] dark:border-[#3D2420]/80">
+                <button
+                  type="button"
+                  onClick={handleSignOut}
+                  className="w-full flex items-center gap-2 px-3 py-2 text-xs font-bold text-rose-500 hover:text-rose-400 hover:bg-rose-500/10 rounded-xl transition cursor-pointer"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                  <span>Cerrar Sesión</span>
+                </button>
               </div>
             </div>
           )}
