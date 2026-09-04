@@ -37,7 +37,7 @@ export default function QRDomainModal({ isOpen, onClose }: QRDomainModalProps) {
         </div>
 
         <p className="text-xs text-[#70645A] dark:text-[#A8988B] leading-relaxed">
-          Ingresa el dominio que compraste (ej. <strong>menu.turestaurante.cl</strong>). Luego apunta un registro CNAME en tu proveedor DNS a <code className="px-1.5 py-0.5 rounded bg-[#FAF7F2] dark:bg-[#180E0C] text-color4 font-mono font-bold">domains.bun.app</code>.
+          Ingresa el dominio que compraste (ej. <strong>menu.turestaurante.cl</strong>). Luego apunta un registro CNAME en tu proveedor DNS a <code className="px-1.5 py-0.5 rounded bg-[#FAF7F2] dark:bg-[#180E0C] text-color4 font-mono font-bold">cname.vercel-dns.com</code>.
         </p>
 
         <form onSubmit={handleSave} className="space-y-4 pt-1">
