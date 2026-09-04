@@ -123,11 +123,25 @@ export default function KitchenTicketCard({ ticket, onUpdateStatus, onCancelTick
                 )}
               </div>
 
-              {item.modifiers && item.modifiers.length > 0 && (
-                <div className="text-[10px] text-[#70645A] dark:text-[#A8988B] pl-4">
-                  {item.modifiers.join(', ')}
-                </div>
-              )}
+              {(() => {
+                const mods: string[] = Array.isArray(item.modifiers)
+                  ? item.modifiers
+                  : typeof item.modifiers === 'string'
+                  ? (() => {
+                      try {
+                        const parsed = JSON.parse(item.modifiers);
+                        return Array.isArray(parsed) ? parsed : [item.modifiers];
+                      } catch {
+                        return [item.modifiers];
+                      }
+                    })()
+                  : [];
+                return mods.length > 0 ? (
+                  <div className="text-[10px] text-[#70645A] dark:text-[#A8988B] pl-4">
+                    {mods.join(', ')}
+                  </div>
+                ) : null;
+              })()}
             </div>
           ))}
         </div>

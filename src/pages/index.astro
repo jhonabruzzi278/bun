@@ -9,27 +9,41 @@ import LandingFooter from '../components/react/landing/LandingFooter';
 ---
 
 <!DOCTYPE html>
-<html lang="es" class="scroll-smooth bg-slate-950 text-slate-100 selection:bg-brand-500 selection:text-white">
+<html lang="es" class="scroll-smooth bg-[#09090B] text-zinc-100 selection:bg-amber-500 selection:text-black">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>BUN | Software para Restaurantes — Menú Digital QR, WhatsApp y Cocina KDS</title>
+    <title>brew.cl — Plataforma Operativa para la Gastronomía y Cervecerías</title>
     <meta
       name="description"
-      content="BUN es el software gastronómico estilo OlaClick con Menú Digital QR, pedidos directos por WhatsApp, KDS de cocina en tiempo real y 0% comisiones."
+      content="brew.cl es la plataforma integral para restaurantes, bares y cervecerías modernas: Menú Digital QR ultrarrápido, Cocina KDS en vivo, Punto de Venta (POS) con lector de códigos de barras, simulación térmica ESC/POS y gestión analítica."
     />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   </head>
-  <body class="bg-slate-950 font-sans antialiased overflow-x-hidden">
-    <LandingNavbar client:load />
-    <main>
-      <LandingHero client:load />
-      <LandingFeatures client:load />
-      <LandingPricing client:load />
-      <LandingFAQ client:load />
-    </main>
-    <LandingFooter client:load />
+  <body class="bg-[#09090B] font-sans antialiased overflow-x-hidden text-zinc-100 relative min-h-screen">
+    {/* Clerk-Style Ambient Glow Background */}
+    <div class="pointer-events-none fixed inset-0 z-0 overflow-hidden">
+      <div class="absolute -top-[20%] left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-gradient-to-b from-amber-500/10 via-amber-600/5 to-transparent blur-[140px] rounded-full" />
+      <div class="absolute top-[40%] right-[-10%] w-[500px] h-[500px] bg-amber-500/[0.04] blur-[150px] rounded-full" />
+      <div class="absolute top-[70%] left-[-10%] w-[600px] h-[600px] bg-amber-600/[0.03] blur-[160px] rounded-full" />
+      <div 
+        class="absolute inset-0 opacity-[0.025] pointer-events-none"
+        style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 28px 28px;"
+      />
+    </div>
+
+    <div class="relative z-10">
+      <LandingNavbar client:load />
+      <main>
+        <LandingHero client:load />
+        <LandingFeatures client:load />
+        <LandingPricing client:load />
+        <LandingFAQ client:load />
+      </main>
+      <LandingFooter client:load />
+    </div>
   </body>
 </html>

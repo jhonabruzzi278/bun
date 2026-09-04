@@ -10,8 +10,8 @@ interface TopHeaderBarProps {
 
 export const TopHeaderBar: React.FC<TopHeaderBarProps> = ({
   userName = 'Juan Doe',
-  userRole = 'Gerente',
-  businessName = 'Maestro cervecero',
+  userRole = 'Gerente General',
+  businessName = 'brew.cl',
   notificationCount = 3,
 }) => {
   const [selectedRange, setSelectedRange] = useState('Hoy');
@@ -176,14 +176,14 @@ export const TopHeaderBar: React.FC<TopHeaderBarProps> = ({
             <div className="absolute right-0 mt-2 w-52 bg-white dark:bg-[#241512] border border-[#EAE1D6] dark:border-[#3D2420] rounded-2xl shadow-coffee-lg p-2 z-50">
               <div className="px-3 py-2 border-b border-[#EAE1D6] dark:border-[#3D2420]">
                 <p className="text-xs font-bold text-coffee-950 dark:text-white">{businessName}</p>
-                <p className="text-[10px] text-[#70645A] dark:text-[#A8988B]">jonathan@pidelisto.cl</p>
+                <p className="text-[10px] text-[#70645A] dark:text-[#A8988B]">admin@brew.cl</p>
               </div>
               <div className="py-1">
                 <a href="/admin/settings" className="block px-3 py-1.5 text-xs text-coffee-800 dark:text-[#E8DFD8] hover:bg-[#FAF7F2] dark:hover:bg-[#2D1B18] rounded-lg">
                   Configuración del Local
                 </a>
-                <a href="/admin/team" className="block px-3 py-1.5 text-xs text-coffee-800 dark:text-[#E8DFD8] hover:bg-[#FAF7F2] dark:hover:bg-[#2D1B18] rounded-lg">
-                  Gestión de Personal
+                <a href="/sign-in" className="block px-3 py-1.5 text-xs text-amber-500 font-bold hover:bg-[#FAF7F2] dark:hover:bg-[#2D1B18] rounded-lg">
+                  Cuenta Clerk (Sign In) 🔒
                 </a>
                 <a href="/menu/burger-craft" target="_blank" className="block px-3 py-1.5 text-xs text-color3 font-bold hover:bg-[#FAF7F2] dark:hover:bg-[#2D1B18] rounded-lg">
                   Ver Carta Pública ↗

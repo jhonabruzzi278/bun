@@ -52,7 +52,7 @@ export const PUT: APIRoute = async ({ request }) => {
         logoUrl: body.logoUrl,
         bannerUrl: body.bannerUrl,
         isOpen: body.isOpen,
-        updatedAt: new Date(),
+        updatedAt: new Date().toISOString(),
       }).where(eq(businesses.slug, slug));
     } catch (dbErr) {
       console.warn('DB Fallback update en /api/business:', dbErr);

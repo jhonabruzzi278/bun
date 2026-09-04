@@ -105,6 +105,37 @@ export function openWhatsAppOrder(payload: WhatsAppOrderPayload) {
     : '+56938980598';
   const cleanPhone = rawPhone.replace(/[^0-9]/g, '');
   const encodedText = encodeURIComponent(message);
-  const url = `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodedText}`;
+  // Free Click-to-WhatsApp URL (zero API fees, 100% compliant with WhatsApp web/mobile)
+  const url = `https://wa.me/${cleanPhone}?text=${encodedText}`;
+  window.open(url, '_blank');
+}
+
+/**
+ * Generates a direct wa.me link for the POS to notify a customer with 0 API costs.
+ */
+export function openCustomerNotificationWhatsApp(params: {
+  phone: string;
+  customerName: string;
+  orderNumber: string;
+  status: string;
+  total: number;
+}) {
+  const cleanPhone = params.phone.replace(/[^0-9]/g, '');
+  const statusLabel =
+    params.status === 'READY'
+      ? '¡Tu pedido está listo para retirar o servir!'
+      : params.status === 'IN_PROGRESS'
+      ? 'Tu pedido ya está en preparación en cocina/barra.'
+      : 'Tu comanda ha sido confirmada.';
+
+  const message =
+    `🍺 *brew.cl - Actualización de Comanda*\n\n` +
+    `Hola *${params.customerName}*,\n` +
+    `Información de tu pedido *#${params.orderNumber}*:\n` +
+    `🔔 *Estado:* ${statusLabel}\n` +
+    `💰 *Total:* $${params.total.toLocaleString('es-CL')}\n\n` +
+    `¡Gracias por preferirnos!`;
+
+  const url = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
   window.open(url, '_blank');
 }

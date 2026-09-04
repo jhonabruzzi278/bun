@@ -36,6 +36,7 @@ export interface Product {
   compareAtPrice?: number | null;
   imageUrl?: string | null;
   sku?: string | null;
+  barcode?: string | null;
   position: number;
   isFeatured: boolean;
   isVisible: boolean;
@@ -187,5 +188,21 @@ export interface OnboardingStage {
   title: string;
   badge: string;
   steps: OnboardingStep[];
+}
+
+export interface TenantAccount {
+  id: string;
+  name: string;
+  slug: string;
+  plan: 'FREE_TRIAL' | 'PRO' | 'ENTERPRISE';
+  subscriptionStatus: 'TRIAL' | 'ACTIVE' | 'EXPIRED' | 'SUSPENDED';
+  isActive: boolean;
+  trialEndsAt: string;
+  ownerName: string;
+  ownerEmail: string;
+  ownerPhone: string;
+  city: string;
+  createdAt: string;
+  daysRemaining: number;
 }
 

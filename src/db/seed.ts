@@ -127,10 +127,10 @@ async function seed() {
         status: kt.status,
         notes: kt.notes,
         targetMinutes: kt.targetMinutes,
-        prepStartedAt: kt.prepStartedAt ? new Date(kt.prepStartedAt) : null,
-        readyAt: kt.readyAt ? new Date(kt.readyAt) : null,
-        createdAt: new Date(kt.createdAt),
-        updatedAt: new Date(kt.updatedAt),
+        prepStartedAt: kt.prepStartedAt || null,
+        readyAt: kt.readyAt || null,
+        createdAt: kt.createdAt,
+        updatedAt: kt.updatedAt,
       }).onConflictDoNothing();
 
       for (const item of kt.items) {

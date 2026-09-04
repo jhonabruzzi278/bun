@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Category, Product } from '@/lib/types';
 import { Plus, Star } from 'lucide-react';
+import { Button, Badge } from '@/components/ui';
 
 interface ProductFilterTabsProps {
   categories: Category[];
@@ -20,36 +21,42 @@ export default function ProductFilterTabs({
   const featuredCount = products.filter((p) => p.isFeatured).length;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-extrabold text-coffee-950 dark:text-white">
-            Catálogo de Productos
-          </h1>
-          <p className="text-xs sm:text-sm text-[#70645A] dark:text-[#A8988B] mt-0.5">
-            Gestiona precios, fotos, variantes y modificadores de tus platos y bebidas.
+          <div className="flex items-center gap-2">
+            <h1 className="text-2xl sm:text-3xl font-black text-coffee-950 dark:text-white tracking-tight">
+              Catálogo de Productos
+            </h1>
+            <Badge variant="amber" dot>
+              {products.length} platos
+            </Badge>
+          </div>
+          <p className="text-xs sm:text-sm text-[#70645A] dark:text-[#A8988B] mt-1">
+            Gestiona precios, fotos, variantes y modificadores de tus platos y bebidas en brew.cl.
           </p>
         </div>
 
-        <button
-          type="button"
+        <Button
+          variant="primary"
+          size="default"
           onClick={onOpenCreateModal}
-          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-color4 hover:bg-[#522B2B] dark:bg-color3 dark:hover:bg-color4 text-white font-bold text-xs shadow-coffee-sm transition self-start sm:self-auto"
+          className="self-start sm:self-auto shadow-lg shadow-amber-500/20"
         >
           <Plus className="w-4 h-4" />
           <span>Nuevo Producto</span>
-        </button>
+        </Button>
       </div>
 
-      {/* Filter Chips */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+      {/* Apple-style Filter Chips */}
+      <div className="flex items-center gap-1.5 overflow-x-auto pb-2 scrollbar-none">
         <button
           type="button"
           onClick={() => onSelectCategoryFilter('ALL')}
-          className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition ${
+          className={`px-4 py-2 rounded-2xl text-xs font-bold whitespace-nowrap transition-all duration-200 active:scale-95 ${
             selectedCategoryFilter === 'ALL'
-              ? 'bg-color4 dark:bg-color3 text-white shadow-sm'
-              : 'bg-white dark:bg-[#241512] text-[#70645A] dark:text-[#A8988B] hover:text-coffee-950 dark:hover:text-white border border-[#EAE1D6] dark:border-[#3D2420]'
+              ? 'bg-white text-black dark:bg-white dark:text-black shadow-sm font-black'
+              : 'bg-white/70 dark:bg-white/[0.05] text-[#70645A] dark:text-[#A8988B] hover:text-black dark:hover:text-white border border-neutral-200 dark:border-white/[0.08] backdrop-blur-md'
           }`}
         >
           Todos ({products.length})
@@ -58,30 +65,32 @@ export default function ProductFilterTabs({
         <button
           type="button"
           onClick={() => onSelectCategoryFilter('FEATURED')}
-          className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition flex items-center gap-1.5 ${
+          className={`px-4 py-2 rounded-2xl text-xs font-bold whitespace-nowrap transition-all duration-200 active:scale-95 flex items-center gap-1.5 ${
             selectedCategoryFilter === 'FEATURED'
-              ? 'bg-color2 text-coffee-950 font-bold shadow-sm'
-              : 'bg-white dark:bg-[#241512] text-[#70645A] dark:text-[#A8988B] hover:text-coffee-950 dark:hover:text-white border border-[#EAE1D6] dark:border-[#3D2420]'
+              ? 'bg-amber-500 text-black shadow-sm font-black'
+              : 'bg-white/70 dark:bg-white/[0.05] text-[#70645A] dark:text-[#A8988B] hover:text-black dark:hover:text-white border border-neutral-200 dark:border-white/[0.08] backdrop-blur-md'
           }`}
         >
-          <Star className="w-3.5 h-3.5 fill-current" />
-          Destacados ({featuredCount})
+          <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+          <span>Destacados ({featuredCount})</span>
         </button>
 
-        {categories.map((c) => {
-          const count = products.filter((p) => p.categoryId === c.id).length;
+        {categories.map((cat) => {
+          const count = products.filter((p) => p.categoryId === cat.id).length;
+          const isSelected = selectedCategoryFilter === cat.id;
+
           return (
             <button
-              key={c.id}
+              key={cat.id}
               type="button"
-              onClick={() => onSelectCategoryFilter(c.id)}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition ${
-                selectedCategoryFilter === c.id
-                  ? 'bg-color4 dark:bg-color3 text-white shadow-sm'
-                  : 'bg-white dark:bg-[#241512] text-[#70645A] dark:text-[#A8988B] hover:text-coffee-950 dark:hover:text-white border border-[#EAE1D6] dark:border-[#3D2420]'
+              onClick={() => onSelectCategoryFilter(cat.id)}
+              className={`px-4 py-2 rounded-2xl text-xs font-bold whitespace-nowrap transition-all duration-200 active:scale-95 ${
+                isSelected
+                  ? 'bg-white text-black dark:bg-white dark:text-black shadow-sm font-black'
+                  : 'bg-white/70 dark:bg-white/[0.05] text-[#70645A] dark:text-[#A8988B] hover:text-black dark:hover:text-white border border-neutral-200 dark:border-white/[0.08] backdrop-blur-md'
               }`}
             >
-              {c.name} ({count})
+              {cat.name} ({count})
             </button>
           );
         })}

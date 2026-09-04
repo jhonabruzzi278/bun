@@ -16,7 +16,7 @@ export function useCatalogStore() {
   const [categories, setCategoriesState] = useState<Category[]>(INITIAL_CATEGORIES);
   const [products, setProductsState] = useState<Product[]>(INITIAL_PRODUCTS);
   const [onboardingStages, setOnboardingStages] = useState<OnboardingStage[]>(INITIAL_ONBOARDING_STAGES);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(true);
 
   useEffect(() => {
     try {

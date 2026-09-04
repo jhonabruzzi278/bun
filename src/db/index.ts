@@ -1,17 +1,15 @@
-import { drizzle } from 'drizzle-orm/node-postgres';
-import pg from 'pg';
+import { drizzle } from 'drizzle-orm/libsql';
+import { createClient } from '@libsql/client';
 import * as schema from './schema';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-const { Pool } = pg;
+const url = process.env.TURSO_DATABASE_URL || process.env.DATABASE_URL || '';
+const authToken = process.env.TURSO_AUTH_TOKEN;
 
-const connectionString = process.env.DATABASE_URL || 'postgresql://postgres:postgrespassword@localhost:5432/bun_db';
-
-const pool = new Pool({
-  connectionString,
-  max: 10,
-  idleTimeoutMillis: 30000,
+export const client = createClient({
+  url,
+  authToken,
 });
 
-export const db = drizzle(pool, { schema });
+export const db = drizzle(client, { schema });

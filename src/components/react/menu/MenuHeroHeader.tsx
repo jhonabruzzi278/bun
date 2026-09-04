@@ -11,21 +11,21 @@ export default function MenuHeroHeader({ business, themeColor }: MenuHeroHeaderP
   return (
     <div className="relative">
       {/* Cover Banner */}
-      <div className="h-44 md:h-60 w-full bg-[#241512] overflow-hidden relative">
+      <div className="h-44 md:h-60 w-full bg-zinc-900 overflow-hidden relative">
         {business.bannerUrl && (
           <img
             src={business.bannerUrl}
             alt={business.name}
-            className="w-full h-full object-cover opacity-70"
+            className="w-full h-full object-cover opacity-80"
           />
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#180E0C] via-[#180E0C]/40 to-transparent"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-[#09090B] via-[#09090B]/50 to-transparent"></div>
       </div>
 
       {/* Info Card */}
       <div className="max-w-3xl mx-auto px-4 -mt-16 relative z-10">
         <div className="flex items-end gap-4">
-          <div className="w-24 h-24 rounded-2xl bg-[#241512] border-4 border-[#180E0C] shadow-2xl overflow-hidden shrink-0">
+          <div className="w-24 h-24 rounded-3xl bg-zinc-900 border-4 border-[#09090B] shadow-2xl overflow-hidden shrink-0">
             {business.logoUrl ? (
               <img
                 src={business.logoUrl}
@@ -38,7 +38,7 @@ export default function MenuHeroHeader({ business, themeColor }: MenuHeroHeaderP
           </div>
 
           <div className="pb-1 min-w-0 flex-1">
-            <h1 className="text-xl md:text-2xl font-black text-white truncate">
+            <h1 className="text-xl md:text-2xl font-black text-white truncate tracking-tight">
               {business.name}
             </h1>
             <p className="text-xs text-emerald-400 font-semibold flex items-center gap-1.5 mt-0.5">
@@ -48,18 +48,18 @@ export default function MenuHeroHeader({ business, themeColor }: MenuHeroHeaderP
           </div>
         </div>
 
-        <p className="text-xs text-[#D4C5B9] mt-3 line-clamp-2">{business.description}</p>
+        <p className="text-xs text-zinc-300 mt-3 line-clamp-2 leading-relaxed">{business.description}</p>
 
-        <div className="flex items-center gap-4 text-[11px] text-[#A8988B] mt-2 flex-wrap">
+        <div className="flex items-center gap-4 text-[11px] text-zinc-400 mt-2.5 flex-wrap">
           {business.address && (
-            <span className="flex items-center gap-1 truncate">
-              <MapPin className="w-3.5 h-3.5 shrink-0" style={{ color: themeColor }} />
+            <span className="flex items-center gap-1.5 truncate">
+              <MapPin className="w-3.5 h-3.5 shrink-0 text-amber-400" />
               {business.address}
             </span>
           )}
           {business.phone && (
-            <span className="flex items-center gap-1">
-              <Phone className="w-3.5 h-3.5 shrink-0" style={{ color: themeColor }} />
+            <span className="flex items-center gap-1.5">
+              <Phone className="w-3.5 h-3.5 shrink-0 text-amber-400" />
               {business.phone}
             </span>
           )}

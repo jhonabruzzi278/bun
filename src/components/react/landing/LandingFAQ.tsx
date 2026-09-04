@@ -1,27 +1,27 @@
 import React, { useState } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { IconChevronDown } from '@tabler/icons-react';
 
 export default function LandingFAQ() {
   const faqs = [
     {
       q: '¿Cómo funciona la recepción de pedidos por WhatsApp?',
-      a: 'Tus clientes entran a tu enlace o escanean el QR, seleccionan sus productos y al hacer clic en "Pedir", se abre WhatsApp con el mensaje completamente formateado con el desglose del pedido, total, nombre y dirección del cliente.',
+      a: 'Tus clientes escanean el código QR en mesa o abren el enlace en redes sociales, eligen sus productos y al presionar "Pedir", WhatsApp se abre automáticamente con la comanda perfectamente estructurada con subtotales, notas y dirección.',
     },
     {
-      q: '¿Cobran comisiones o porcentajes por cada venta?',
-      a: 'No. En BUN creemos en el crecimiento de tu restaurante. No cobramos comisiones por pedido ni por volumen de ventas.',
+      q: '¿Cobran comisiones por cada pedido o venta realizada?',
+      a: 'Cero comisiones. En brew.cl el 100% de lo que vendes es para tu negocio. Solo pagas la suscripción fija mensual si decides activar el plan Pro.',
     },
     {
-      q: '¿Qué es el Tablero de Cocina KDS y qué equipo necesito?',
-      a: 'El KDS (Kitchen Display System) es una pantalla web que reemplaza las comandas de papel. Funciona en cualquier tablet (iPad o Android), televisor Smart TV o computador con navegador web.',
+      q: '¿Qué es el Tablero de Cocina KDS y qué pantalla necesito?',
+      a: 'El KDS (Kitchen Display System) reemplaza las comandas impresas en papel térmico. Funciona en cualquier navegador: tablets (iPad, Android), pantallas táctiles o monitores en cocina y barra.',
     },
     {
-      q: '¿Puedo conectar mi propio dominio (.cl, .com, .mx)?',
-      a: 'Sí. A partir del Plan Pro puedes vincular tu propio dominio personalizado (ej. tudominio.com) para que tus clientes naveguen directamente en tu marca.',
+      q: '¿Puedo conectar mi propio dominio (.cl, .com)?',
+      a: 'Sí. A partir del Plan Pro puedes configurar tu dominio personalizado para que tus clientes naveguen bajo tu marca propia.',
     },
     {
-      q: '¿Cuánto tiempo toma tener el menú listo?',
-      a: 'Menos de 5 minutos. Solo ingresas el nombre de tu local, creas tus categorías, cargas tus productos con foto y precio, y tu menú estará en línea de inmediato.',
+      q: '¿Quién es Brew y qué funciones realiza el copiloto IA?',
+      a: 'Brew es una lechuza barista y cervecera 🦉. Es nuestro motor analítico que evalúa las comandas nocturnas, calcula los platos con mayor margen y te propone combinaciones para aumentar el ticket promedio.',
     },
   ];
 
@@ -32,44 +32,48 @@ export default function LandingFAQ() {
   };
 
   return (
-    <section id="faq" className="py-20 md:py-32 bg-slate-950/40 border-t border-slate-800/80">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-        
-        <div className="text-center space-y-3">
-          <span className="text-xs font-extrabold uppercase tracking-widest text-brand-400 bg-brand-500/10 px-3 py-1 rounded-full border border-brand-500/20">
-            Resuelve tus dudas
-          </span>
-          <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
-            Preguntas Frecuentes
+    <section id="faq" className="py-20 md:py-28 border-t border-white/[0.08] font-mono">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6">
+        <p className="text-xs uppercase tracking-widest text-amber-400/90 mb-4">
+          // PREGUNTAS_FRECUENTES_04
+        </p>
+
+        <div className="mb-12">
+          <h2 className="text-3xl md:text-4xl font-normal text-white mb-3 tracking-tight">
+            Dudas comunes sobre la plataforma
           </h2>
+          <p className="text-sm text-zinc-400">
+            Todo lo que necesitas saber antes de implementar brew.cl en tu negocio.
+          </p>
         </div>
 
-        <div className="space-y-3">
+        <div className="border-t border-white/[0.08] divide-y divide-white/[0.08]">
           {faqs.map((faq, idx) => {
             const isOpen = openIdx === idx;
             return (
-              <div
-                key={idx}
-                className="rounded-2xl bg-slate-900/80 border border-slate-800 overflow-hidden transition"
-              >
+              <div key={idx} className="py-5">
                 <button
                   type="button"
                   onClick={() => toggle(idx)}
-                  className="w-full p-5 text-left flex items-center justify-between gap-4 text-sm sm:text-base font-bold text-white hover:text-brand-400 transition"
+                  className="w-full text-left flex items-center justify-between gap-4 text-sm font-semibold text-white hover:text-amber-400 transition-colors"
                 >
                   <span>{faq.q}</span>
-                  <ChevronDown className={`w-5 h-5 text-slate-400 transition-transform ${isOpen ? 'rotate-180 text-brand-400' : ''}`} />
+                  <IconChevronDown
+                    className={`w-4 h-4 text-zinc-500 shrink-0 transition-transform duration-200 ${
+                      isOpen ? 'rotate-180 text-amber-400' : ''
+                    }`}
+                  />
                 </button>
+
                 {isOpen && (
-                  <div className="px-5 pb-5 text-xs sm:text-sm text-slate-400 leading-relaxed border-t border-slate-800/60 pt-3">
+                  <p className="text-xs text-zinc-400 leading-relaxed mt-3 pr-8 font-sans">
                     {faq.a}
-                  </div>
+                  </p>
                 )}
               </div>
             );
           })}
         </div>
-
       </div>
     </section>
   );

@@ -1,35 +1,25 @@
 ---
 import AdminLayout from '../../layouts/AdminLayout.astro';
-import { Printer } from 'lucide-react';
+import ThermalPrinterSimulatorIsland from '../../components/react/printers/ThermalPrinterSimulatorIsland';
 ---
 
-<AdminLayout title="Impresoras y Tickets" activePath="/admin/printers">
-  <div class="max-w-4xl mx-auto space-y-6 pb-12">
+<AdminLayout title="Impresoras Térmicas ESC/POS" activePath="/admin/printers">
+  <div class="max-w-6xl mx-auto space-y-6 pb-16">
     <div>
-      <h1 class="text-2xl sm:text-3xl font-extrabold text-coffee-950 dark:text-white tracking-tight">
-        Impresoras y Tickets
+      <div class="flex items-center gap-2 text-xs font-bold text-amber-500 uppercase tracking-widest">
+        <span>Hardware & Periféricos</span>
+        <span>•</span>
+        <span>Simulador ESC/POS</span>
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-coffee-950 dark:text-white tracking-tight mt-1">
+        Impresoras Térmicas & Tickets
       </h1>
       <p class="text-xs sm:text-sm text-[#70645A] dark:text-[#A8988B] mt-1">
-        Conecta impresoras térmicas ESC/POS (58mm / 80mm) para tickets de cocina y comandas.
+        Control y simulación de comanderas de cocina (80mm), barra (58mm) y pre-cuenta de cliente con corte automático.
       </p>
     </div>
 
-    <div class="p-6 rounded-2xl bg-white dark:bg-[#241512] border border-[#EAE1D6] dark:border-[#3D2420] shadow-coffee-sm space-y-4 transition-colors">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-[#FAF7F2] dark:bg-[#180E0C] border border-[#EAE1D6] dark:border-[#3D2420] flex items-center justify-center text-color4 dark:text-color2">
-            <Printer className="w-5 h-5" />
-          </div>
-          <div>
-            <h4 class="text-sm font-bold text-coffee-950 dark:text-white">Impresora de Cocina (Comandas)</h4>
-            <span class="text-xs text-[#70645A] dark:text-[#A8988B]">Térmica 80mm • USB / Red Local</span>
-          </div>
-        </div>
-
-        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#FEF8E3] dark:bg-[#33220E] text-[#A0740E] dark:text-[#FBBF24] border border-[#FDECB8] dark:border-[#593E1A]">
-          En configuración
-        </span>
-      </div>
-    </div>
+    <!-- Interactive Simulator Island -->
+    <ThermalPrinterSimulatorIsland client:load />
   </div>
 </AdminLayout>

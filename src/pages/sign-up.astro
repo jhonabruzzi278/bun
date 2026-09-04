@@ -1,0 +1,49 @@
+---
+import '../styles/global.css';
+import { SignUp } from '@clerk/astro/components';
+---
+
+<!DOCTYPE html>
+<html lang="es" class="dark h-full bg-[#09090B]">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Crear Cuenta - brew.cl</title>
+    <link rel="icon" type="image/jpeg" href="/images/brew-mascot.jpg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  </head>
+  <body class="h-full flex items-center justify-center p-4 bg-[#09090B] relative overflow-hidden text-white font-sans antialiased">
+    {/* Subtle Apple Ambient Glow */}
+    <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-amber-500/[0.08] rounded-full blur-[120px] pointer-events-none" />
+
+    <div class="w-full max-w-md space-y-6 relative z-10">
+      {/* Brand Header with Brew Mascot */}
+      <div class="text-center space-y-3">
+        <div class="inline-flex items-center justify-center w-20 h-20 rounded-3xl overflow-hidden border-2 border-amber-500/40 shadow-2xl shadow-black bg-zinc-900">
+          <img src="/images/brew-mascot.jpg" alt="Brew Mascot" class="w-full h-full object-cover" />
+        </div>
+        <div>
+          <h1 class="text-2xl font-black tracking-tight text-white flex items-center justify-center gap-1.5">
+            brew<span class="text-amber-500">.cl</span>
+          </h1>
+          <p class="text-xs text-zinc-400 mt-0.5">
+            Únete a la plataforma gastronómica de nueva generación
+          </p>
+        </div>
+      </div>
+
+      {/* Clerk Sign-Up Component Container */}
+      <div class="flex justify-center">
+        <SignUp routing="path" path="/sign-up" signInUrl="/sign-in" />
+      </div>
+
+      {/* Footer */}
+      <p class="text-center text-[11px] text-zinc-500">
+        Al registrarte aceptas los Términos y Condiciones de <span class="text-amber-400">brew.cl</span>
+      </p>
+    </div>
+
+  </body>
+</html>

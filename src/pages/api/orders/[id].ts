@@ -17,10 +17,18 @@ export const PATCH: APIRoute = async ({ params, request }) => {
     const { status } = body;
 
     try {
+      const now = new Date().toISOString();
       await db.update(orders).set({
         status,
-        updatedAt: new Date(),
+        updatedAt: now,
       }).where(eq(orders.id, id));
+
+      try {
+        const { emitUpdateOrder } = await import('../../../lib/realtime');
+        emitUpdateOrder({ orderId: id, status });
+      } catch (realtimeErr) {
+        console.warn('Realtime update order error:', realtimeErr);
+      }
     } catch (dbErr) {
       console.warn(`DB Fallback update order ${id}:`, dbErr);
     }

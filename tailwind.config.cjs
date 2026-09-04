@@ -5,47 +5,47 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Paleta Café Cálida Solicitada por el Usuario
-        color1: '#BEC483', // Sage / Oliva cálido
-        color2: '#C7B140', // Mostaza / Oro cálido
-        color3: '#B1813B', // Caramelo / Ocre tostado
-        color4: '#774C3B', // Moca / Café Cálido (Principal)
-        color5: '#522B2B', // Espresso / Café Oscuro Profundo
+        // Paleta Apple Craft - Luminous Amber & Deep Obsidian
+        color1: '#10B981', // Emerald activo
+        color2: '#FBBF24', // Oro cálido Apple
+        color3: '#F59E0B', // Ámbar Cervecero Brillante
+        color4: '#D97706', // Ámbar Tostado Principal
+        color5: '#18181B', // Zinc Dark Profundo
 
-        // Escala completa de tonos Café / Latte
+        // Escala Café / Zinc Oscuro Apple
         coffee: {
-          50: '#FAF7F2',   // Crema fondo claro ultra suave
-          100: '#F4EFE6',  // Fondo secundario latte
-          200: '#E8DFD3',  // Bordes sutiles cálidos
-          300: '#D7C7B5',  // Bordes activos / dividers
-          400: '#BEC483',  // .color1 (Sage/Oliva)
-          500: '#C7B140',  // .color2 (Oro)
-          600: '#B1813B',  // .color3 (Caramelo)
-          700: '#774C3B',  // .color4 (Moca Principal)
-          800: '#522B2B',  // .color5 (Espresso Oscuro)
-          900: '#381C1C',  // Espresso Tostado Intenso
-          950: '#231010',  // Texto de máximo contraste
+          50: '#FAF7F2',   // Crema fondo claro suave
+          100: '#F4EFE6',  // Fondo secundario
+          200: '#E8DFD3',  // Bordes sutiles
+          300: '#D7C7B5',  // Bordes activos
+          400: '#FBBF24',  // Oro ámbar
+          500: '#F59E0B',  // Ámbar artesanal
+          600: '#D97706',  // Ámbar tostado
+          700: '#B45309',  // Tostado profundo
+          800: '#27272A',  // Zinc 800
+          900: '#18181B',  // Zinc 900
+          950: '#09090B',  // Obsidian Apple
         },
 
         brand: {
-          50: '#FAF7F2',
-          100: '#F4EFE6',
-          200: '#E8DFD3',
-          300: '#D7C7B5',
-          400: '#B1813B',
-          500: '#774C3B', // Moca Principal
-          600: '#522B2B',
-          700: '#381C1C',
-          800: '#2D1515',
-          900: '#1D0D0D',
-          950: '#120707',
+          50: '#FBFBFD',
+          100: '#F5F5F7',
+          200: '#E5E5EA',
+          300: '#D1D1D6',
+          400: '#FBBF24',
+          500: '#F59E0B', // Ámbar Principal
+          600: '#D97706',
+          700: '#B45309',
+          800: '#27272A',
+          900: '#18181B',
+          950: '#09090B',
         },
 
-        // Sidebar con estilo Maestro Cervecero / Coffee Shop
+        // Sidebar Apple Dark Glass
         sidebar: {
           bg: '#FAF7F2',
           hover: '#F0E8DD',
-          active: '#774C3B',
+          active: '#F59E0B',
           text: '#70645A',
           textActive: '#FFFFFF',
           border: '#EAE1D6',
@@ -55,10 +55,13 @@ module.exports = {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
       },
       boxShadow: {
-        'coffee-sm': '0 1px 3px 0 rgba(82, 43, 43, 0.05), 0 1px 2px -1px rgba(82, 43, 43, 0.05)',
-        'coffee-md': '0 4px 12px -2px rgba(82, 43, 43, 0.08), 0 2px 6px -2px rgba(82, 43, 43, 0.04)',
-        'coffee-lg': '0 10px 25px -3px rgba(82, 43, 43, 0.1), 0 4px 10px -4px rgba(82, 43, 43, 0.05)',
-        'glass': '0 8px 32px 0 rgba(82, 43, 43, 0.06)',
+        'coffee-sm': '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1)',
+        'coffee-md': '0 4px 12px -2px rgba(0, 0, 0, 0.15), 0 2px 6px -2px rgba(0, 0, 0, 0.1)',
+        'coffee-lg': '0 10px 25px -3px rgba(0, 0, 0, 0.25), 0 4px 10px -4px rgba(0, 0, 0, 0.15)',
+        'apple-glow': '0 0 25px -5px rgba(245, 158, 11, 0.3)',
+      },
+      animation: {
+        'pulse-subtle': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
       }
     },
   },

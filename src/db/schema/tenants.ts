@@ -1,15 +1,16 @@
-import { pgTable, text, timestamp, boolean, uuid } from 'drizzle-orm/pg-core';
+import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
+import { sql } from 'drizzle-orm';
 
-export const tenants = pgTable('tenants', {
+export const tenants = sqliteTable('tenants', {
   id: text('id').primaryKey(), // e.g. 'tenant_001'
   name: text('name').notNull(),
   plan: text('plan').default('starter').notNull(), // 'starter', 'pro', 'dedicated'
-  isActive: boolean('is_active').default(true).notNull(),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  isActive: integer('is_active', { mode: 'boolean' }).default(true).notNull(),
+  createdAt: text('created_at').default(sql`(CURRENT_TIMESTAMP)`).notNull(),
+  updatedAt: text('updated_at').default(sql`(CURRENT_TIMESTAMP)`).notNull(),
 });
 
-export const businesses = pgTable('businesses', {
+export const businesses = sqliteTable('businesses', {
   id: text('id').primaryKey(), // e.g. 'biz_001'
   tenantId: text('tenant_id').references(() => tenants.id, { onDelete: 'cascade' }).notNull(),
   name: text('name').notNull(),
@@ -22,8 +23,8 @@ export const businesses = pgTable('businesses', {
   currency: text('currency').default('USD').notNull(), // 'USD', 'CLP', 'MXN', 'EUR'
   currencySymbol: text('currency_symbol').default('$').notNull(),
   primaryColor: text('primary_color').default('#f97316').notNull(),
-  whatsappOrders: boolean('whatsapp_orders').default(true).notNull(),
-  isOpen: boolean('is_open').default(true).notNull(),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  whatsappOrders: integer('whatsapp_orders', { mode: 'boolean' }).default(true).notNull(),
+  isOpen: integer('is_open', { mode: 'boolean' }).default(true).notNull(),
+  createdAt: text('created_at').default(sql`(CURRENT_TIMESTAMP)`).notNull(),
+  updatedAt: text('updated_at').default(sql`(CURRENT_TIMESTAMP)`).notNull(),
 });

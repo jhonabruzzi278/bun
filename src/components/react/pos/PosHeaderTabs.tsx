@@ -1,5 +1,6 @@
 import React from 'react';
 import { ShoppingBag, Truck, Armchair, Plus, CheckCircle2 } from 'lucide-react';
+import { Button, Badge } from '@/components/ui';
 
 export type ServiceTab = 'COUNTER' | 'DELIVERY' | 'TABLES';
 
@@ -27,21 +28,21 @@ export default function PosHeaderTabs({
   onOpenNewOrder,
 }: PosHeaderTabsProps) {
   return (
-    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#EAE1D6] dark:border-[#3D2420] pb-4">
-      {/* Service Tabs */}
-      <div className="flex items-center gap-2 overflow-x-auto">
+    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-neutral-200 dark:border-white/[0.08] pb-4">
+      {/* Apple-style Segmented Service Tabs */}
+      <div className="flex items-center gap-1.5 overflow-x-auto p-1 rounded-2xl bg-white/70 dark:bg-white/[0.05] border border-neutral-200 dark:border-white/[0.08] backdrop-blur-md">
         <button
           type="button"
           onClick={() => onTabChange('COUNTER')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs transition whitespace-nowrap ${
+          className={`flex items-center gap-2 px-3.5 py-2 rounded-xl font-bold text-xs transition-all duration-200 whitespace-nowrap active:scale-95 ${
             activeTab === 'COUNTER'
-              ? 'bg-color4 text-white shadow-coffee-sm'
-              : 'bg-white dark:bg-[#241512] text-[#70645A] dark:text-[#A8988B] hover:text-coffee-950 dark:hover:text-white border border-[#EAE1D6] dark:border-[#3D2420]'
+              ? 'bg-white text-black dark:bg-white dark:text-black shadow-sm font-black'
+              : 'text-[#70645A] dark:text-[#A8988B] hover:text-black dark:hover:text-white'
           }`}
         >
-          <ShoppingBag className="w-4 h-4" />
+          <ShoppingBag className="w-3.5 h-3.5" />
           <span>Mostrador</span>
-          <span className="px-1.5 py-0.5 rounded-full text-[10px] bg-black/20 text-white font-mono">
+          <span className="px-1.5 py-0.5 rounded-full text-[10px] bg-black/10 dark:bg-black/40 text-neutral-800 dark:text-neutral-300 font-mono">
             {counterCount}
           </span>
         </button>
@@ -49,15 +50,15 @@ export default function PosHeaderTabs({
         <button
           type="button"
           onClick={() => onTabChange('DELIVERY')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs transition whitespace-nowrap ${
+          className={`flex items-center gap-2 px-3.5 py-2 rounded-xl font-bold text-xs transition-all duration-200 whitespace-nowrap active:scale-95 ${
             activeTab === 'DELIVERY'
-              ? 'bg-color4 text-white shadow-coffee-sm'
-              : 'bg-white dark:bg-[#241512] text-[#70645A] dark:text-[#A8988B] hover:text-coffee-950 dark:hover:text-white border border-[#EAE1D6] dark:border-[#3D2420]'
+              ? 'bg-white text-black dark:bg-white dark:text-black shadow-sm font-black'
+              : 'text-[#70645A] dark:text-[#A8988B] hover:text-black dark:hover:text-white'
           }`}
         >
-          <Truck className="w-4 h-4" />
+          <Truck className="w-3.5 h-3.5" />
           <span>A domicilio</span>
-          <span className="px-1.5 py-0.5 rounded-full text-[10px] bg-black/20 text-white font-mono">
+          <span className="px-1.5 py-0.5 rounded-full text-[10px] bg-black/10 dark:bg-black/40 text-neutral-800 dark:text-neutral-300 font-mono">
             {deliveryCount}
           </span>
         </button>
@@ -66,15 +67,15 @@ export default function PosHeaderTabs({
           <button
             type="button"
             onClick={() => onTabChange('TABLES')}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs transition whitespace-nowrap ${
+            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl font-bold text-xs transition-all duration-200 whitespace-nowrap active:scale-95 ${
               activeTab === 'TABLES'
-                ? 'bg-color4 text-white shadow-coffee-sm'
-                : 'bg-white dark:bg-[#241512] text-[#70645A] dark:text-[#A8988B] hover:text-coffee-950 dark:hover:text-white border border-[#EAE1D6] dark:border-[#3D2420]'
+                ? 'bg-white text-black dark:bg-white dark:text-black shadow-sm font-black'
+                : 'text-[#70645A] dark:text-[#A8988B] hover:text-black dark:hover:text-white'
             }`}
           >
-            <Armchair className="w-4 h-4" />
+            <Armchair className="w-3.5 h-3.5" />
             <span>Mesas</span>
-            <span className="px-1.5 py-0.5 rounded-full text-[10px] bg-black/20 text-white font-mono">
+            <span className="px-1.5 py-0.5 rounded-full text-[10px] bg-black/10 dark:bg-black/40 text-neutral-800 dark:text-neutral-300 font-mono">
               {tablesCount}
             </span>
           </button>
@@ -83,22 +84,23 @@ export default function PosHeaderTabs({
 
       {/* Right Side: Total Sales & New Order Button */}
       <div className="flex items-center gap-3">
-        <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white dark:bg-[#241512] border border-[#EAE1D6] dark:border-[#3D2420] text-xs">
-          <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-          <span className="text-[#8C7E73] dark:text-[#A8988B]">Caja Abierta:</span>
-          <span className="font-mono font-bold text-coffee-950 dark:text-white">
+        <div className="hidden sm:flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-white/70 dark:bg-white/[0.05] border border-neutral-200 dark:border-white/[0.08] backdrop-blur-md text-xs">
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span className="text-[#8C7E73] dark:text-[#A8988B] font-medium">Caja Abierta:</span>
+          <span className="font-mono font-black text-coffee-950 dark:text-amber-400">
             {currencySymbol}{totalSalesToday.toLocaleString('es-CL')}
           </span>
         </div>
 
-        <button
-          type="button"
+        <Button
+          variant="primary"
+          size="default"
           onClick={onOpenNewOrder}
-          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-color4 hover:bg-[#522B2B] text-white font-bold text-xs shadow-coffee-sm transition"
+          className="shadow-lg shadow-amber-500/20"
         >
           <Plus className="w-4 h-4" />
           <span>Nuevo Pedido</span>
-        </button>
+        </Button>
       </div>
     </div>
   );

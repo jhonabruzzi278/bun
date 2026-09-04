@@ -1,134 +1,136 @@
 import React from 'react';
-import { Smartphone, QrCode, MessageSquare, ChefHat, BarChart3, Zap, Shield, Sparkles, Layers, Sliders, Bell } from 'lucide-react';
+import {
+  IconQrcode,
+  IconBrandWhatsapp,
+  IconChefHat,
+  IconCash,
+  IconSparkles,
+  IconDatabase,
+  IconArrowUpRight
+} from '@tabler/icons-react';
 
 export default function LandingFeatures() {
-  const features = [
+  const modules = [
     {
-      icon: <QrCode className="w-6 h-6 text-brand-400" />,
-      badge: 'Menú Digital',
-      title: 'Catálogo QR y Móvil Ultrarrápido',
-      description: 'Menú interactivo con fotos en alta definición, selección de variantes (tamaños) y extras con cobro adicional.',
+      id: 'menu',
+      name: 'Menú Digital QR',
+      description: 'Carta web responsive con carga instantánea, selector de variantes, notas y extras con cobro dinámico.',
+      icon: IconQrcode,
+      href: '/menu/burger-craft',
+      tags: ['CLIENTE', 'QR INTERACTIVO'],
+      featured: true,
     },
     {
-      icon: <MessageSquare className="w-6 h-6 text-emerald-400" />,
-      badge: 'WhatsApp Orders',
-      title: 'Pedidos Directos a WhatsApp',
-      description: 'El cliente arma su pedido en el carrito web y se envía con el detalle formateado directamente al chat de tu negocio.',
+      id: 'whatsapp',
+      name: 'Pedidos por WhatsApp',
+      description: 'Envío de comanda estructurada con resumen, notas especiales y total calculado directo al chat del local.',
+      icon: IconBrandWhatsapp,
+      href: '/menu/burger-craft',
+      tags: ['VENTA DIRECTA', '0% COMISIÓN'],
+      featured: false,
     },
     {
-      icon: <ChefHat className="w-6 h-6 text-amber-400" />,
-      badge: 'Cocina KDS',
-      title: 'Pantalla de Cocina en Tiempo Real',
-      description: 'Organiza comandas en tarjetas con estados (Pendiente, Preparando, Listo), cronómetros automáticos y semáforo de demoras.',
+      id: 'kds',
+      name: 'Cocina KDS en Tiempo Real',
+      description: 'Tablero de comandas con cronómetro en vivo, semáforo de demoras y filtrado por estaciones de preparación.',
+      icon: IconChefHat,
+      href: '/admin/kitchen',
+      tags: ['COCINA', 'POLLING CLOUD'],
+      featured: true,
     },
     {
-      icon: <Layers className="w-6 h-6 text-cyan-400" />,
-      badge: 'Estaciones de Cocina',
-      title: 'División por Estaciones',
-      description: 'Separa automáticamente pedidos hacia Parrilla, Frituras o Bar para que cada área trabaje coordinada.',
+      id: 'pos',
+      name: 'Punto de Venta (POS)',
+      description: 'Caja rápida para atención en mostrador y comandas de mesas con arqueo en vivo y control de turno.',
+      icon: IconCash,
+      href: '/admin/pos',
+      tags: ['CAJA', 'MOSTRADOR'],
+      featured: false,
     },
     {
-      icon: <Bell className="w-6 h-6 text-purple-400" />,
-      badge: 'Alertas Sonoras',
-      title: 'Avisos Acústicos sin Retraso',
-      description: 'Sonidos de nueva comanda y alerta de plato demorado sin necesidad de instalar apps pesadas.',
+      id: 'ai',
+      name: 'Copiloto Brew IA',
+      description: 'Asesoría con la lechuza Brew: diagnóstico de rotación, sugerencia de maridajes y matriz de rentabilidad.',
+      icon: IconSparkles,
+      href: '/admin/ai',
+      tags: ['LECHUZA BREW', 'ANALÍTICA'],
+      featured: true,
     },
     {
-      icon: <BarChart3 className="w-6 h-6 text-rose-400" />,
-      badge: 'Multi-tenant SaaS',
-      title: 'Arquitectura Escalable & Marca Propia',
-      description: 'Diseñado desde la base para soportar subdominios, dominios propios (.cl, .com) y múltiples sucursales.',
+      id: 'turso',
+      name: 'Base de Datos libSQL Turso',
+      description: 'Almacenamiento en edge ultrarrápido con SQLite serverless sincronizado entre clientes y barra sin fricción.',
+      icon: IconDatabase,
+      href: '/admin',
+      tags: ['EDGE COMPUTING', '5MS LATENCIA'],
+      featured: false,
     },
   ];
 
   return (
-    <section id="features" className="py-20 md:py-32 bg-slate-950/60 border-t border-slate-800/80">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
-        
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto space-y-4">
-          <span className="text-xs font-extrabold uppercase tracking-widest text-brand-400 bg-brand-500/10 px-3 py-1 rounded-full border border-brand-500/20">
-            Todo lo que tu negocio necesita
-          </span>
-          <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
-            Herramientas Modernas para Vender Más y Despachar Más Rápido
+    <section id="modulos" className="py-20 md:py-28 border-t border-white/[0.08] font-mono">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        {/* Section Kicker & Header */}
+        <p className="text-xs uppercase tracking-widest text-amber-400/90 mb-4">
+          // MODULOS_OPERATIVOS_02
+        </p>
+
+        <div className="mb-12">
+          <h2 className="text-3xl md:text-4xl font-normal text-white mb-3 tracking-tight">
+            Ecosistema modular de brew.cl
           </h2>
-          <p className="text-slate-400 text-sm sm:text-base">
-            Inspirado en la simplicidad de OlaClick, pero potenciado con una arquitectura multi-tenant de alto rendimiento.
+          <p className="text-sm text-zinc-400 max-w-lg">
+            Componentes desacoplados construidos para operar a alta velocidad tanto en sala como en cocina y delivery.
           </p>
         </div>
 
-        {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {features.map((f, idx) => (
-            <div
-              key={idx}
-              className="p-8 rounded-3xl bg-slate-900/80 border border-slate-800 hover:border-slate-700 transition hover:-translate-y-1 group space-y-4 flex flex-col justify-between shadow-xl"
-            >
-              <div className="space-y-4">
-                <div className="w-12 h-12 rounded-2xl bg-slate-950 border border-slate-800 flex items-center justify-center group-hover:scale-110 transition shadow-md">
-                  {f.icon}
-                </div>
-                <div>
-                  <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 font-mono">
-                    {f.badge}
+        {/* The Signature ToolDev Border Grid Layout */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 border-t border-l border-white/[0.08]">
+          {modules.map((m) => {
+            const Icon = m.icon;
+
+            return (
+              <a
+                key={m.id}
+                href={m.href}
+                className="group relative block border-r border-b border-white/[0.08] p-7 hover:bg-white/[0.02] transition-colors"
+              >
+                {/* Minimalist Top Corner Sparkle */}
+                {m.featured && (
+                  <span className="absolute top-4 right-4 text-amber-400 text-sm" aria-hidden="true">
+                    ✦
                   </span>
-                  <h3 className="text-lg font-bold text-white mt-1 group-hover:text-brand-400 transition">
-                    {f.title}
+                )}
+
+                {/* Header: Icon + Title + Diagonal Arrow */}
+                <div className="flex items-center gap-2.5 mb-3">
+                  <Icon className="w-4 h-4 text-amber-400 shrink-0" />
+                  <h3 className="text-sm font-semibold text-white truncate tracking-tight">
+                    {m.name}
                   </h3>
+                  <IconArrowUpRight className="w-3.5 h-3.5 text-zinc-600 group-hover:text-amber-400 transition-colors shrink-0 ml-auto" />
                 </div>
-                <p className="text-xs text-slate-400 leading-relaxed">
-                  {f.description}
+
+                {/* Description */}
+                <p className="text-xs text-zinc-400 leading-relaxed mb-6 line-clamp-3 font-sans">
+                  {m.description}
                 </p>
-              </div>
-            </div>
-          ))}
+
+                {/* Minimalist Micro-tags */}
+                <div className="flex items-center gap-2 flex-wrap">
+                  {m.tags.map((tag, idx) => (
+                    <span
+                      key={idx}
+                      className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-[2px] border border-white/[0.08] text-zinc-400 bg-white/[0.02]"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </a>
+            );
+          })}
         </div>
-
-        {/* Showcase Banner KDS */}
-        <div id="kds" className="relative rounded-3xl bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 p-8 md:p-12 border border-slate-800 overflow-hidden">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-            <div className="space-y-4">
-              <span className="text-xs font-bold text-emerald-400 uppercase tracking-widest">
-                ● Enfoque en Cocina (KDS)
-              </span>
-              <h3 className="text-2xl sm:text-4xl font-black text-white tracking-tight">
-                Dile adiós al desorden de comandas en papel
-              </h3>
-              <p className="text-slate-300 text-sm leading-relaxed">
-                Tus cocineros tendrán una pantalla clara con los pedidos ordenados por tiempo de espera. Sabrán exactamente qué preparar, con qué ingredientes extra y notas especiales.
-              </p>
-              <div className="pt-2">
-                <a
-                  href="/admin/kitchen"
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-brand-500 hover:bg-brand-600 text-white font-bold text-xs shadow-lg shadow-brand-500/25 transition"
-                >
-                  <ChefHat className="w-4 h-4" />
-                  Abrir Tablero de Cocina KDS
-                </a>
-              </div>
-            </div>
-
-            <div className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3 font-mono text-xs shadow-2xl">
-              <div className="flex items-center justify-between pb-2 border-b border-slate-800">
-                <span className="font-bold text-white">PEDIDO #104 (Mesa 2)</span>
-                <span className="text-emerald-400 font-bold">PREPARANDO (03:45)</span>
-              </div>
-              <div className="space-y-1 text-slate-300">
-                <p className="font-bold text-white">1x Doble Smash Burger</p>
-                <p className="text-[11px] text-amber-400 pl-4">└ Tocino Extra Crispy</p>
-                <p className="text-[11px] text-amber-400 pl-4">└ Queso Cheddar Fundido</p>
-                <p className="font-bold text-white">1x Papas Rústicas</p>
-              </div>
-              <div className="pt-2 flex gap-2">
-                <button className="flex-1 py-1.5 bg-emerald-600 text-white font-bold rounded-lg text-center">
-                  LISTO PARA SERVIR ✓
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
       </div>
     </section>
   );

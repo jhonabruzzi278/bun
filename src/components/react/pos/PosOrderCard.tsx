@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Product } from '@/lib/types';
-import { Clock, Eye, CheckCircle2 } from 'lucide-react';
+import { Clock, Eye, CheckCircle2, Printer, MessageCircle } from 'lucide-react';
+import { openCustomerNotificationWhatsApp } from '@/lib/whatsappOrderBuilder';
 
 export interface PosOrder {
   id: string;
@@ -20,12 +21,14 @@ interface PosOrderCardProps {
   order: PosOrder;
   currencySymbol: string;
   onAdvanceStatus: (orderId: string) => void;
+  onPrintOrder?: (order: PosOrder) => void;
 }
 
 export default function PosOrderCard({
   order,
   currencySymbol,
   onAdvanceStatus,
+  onPrintOrder,
 }: PosOrderCardProps) {
   const getStatusBadge = (status: PosOrder['status']) => {
     switch (status) {
@@ -89,14 +92,46 @@ export default function PosOrderCard({
           </span>
         </div>
 
-        <button
-          type="button"
-          onClick={() => onAdvanceStatus(order.id)}
-          className="px-3 py-1.5 rounded-xl bg-color4 hover:bg-[#522B2B] text-white text-xs font-bold shadow-sm transition flex items-center gap-1"
-        >
-          <CheckCircle2 className="w-3.5 h-3.5" />
-          <span>{order.status === 'PENDING' ? 'Preparar' : order.status === 'IN_PROGRESS' ? 'Despachar' : 'Completar'}</span>
-        </button>
+        <div className="flex items-center gap-1.5">
+          {order.customerPhone && (
+            <button
+              type="button"
+              onClick={() =>
+                openCustomerNotificationWhatsApp({
+                  phone: order.customerPhone!,
+                  customerName: order.customerName,
+                  orderNumber: order.orderNumber,
+                  status: order.status,
+                  total: order.total,
+                })
+              }
+              title="Notificar al cliente por WhatsApp (wa.me gratis)"
+              className="p-1.5 rounded-xl border border-emerald-300 dark:border-emerald-800 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 transition"
+            >
+              <MessageCircle className="w-3.5 h-3.5" />
+            </button>
+          )}
+
+          {onPrintOrder && (
+            <button
+              type="button"
+              onClick={() => onPrintOrder(order)}
+              title="Imprimir comanda térmica (ESC/POS)"
+              className="p-1.5 rounded-xl border border-[#EAE1D6] dark:border-[#3D2420] text-[#70645A] dark:text-[#A8988B] hover:text-coffee-950 dark:hover:text-white hover:bg-[#FAF7F2] dark:hover:bg-[#180E0C] transition"
+            >
+              <Printer className="w-3.5 h-3.5" />
+            </button>
+          )}
+
+          <button
+            type="button"
+            onClick={() => onAdvanceStatus(order.id)}
+            className="px-3 py-1.5 rounded-xl bg-color4 hover:bg-[#522B2B] text-white text-xs font-bold shadow-sm transition flex items-center gap-1"
+          >
+            <CheckCircle2 className="w-3.5 h-3.5" />
+            <span>{order.status === 'PENDING' ? 'Preparar' : order.status === 'IN_PROGRESS' ? 'Despachar' : 'Completar'}</span>
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import type { KitchenTicket, KitchenStatus, PrepStation } from './types';
 
 export const INITIAL_STATIONS: PrepStation[] = [
@@ -178,19 +178,148 @@ export function useKitchenStore() {
   const [selectedStation, setSelectedStation] = useState<string>('ALL');
   const [soundEnabled, setSoundEnabled] = useState<boolean>(true);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const knownTicketIds = useRef<Set<string>>(new Set());
+  const isInitialLoadDone = useRef<boolean>(false);
+  const soundEnabledRef = useRef<boolean>(soundEnabled);
+
+  useEffect(() => {
+    soundEnabledRef.current = soundEnabled;
+  }, [soundEnabled]);
 
   useEffect(() => {
     try {
       const storedTickets = localStorage.getItem(STORAGE_KEYS.TICKETS);
       const storedSound = localStorage.getItem(STORAGE_KEYS.SOUND_ENABLED);
 
-      if (storedTickets) setTickets(JSON.parse(storedTickets));
+      if (storedTickets) {
+        const parsed: KitchenTicket[] = JSON.parse(storedTickets);
+        setTickets(parsed);
+        parsed.forEach((t) => knownTicketIds.current.add(t.id));
+      }
       if (storedSound !== null) setSoundEnabled(storedSound === 'true');
     } catch (e) {
       console.error('Error loading kitchen tickets', e);
     } finally {
       setIsLoaded(true);
     }
+
+    const processIncomingTickets = (serverTickets: KitchenTicket[]) => {
+      if (!Array.isArray(serverTickets) || serverTickets.length === 0) return;
+
+      let hasNewPendingTicket = false;
+      serverTickets.forEach((t) => {
+        if (!knownTicketIds.current.has(t.id)) {
+          knownTicketIds.current.add(t.id);
+          if (t.status === 'PENDING' && isInitialLoadDone.current) {
+            hasNewPendingTicket = true;
+          }
+        }
+      });
+
+      if (hasNewPendingTicket && soundEnabledRef.current) {
+        playKitchenSound('new');
+      }
+
+      setTickets(serverTickets);
+      localStorage.setItem(STORAGE_KEYS.TICKETS, JSON.stringify(serverTickets));
+      isInitialLoadDone.current = true;
+    };
+
+    // 1. Initial fetch from Turso API
+    fetch('/api/kitchen')
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.success && Array.isArray(json.data)) {
+          processIncomingTickets(json.data);
+        }
+      })
+      .catch((err) => console.warn('Turso tickets initial fetch warning:', err))
+      .finally(() => {
+        isInitialLoadDone.current = true;
+      });
+
+    // 2. Realtime SSE connection (<200ms latency)
+    let eventSource: EventSource | null = null;
+    try {
+      eventSource = new EventSource('/api/realtime/events');
+
+      eventSource.addEventListener('kitchen:new_ticket', (e) => {
+        try {
+          const newTicket: KitchenTicket = JSON.parse(e.data);
+          if (!newTicket || !newTicket.id) return;
+
+          knownTicketIds.current.add(newTicket.id);
+
+          setTickets((prev) => {
+            const exists = prev.some((t) => t.id === newTicket.id);
+            if (exists) return prev;
+            const updated = [newTicket, ...prev];
+            localStorage.setItem(STORAGE_KEYS.TICKETS, JSON.stringify(updated));
+            return updated;
+          });
+
+          if (soundEnabledRef.current) {
+            playKitchenSound('new');
+          }
+        } catch (err) {
+          console.warn('Error processing SSE kitchen:new_ticket:', err);
+        }
+      });
+
+      eventSource.addEventListener('kitchen:update_ticket', (e) => {
+        try {
+          const payload = JSON.parse(e.data);
+          const { ticketId, status, patch } = payload || {};
+          if (!ticketId) return;
+
+          setTickets((prev) => {
+            const updated = prev.map((t) =>
+              t.id === ticketId ? { ...t, status: (status || t.status) as KitchenStatus, ...(patch || {}) } : t
+            );
+            localStorage.setItem(STORAGE_KEYS.TICKETS, JSON.stringify(updated));
+            return updated;
+          });
+        } catch (err) {
+          console.warn('Error processing SSE kitchen:update_ticket:', err);
+        }
+      });
+
+      eventSource.onerror = () => {
+        // EventSource automatically attempts reconnects
+      };
+    } catch (sseErr) {
+      console.warn('SSE not supported or failed to connect:', sseErr);
+    }
+
+    // 3. Fallback Polling (every 4 seconds for resilience)
+    const pollInterval = setInterval(() => {
+      fetch('/api/kitchen')
+        .then((res) => res.json())
+        .then((json) => {
+          if (json.success && Array.isArray(json.data)) {
+            processIncomingTickets(json.data);
+          }
+        })
+        .catch(() => {});
+    }, 4000);
+
+    // 4. Local storage event listener for same-browser multi-tab sync
+    const handleUpdate = () => {
+      const storedTickets = localStorage.getItem(STORAGE_KEYS.TICKETS);
+      if (storedTickets) {
+        setTickets(JSON.parse(storedTickets));
+      }
+    };
+
+    window.addEventListener('bun:kitchen_updated', handleUpdate);
+    window.addEventListener('storage', handleUpdate);
+
+    return () => {
+      if (eventSource) eventSource.close();
+      clearInterval(pollInterval);
+      window.removeEventListener('bun:kitchen_updated', handleUpdate);
+      window.removeEventListener('storage', handleUpdate);
+    };
   }, []);
 
   const saveTickets = useCallback((newTickets: KitchenTicket[]) => {
@@ -230,6 +359,13 @@ export function useKitchenStore() {
     });
 
     saveTickets(updated);
+
+    // Sync status change to Turso
+    fetch('/api/kitchen', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ticketId, status: nextStatus }),
+    }).catch((e) => console.warn('Turso status sync warning:', e));
   };
 
   const cancelTicket = (ticketId: string, reason: string) => {

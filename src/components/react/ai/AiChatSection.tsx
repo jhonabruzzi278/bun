@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Send, Zap, Lightbulb, ArrowRight, Flame } from 'lucide-react';
+import { Button, Badge, Card } from '@/components/ui';
 
 export interface ChatMessage {
   id: string;
@@ -20,10 +21,10 @@ const INITIAL_MESSAGES: ChatMessage[] = [
   {
     id: 'msg-1',
     sender: 'bot',
-    text: '¡Hola Maestro Cervecero! Soy **Chef Bunito** 🐻‍🍳, tu copiloto gastronómico con IA. He analizado las ventas de hoy y tengo 3 oportunidades detectadas para aumentar tu margen.',
+    text: '¡Hola Maestro Cervecero! Soy **Brew** 🦉🍺, la lechuza copiloto gastronómica de **brew.cl**. Con mi visión analítica aguda, he analizado tus comandas y detecté 3 oportunidades tácticas para elevar el margen promedio de tu carta.',
     timestamp: '14:15',
     action: {
-      label: 'Ver 3 oportunidades de margen',
+      label: 'Ver 3 sugerencias de margen',
       type: 'insights'
     }
   }
@@ -49,7 +50,7 @@ export default function AiChatSection({ businessName }: AiChatSectionProps) {
       id: `user-${Date.now()}`,
       sender: 'user',
       text,
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     };
 
     setMessages((prev) => [...prev, userMsg]);
@@ -58,21 +59,20 @@ export default function AiChatSection({ businessName }: AiChatSectionProps) {
 
     setTimeout(() => {
       let botResponse = '';
-      let botAction: { label: string; type: string } | undefined;
+      let actionLabel = '';
 
-      const lower = text.toLowerCase();
-      if (lower.includes('ticket') || lower.includes('promedio') || lower.includes('aumento')) {
-        botResponse = `💡 **Estrategia para elevar el Ticket Promedio (+22% estimado):**\n\n1. **Upselling de Extras en Carta Digital:** Tu plato más pedido es *Double Bacon Smash* ($7.990). Si activamos por defecto la sugerencia de *+ Queso Cheddar Extra* ($600) y *+ Tocino Crocante* ($990), 4 de cada 10 comensales lo aceptan.\n2. **Maridaje en 1 Clic:** Ofrecer la *Cerveza IPA Artesanal* ($4.200) con descuento de $500 al pedir una hamburguesa smash.\n\n¿Quieres que apliquemos la sugerencia de maridaje al menú ahora?`;
-        botAction = { label: 'Activar combo sugerido en la carta', type: 'apply_combo' };
-      } else if (lower.includes('descripción') || lower.includes('seductora') || lower.includes('plato')) {
-        botResponse = `✨ **Propuesta de Copy Gastronómico Gourmet:**\n\n_"Dos discos jugosos de auténtica carne Angus aplastados al hierro candente con costra caramelizada perfecta, fundidos en generosas capas de queso cheddar madurado, tocino crujiente ahumado en madera de roble y nuestra emulsión secreta artesanal. Servido en esponjoso pan brioche tostado a la mantequilla."_\n\n¿Deseas guardarla como descripción oficial del plato?`;
-        botAction = { label: 'Actualizar plato en el catálogo', type: 'update_desc' };
-      } else if (lower.includes('margen') || lower.includes('rentabilidad')) {
-        botResponse = `📊 **Análisis de Margen de Contribución:**\n\n⭐ **Plato #1 Más Rentable:** *Pizza Pepperoni Rústica* (Margen bruto estimado: **72%**).\n⭐ **Plato #2 Más Rentable:** *Double Bacon Smash* (Margen bruto: **68%**).\n\n⚠️ **Alerta de Oportunidad:** Las *Papas Rústicas* tienen alta rotación pero su costo de aceite subió un 8%. Te sugiero ajustar su precio de $4.490 a **$4.890** para recuperar $400 por comensal sin afectar la demanda.`;
-        botAction = { label: 'Ajustar precio de papas a $4.890', type: 'price_adjust' };
+      if (text.includes('ticket promedio') || text.includes('fin de semana')) {
+        botResponse = `🦉 **Estrategia para Fin de Semana en ${businessName}:**\n1. **Maridaje en Barra**: Sugerir una IPA artesanal con las Hamburguesas Smash (+18% ticket).\n2. **Postre Exprés**: Añadir café espresso de especialidad a mitad de precio con el cheesecake.\n3. **Upselling de Papas**: Sugerir doble queso cheddar por $1.200 al confirmar comanda.`;
+        actionLabel = 'Aplicar promociones recomendadas';
+      } else if (text.includes('descripción') || text.includes('seductora')) {
+        botResponse = `🦉 **Copy Gastronómico de Alta Conversión:**\n"Doble medallón smash premium prensado a fuego vivo sobre plancha de hierro, corteza caramelizada con cebolla braseada, queso cheddar fundido y tocino crujiente en pan brioche tostado con mantequilla artesanal."`;
+        actionLabel = 'Copiar al portapapeles';
+      } else if (text.includes('margen')) {
+        botResponse = `🦉 **Top 2 Platos con Mayor Contribución:**\n1. **Papas Rústicas Cheddar**: Margen del 74% (Costo $1.150 / Precio $4.490).\n2. **Café Flat White**: Margen del 81% (Costo $650 / Precio $3.490).\nRecomiendo colocarlos en la cabecera visual de tu Menú QR.`;
+        actionLabel = 'Destacar en carta';
       } else {
-        botResponse = `🐻‍🍳 **Chef Bunito analizando:** He revisado los parámetros de tu restaurante *${businessName}*. Para optimizar el turno actual, te recomiendo impulsar las bebidas artesanales y verificar que la estación de parrilla tenga listo el mise en place para la hora punta (20:30 hrs).`;
-        botAction = { label: 'Ver tablero KDS de cocina', type: 'go_kitchen' };
+        botResponse = `🦉 **Diagnóstico de Brew:** He recibido tu consulta: "${text}". Basado en los patrones de consumo nocturnos de ${businessName}, optimizar la rotación de mesas entre las 20:30 y 22:30 generará un impacto directo en tus ventas netas.`;
+        actionLabel = 'Ver desglose';
       }
 
       const botMsg: ChatMessage = {
@@ -80,18 +80,18 @@ export default function AiChatSection({ businessName }: AiChatSectionProps) {
         sender: 'bot',
         text: botResponse,
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        action: botAction
+        action: { label: actionLabel, type: 'strategy' },
       };
 
       setMessages((prev) => [...prev, botMsg]);
       setIsThinking(false);
-    }, 900);
+    }, 800);
   };
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       {/* Chat Window */}
-      <div className="lg:col-span-2 rounded-3xl bg-white dark:bg-[#241512] border border-[#EAE1D6] dark:border-[#3D2420] shadow-coffee-sm flex flex-col h-[560px] overflow-hidden">
+      <div className="lg:col-span-2 rounded-3xl bg-white dark:bg-[#121215] border border-neutral-200 dark:border-white/[0.08] shadow-sm flex flex-col h-[560px] overflow-hidden">
         {/* Messages */}
         <div className="p-5 flex-1 overflow-y-auto space-y-4">
           {messages.map((msg) => (
@@ -100,16 +100,16 @@ export default function AiChatSection({ businessName }: AiChatSectionProps) {
               className={`flex gap-3 ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
             >
               {msg.sender === 'bot' && (
-                <div className="w-8 h-8 rounded-xl bg-color4 text-white flex items-center justify-center text-base shrink-0">
-                  🐻‍🍳
+                <div className="w-8 h-8 rounded-xl bg-amber-500/20 border border-amber-500/30 text-white flex items-center justify-center text-base shrink-0 shadow-sm">
+                  🦉
                 </div>
               )}
 
               <div
                 className={`max-w-md p-4 rounded-2xl text-xs leading-relaxed space-y-2 ${
                   msg.sender === 'user'
-                    ? 'bg-color4 text-white rounded-tr-none shadow-sm'
-                    : 'bg-[#FAF7F2] dark:bg-[#180E0C] text-coffee-950 dark:text-[#E8DFD8] border border-[#EAE1D6] dark:border-[#3D2420] rounded-tl-none'
+                    ? 'bg-amber-500 text-black font-semibold rounded-tr-none shadow-sm'
+                    : 'bg-neutral-50 dark:bg-white/[0.04] text-neutral-900 dark:text-zinc-100 border border-neutral-200 dark:border-white/[0.08] rounded-tl-none'
                 }`}
               >
                 <div className="whitespace-pre-line">{msg.text}</div>
@@ -119,7 +119,7 @@ export default function AiChatSection({ businessName }: AiChatSectionProps) {
                     <button
                       type="button"
                       onClick={() => alert(`Acción ejecutada: ${msg.action?.label}`)}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-color3 hover:bg-color4 text-white font-bold text-[11px] transition shadow-sm"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-400 font-bold text-[11px] transition border border-amber-500/30"
                     >
                       <Zap className="w-3.5 h-3.5" />
                       <span>{msg.action.label}</span>
@@ -133,17 +133,17 @@ export default function AiChatSection({ businessName }: AiChatSectionProps) {
           ))}
 
           {isThinking && (
-            <div className="flex gap-3 items-center text-xs text-[#8C7E73] dark:text-[#A8988B] italic">
-              <div className="w-8 h-8 rounded-xl bg-color4 text-white flex items-center justify-center text-base animate-bounce">
-                🐻‍🍳
+            <div className="flex gap-3 items-center text-xs text-zinc-400 italic">
+              <div className="w-8 h-8 rounded-xl bg-amber-500/20 border border-amber-500/30 text-white flex items-center justify-center text-base animate-bounce">
+                🦉
               </div>
-              <span>Chef Bunito está calculando la mejor recomendación...</span>
+              <span>Brew la lechuza está calculando la mejor recomendación...</span>
             </div>
           )}
         </div>
 
         {/* Input */}
-        <div className="p-4 border-t border-[#EAE1D6] dark:border-[#3D2420] bg-[#FAF7F2] dark:bg-[#180E0C]">
+        <div className="p-4 border-t border-neutral-200 dark:border-white/[0.08] bg-neutral-50/70 dark:bg-[#0E0E11]/80 backdrop-blur-md">
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -153,28 +153,29 @@ export default function AiChatSection({ businessName }: AiChatSectionProps) {
           >
             <input
               type="text"
-              placeholder="Pregúntale a Chef Bunito sobre tus ventas, platos, combos o precios..."
+              placeholder="Pregúntale a Brew sobre tus ventas nocturnas, platos, combos o precios..."
               value={inputPrompt}
               onChange={(e) => setInputPrompt(e.target.value)}
-              className="flex-1 px-4 py-2.5 rounded-xl bg-white dark:bg-[#241512] border border-[#EAE1D6] dark:border-[#3D2420] text-xs text-coffee-950 dark:text-white placeholder-[#8C7E73] focus:outline-none focus:border-color4"
+              className="flex-1 px-4 py-2.5 rounded-2xl bg-white dark:bg-zinc-900 border border-neutral-200 dark:border-white/[0.08] text-xs text-neutral-900 dark:text-white placeholder-zinc-500 focus:outline-none focus:border-amber-500/50"
             />
-            <button
+            <Button
               type="submit"
+              variant="primary"
+              size="default"
               disabled={!inputPrompt.trim() || isThinking}
-              className="px-4 py-2.5 rounded-xl bg-color4 hover:bg-[#522B2B] text-white font-bold text-xs flex items-center gap-1.5 transition disabled:opacity-50"
             >
               <span>Enviar</span>
               <Send className="w-3.5 h-3.5" />
-            </button>
+            </Button>
           </form>
         </div>
       </div>
 
       {/* Quick Prompts & Alerts Sidebar */}
       <div className="space-y-4">
-        <div className="p-5 rounded-3xl bg-white dark:bg-[#241512] border border-[#EAE1D6] dark:border-[#3D2420] shadow-coffee-sm space-y-3">
-          <h3 className="text-xs font-extrabold text-coffee-950 dark:text-white uppercase tracking-wider flex items-center gap-2">
-            <Lightbulb className="w-4 h-4 text-color3 dark:text-color2" />
+        <div className="p-5 rounded-3xl bg-white dark:bg-[#121215] border border-neutral-200 dark:border-white/[0.08] shadow-sm space-y-3">
+          <h3 className="text-xs font-black text-neutral-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
+            <Lightbulb className="w-4 h-4 text-amber-400" />
             Consultas Rápidas Sugeridas
           </h3>
 
@@ -184,31 +185,12 @@ export default function AiChatSection({ businessName }: AiChatSectionProps) {
                 key={idx}
                 type="button"
                 onClick={() => handleSendMessage(q)}
-                className="w-full text-left p-2.5 rounded-xl bg-[#FAF7F2] dark:bg-[#180E0C] hover:bg-[#F3EDE3] dark:hover:bg-[#2D1B18] border border-[#EAE1D6] dark:border-[#3D2420] text-xs text-coffee-950 dark:text-[#E8DFD8] font-medium transition flex items-center justify-between group"
+                className="w-full text-left p-3 rounded-2xl bg-neutral-50 dark:bg-white/[0.04] hover:bg-neutral-100 dark:hover:bg-white/[0.08] border border-neutral-200 dark:border-white/[0.08] text-xs text-neutral-800 dark:text-zinc-200 transition-all duration-200 flex items-center justify-between group active:scale-[0.99]"
               >
-                <span className="line-clamp-1">{q}</span>
-                <ArrowRight className="w-3.5 h-3.5 text-[#8C7E73] group-hover:translate-x-0.5 transition" />
+                <span className="line-clamp-2 leading-relaxed">{q}</span>
+                <ArrowRight className="w-3.5 h-3.5 text-zinc-500 group-hover:text-amber-400 group-hover:translate-x-0.5 transition shrink-0 ml-2" />
               </button>
             ))}
-          </div>
-        </div>
-
-        <div className="p-5 rounded-3xl bg-white dark:bg-[#241512] border border-[#EAE1D6] dark:border-[#3D2420] shadow-coffee-sm space-y-3">
-          <h3 className="text-xs font-extrabold text-coffee-950 dark:text-white uppercase tracking-wider flex items-center gap-2">
-            <Flame className="w-4 h-4 text-orange-500" />
-            Alertas en Tiempo Real
-          </h3>
-
-          <div className="space-y-2.5 text-xs">
-            <div className="p-3 rounded-xl bg-[#E7F3E8] dark:bg-[#1A3320] border border-[#D0EBD2] dark:border-[#2E5936] text-[#2E7D32] dark:text-[#4ADE80]">
-              <span className="font-bold block">🔥 Smash Burger en alza (+28%)</span>
-              <span className="text-[11px] opacity-90">Stock de pan brioche suficiente para 4 horas.</span>
-            </div>
-
-            <div className="p-3 rounded-xl bg-[#FEF8E3] dark:bg-[#33220E] border border-[#FDECB8] dark:border-[#593E1A] text-[#B1813B] dark:text-[#FBBF24]">
-              <span className="font-bold block">⚠️ Hora punta 20:30 hrs</span>
-              <span className="text-[11px] opacity-90">Se proyectan 32 pedidos en 45 minutos.</span>
-            </div>
           </div>
         </div>
       </div>

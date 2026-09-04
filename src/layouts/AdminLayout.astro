@@ -3,13 +3,14 @@ import '../styles/global.css';
 import AdminSidebarNav from '../components/react/layout/AdminSidebarNav';
 import SystemStatusWidget from '../components/react/ui/SystemStatusWidget';
 import TopHeaderBar from '../components/react/ui/TopHeaderBar';
+import GlobalToaster from '../components/react/ui/GlobalToaster';
 
 interface Props {
   title?: string;
   activePath?: string;
 }
 
-const { title = 'Panel de Administración', activePath = '/admin' } = Astro.props;
+const { title = 'Panel de Control', activePath = '/admin' } = Astro.props;
 ---
 
 <!DOCTYPE html>
@@ -17,10 +18,11 @@ const { title = 'Panel de Administración', activePath = '/admin' } = Astro.prop
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{title} - BUN / Maestro Cervecero</title>
+    <title>{title} - brew.cl</title>
+    <link rel="icon" type="image/jpeg" href="/images/brew-mascot.jpg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
     
     <!-- Theme Auto-Init Script -->
     <script is:inline>
@@ -35,22 +37,22 @@ const { title = 'Panel de Administración', activePath = '/admin' } = Astro.prop
       } catch (e) {}
     </script>
   </head>
-  <body class="h-full flex overflow-hidden text-coffee-950 dark:text-[#F5EFE8] font-sans bg-[#F9F6F0] dark:bg-[#170D0B] transition-colors duration-200">
+  <body class="h-full flex overflow-hidden text-neutral-900 dark:text-zinc-100 font-sans bg-[#FBFBFD] dark:bg-[#09090B] transition-colors duration-200">
     
-    <!-- Sidebar -->
-    <aside class="w-64 bg-[#FAF7F2] dark:bg-[#1F1210] border-r border-[#ECE4DA] dark:border-[#3D2420] flex flex-col justify-between shrink-0 hidden md:flex z-30 transition-colors">
+    <!-- Apple macOS Sidebar -->
+    <aside class="w-64 bg-white dark:bg-[#0E0E11]/90 dark:backdrop-blur-2xl border-r border-neutral-200 dark:border-white/[0.08] flex flex-col justify-between shrink-0 hidden md:flex z-30 transition-colors">
       <div class="overflow-y-auto">
-        <!-- Logo & Header -->
-        <div class="h-20 px-5 flex items-center gap-3 border-b border-[#ECE4DA] dark:border-[#3D2420]">
-          <div class="w-10 h-10 rounded-full bg-color5 dark:bg-[#381C1C] text-white flex items-center justify-center text-lg shadow-sm shrink-0 border-2 border-white dark:border-[#4D2B24]">
-            ☕
+        <!-- Logo & Header: brew.cl + Mascot Brew -->
+        <div class="h-20 px-5 flex items-center gap-3 border-b border-neutral-200 dark:border-white/[0.08]">
+          <div class="w-11 h-11 rounded-2xl overflow-hidden border-2 border-amber-500/40 shadow-md bg-zinc-900 shrink-0">
+            <img src="/images/brew-mascot.jpg" alt="brew.cl" class="w-full h-full object-cover" />
           </div>
           <div class="min-w-0">
-            <h3 class="font-extrabold text-sm tracking-tight text-coffee-950 dark:text-white truncate leading-tight">
-              Maestro cervecero
+            <h3 class="font-black text-base tracking-tight text-neutral-900 dark:text-white truncate flex items-center gap-1">
+              brew<span class="text-amber-500">.cl</span>
             </h3>
-            <p class="text-[10px] text-[#8C7E73] dark:text-[#A8988B] font-medium truncate">
-              Panel de administración
+            <p class="text-[10px] text-neutral-500 dark:text-zinc-400 font-bold truncate">
+              Gastronomía & Cerveza
             </p>
           </div>
         </div>
@@ -66,7 +68,7 @@ const { title = 'Panel de Administración', activePath = '/admin' } = Astro.prop
     </aside>
 
     <!-- Main Content Area -->
-    <div class="flex-1 flex flex-col min-w-0 bg-[#F9F6F0] dark:bg-[#170D0B] overflow-y-auto transition-colors">
+    <div class="flex-1 flex flex-col min-w-0 bg-[#FBFBFD] dark:bg-[#09090B] overflow-y-auto transition-colors">
       <!-- Topbar Header -->
       <TopHeaderBar client:load />
 
@@ -75,6 +77,9 @@ const { title = 'Panel de Administración', activePath = '/admin' } = Astro.prop
         <slot />
       </main>
     </div>
+
+    <!-- Sonner Global Toast System -->
+    <GlobalToaster client:load />
 
   </body>
 </html>

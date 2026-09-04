@@ -26,7 +26,7 @@ export default function KitchenDisplayIsland() {
 
   const stationFilteredTickets = tickets.filter((t) => {
     if (selectedStation === 'ALL') return true;
-    return t.items.some((item) => item.stationCode === selectedStation);
+    return (t.items || []).some((item) => item.stationCode === selectedStation);
   });
 
   const pendingTickets = stationFilteredTickets.filter((t) => t.status === 'PENDING');

@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useCatalogStore } from '@/lib/useCatalogStore';
 import { Bot, Award, Sparkles, TrendingUp } from 'lucide-react';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui';
 
 import AiHeroMascotBanner from './AiHeroMascotBanner';
 import AiChatSection from './AiChatSection';
@@ -10,73 +11,67 @@ import AiDemandForecast from './AiDemandForecast';
 
 export default function AiCopilotPanelIsland() {
   const { business, products } = useCatalogStore();
-  const [activeTab, setActiveTab] = useState<'chat' | 'menu_engineering' | 'generator' | 'forecast'>('chat');
 
   return (
     <div className="space-y-6 max-w-6xl mx-auto pb-12">
       {/* 1. Hero Mascot Banner */}
       <AiHeroMascotBanner businessName={business.name} />
 
-      {/* 2. Navigation Tabs */}
-      <div className="flex items-center gap-2 border-b border-[#EAE1D6] dark:border-[#3D2420] pb-2 overflow-x-auto">
-        <button
-          type="button"
-          onClick={() => setActiveTab('chat')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition whitespace-nowrap ${
-            activeTab === 'chat'
-              ? 'bg-color4 text-white shadow-coffee-sm'
-              : 'text-[#70645A] dark:text-[#A8988B] hover:bg-[#FAF7F2] dark:hover:bg-[#241512]'
-          }`}
-        >
-          <Bot className="w-4 h-4" />
-          <span>Chat con Chef Bunito</span>
-        </button>
+      {/* 2. Apple Segmented Control Tabs */}
+      <Tabs defaultValue="chat" className="w-full space-y-6">
+        <div className="overflow-x-auto pb-1">
+          <TabsList className="bg-black/30 dark:bg-white/[0.04] border border-white/[0.08] p-1.5 rounded-2xl h-auto inline-flex gap-1 backdrop-blur-xl">
+            <TabsTrigger
+              value="chat"
+              className="flex items-center gap-2 rounded-xl text-xs py-2 px-4 data-[state=active]:bg-gradient-to-r data-[state=active]:from-amber-500 data-[state=active]:to-amber-600 data-[state=active]:text-black font-bold transition-all duration-200"
+            >
+              <Bot className="w-3.5 h-3.5" />
+              <span>Chat con Brew</span>
+            </TabsTrigger>
 
-        <button
-          type="button"
-          onClick={() => setActiveTab('menu_engineering')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition whitespace-nowrap ${
-            activeTab === 'menu_engineering'
-              ? 'bg-color4 text-white shadow-coffee-sm'
-              : 'text-[#70645A] dark:text-[#A8988B] hover:bg-[#FAF7F2] dark:hover:bg-[#241512]'
-          }`}
-        >
-          <Award className="w-4 h-4" />
-          <span>Ingeniería de Menú (Estrellas & Rentabilidad)</span>
-        </button>
+            <TabsTrigger
+              value="menu_engineering"
+              className="flex items-center gap-2 rounded-xl text-xs py-2 px-4 data-[state=active]:bg-gradient-to-r data-[state=active]:from-amber-500 data-[state=active]:to-amber-600 data-[state=active]:text-black font-bold transition-all duration-200"
+            >
+              <Award className="w-3.5 h-3.5" />
+              <span>Ingeniería de Menú</span>
+            </TabsTrigger>
 
-        <button
-          type="button"
-          onClick={() => setActiveTab('generator')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition whitespace-nowrap ${
-            activeTab === 'generator'
-              ? 'bg-color4 text-white shadow-coffee-sm'
-              : 'text-[#70645A] dark:text-[#A8988B] hover:bg-[#FAF7F2] dark:hover:bg-[#241512]'
-          }`}
-        >
-          <Sparkles className="w-4 h-4" />
-          <span>Generador de Textos & Copy</span>
-        </button>
+            <TabsTrigger
+              value="generator"
+              className="flex items-center gap-2 rounded-xl text-xs py-2 px-4 data-[state=active]:bg-gradient-to-r data-[state=active]:from-amber-500 data-[state=active]:to-amber-600 data-[state=active]:text-black font-bold transition-all duration-200"
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Generador de Copy</span>
+            </TabsTrigger>
 
-        <button
-          type="button"
-          onClick={() => setActiveTab('forecast')}
-          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition whitespace-nowrap ${
-            activeTab === 'forecast'
-              ? 'bg-color4 text-white shadow-coffee-sm'
-              : 'text-[#70645A] dark:text-[#A8988B] hover:bg-[#FAF7F2] dark:hover:bg-[#241512]'
-          }`}
-        >
-          <TrendingUp className="w-4 h-4" />
-          <span>Previsión de Demanda</span>
-        </button>
-      </div>
+            <TabsTrigger
+              value="forecast"
+              className="flex items-center gap-2 rounded-xl text-xs py-2 px-4 data-[state=active]:bg-gradient-to-r data-[state=active]:from-amber-500 data-[state=active]:to-amber-600 data-[state=active]:text-black font-bold transition-all duration-200"
+            >
+              <TrendingUp className="w-3.5 h-3.5" />
+              <span>Previsión de Demanda</span>
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
-      {/* 3. Tab Sub-Sections */}
-      {activeTab === 'chat' && <AiChatSection businessName={business.name} />}
-      {activeTab === 'menu_engineering' && <AiMenuEngineeringMatrix />}
-      {activeTab === 'generator' && <AiCopywritingGenerator products={products} />}
-      {activeTab === 'forecast' && <AiDemandForecast />}
+        {/* 3. Tab Sub-Sections */}
+        <TabsContent value="chat" className="mt-0">
+          <AiChatSection businessName={business.name} />
+        </TabsContent>
+
+        <TabsContent value="menu_engineering" className="mt-0">
+          <AiMenuEngineeringMatrix />
+        </TabsContent>
+
+        <TabsContent value="generator" className="mt-0">
+          <AiCopywritingGenerator products={products} />
+        </TabsContent>
+
+        <TabsContent value="forecast" className="mt-0">
+          <AiDemandForecast />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

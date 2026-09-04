@@ -10,7 +10,8 @@ import {
   FolderKanban,
   ChevronDown,
   ChevronUp,
-  Store
+  Store,
+  ShieldCheck,
 } from 'lucide-react';
 
 interface NavItem {
@@ -48,7 +49,7 @@ export default function AdminSidebarNav({ activePath = '/admin' }: { activePath?
   ];
 
   return (
-    <nav className="px-3 space-y-1.5 mt-2 pb-6">
+    <nav className="px-3 space-y-1 mt-3 pb-6">
       {/* Primary Items */}
       {primaryNavItems.map((item) => {
         const Icon = item.icon;
@@ -58,19 +59,19 @@ export default function AdminSidebarNav({ activePath = '/admin' }: { activePath?
           <a
             key={item.href}
             href={item.href}
-            className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+            className={`flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-semibold transition-all duration-200 ${
               isActive
-                ? 'bg-color4 dark:bg-color3 text-white shadow-coffee-sm font-bold'
-                : 'text-[#635A52] dark:text-[#A8988B] hover:bg-[#F3EDE3] dark:hover:bg-[#2D1B18] hover:text-coffee-950 dark:hover:text-white'
+                ? 'bg-amber-500 text-black shadow-md shadow-amber-500/20 font-black'
+                : 'text-neutral-600 dark:text-zinc-400 hover:bg-neutral-100 dark:hover:bg-white/[0.06] hover:text-neutral-950 dark:hover:text-white'
             }`}
           >
             <div className="flex items-center gap-3">
-              <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-[#8C7E73] dark:text-[#A8988B]'}`} />
+              <Icon className={`w-4 h-4 ${isActive ? 'text-black' : 'text-neutral-500 dark:text-zinc-400'}`} />
               <span>{item.label}</span>
             </div>
 
             {item.badge && !isActive && (
-              <span className="text-[9px] px-1.5 py-0.5 rounded font-mono font-bold bg-[#E7F3E8] dark:bg-[#1C3322] text-[#2E7D32] dark:text-[#4ADE80] border border-[#D0EBD2] dark:border-[#2E5936]">
+              <span className="text-[9px] px-1.5 py-0.5 rounded-full font-mono font-bold bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
                 {item.badge}
               </span>
             )}
@@ -83,35 +84,35 @@ export default function AdminSidebarNav({ activePath = '/admin' }: { activePath?
         <button
           type="button"
           onClick={() => setSettingsOpen(!settingsOpen)}
-          className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+          className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-semibold transition-all duration-200 ${
             settingsOpen
-              ? 'border border-[#EAE1D6] dark:border-[#3D2420] bg-white dark:bg-[#241512] text-coffee-950 dark:text-white shadow-coffee-sm'
-              : 'text-[#635A52] dark:text-[#A8988B] hover:bg-[#F3EDE3] dark:hover:bg-[#2D1B18] hover:text-coffee-950 dark:hover:text-white'
+              ? 'border border-neutral-200 dark:border-white/[0.08] bg-neutral-100/70 dark:bg-white/[0.05] text-neutral-900 dark:text-white'
+              : 'text-neutral-600 dark:text-zinc-400 hover:bg-neutral-100 dark:hover:bg-white/[0.06] hover:text-neutral-950 dark:hover:text-white'
           }`}
         >
           <div className="flex items-center gap-3">
-            <Settings className="w-4 h-4 text-[#8C7E73] dark:text-[#A8988B]" />
+            <Settings className="w-4 h-4 text-neutral-500 dark:text-zinc-400" />
             <span>Ajustes</span>
           </div>
           {settingsOpen ? (
-            <ChevronUp className="w-3.5 h-3.5 text-[#8C7E73] dark:text-[#A8988B]" />
+            <ChevronUp className="w-3.5 h-3.5 text-neutral-500 dark:text-zinc-400" />
           ) : (
-            <ChevronDown className="w-3.5 h-3.5 text-[#8C7E73] dark:text-[#A8988B]" />
+            <ChevronDown className="w-3.5 h-3.5 text-neutral-500 dark:text-zinc-400" />
           )}
         </button>
 
         {settingsOpen && (
-          <div className="pl-9 pr-2 py-1.5 space-y-1 mt-1">
+          <div className="pl-9 pr-2 py-1 space-y-1 mt-1">
             {settingsSubItems.map((sub) => {
               const isSubActive = activePath === sub.href;
               return (
                 <a
                   key={sub.href}
                   href={sub.href}
-                  className={`block py-1.5 px-2.5 rounded-lg text-[11px] transition ${
+                  className={`block py-1.5 px-2.5 rounded-xl text-[11px] transition-all duration-150 ${
                     isSubActive
-                      ? 'bg-[#F3EDE3] dark:bg-[#38201C] text-color4 dark:text-color2 font-bold'
-                      : 'text-[#70645A] dark:text-[#A8988B] hover:text-coffee-950 dark:hover:text-white hover:bg-[#FAF7F2] dark:hover:bg-[#2D1B18]'
+                      ? 'bg-amber-500/15 text-amber-500 dark:text-amber-400 font-bold'
+                      : 'text-neutral-600 dark:text-zinc-400 hover:text-neutral-950 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-white/[0.04]'
                   }`}
                 >
                   {sub.label}
@@ -123,34 +124,38 @@ export default function AdminSidebarNav({ activePath = '/admin' }: { activePath?
       </div>
 
       {/* Mascot AI Assistant Card (Under Settings) */}
-      <div className="pt-4">
+      <div className="pt-3">
         <a
           href="/admin/ai"
-          className={`block p-3 rounded-2xl border transition-all group relative overflow-hidden ${
+          className={`block p-3 rounded-2xl border transition-all duration-200 group relative overflow-hidden ${
             activePath === '/admin/ai'
-              ? 'bg-color4 text-white border-transparent shadow-coffee-sm'
-              : 'bg-white dark:bg-[#241512] hover:bg-[#FAF7F2] dark:hover:bg-[#2D1B18] border-[#EAE1D6] dark:border-[#3D2420] text-coffee-950 dark:text-white'
+              ? 'bg-amber-500 text-black border-amber-500 shadow-md shadow-amber-500/20'
+              : 'bg-neutral-50 dark:bg-[#121215] hover:bg-neutral-100 dark:hover:bg-[#18181D] border-neutral-200 dark:border-white/[0.08] text-neutral-900 dark:text-white'
           }`}
         >
           <div className="flex items-center gap-3">
             <div className="relative shrink-0">
-              <div className="w-10 h-10 rounded-xl bg-[#FAF7F2] dark:bg-[#180E0C] border border-[#EAE1D6] dark:border-[#4D2D26] flex items-center justify-center text-xl shadow-inner">
-                🐻‍🍳
+              <div className="w-10 h-10 rounded-xl overflow-hidden border border-neutral-200 dark:border-white/[0.1] shadow-sm bg-zinc-900">
+                <img src="/images/brew-mascot.jpg" alt="Brew" className="w-full h-full object-cover" />
               </div>
-              <span className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-500 border-2 border-white dark:border-[#241512]"></span>
+              <span className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-500 border-2 border-white dark:border-[#121215]"></span>
             </div>
 
             <div className="min-w-0 flex-1">
               <div className="flex items-center justify-between">
-                <span className={`text-xs font-black truncate ${activePath === '/admin/ai' ? 'text-white' : 'text-coffee-950 dark:text-white'}`}>
-                  Chef Bunito IA
+                <span className={`text-xs font-black truncate ${activePath === '/admin/ai' ? 'text-black' : 'text-neutral-900 dark:text-white'}`}>
+                  Brew IA
                 </span>
-                <span className="text-[9px] font-bold px-1.5 py-0.2 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300">
+                <span className={`text-[9px] font-bold px-1.5 py-0.2 rounded-full ${
+                  activePath === '/admin/ai'
+                    ? 'bg-black/20 text-black'
+                    : 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400'
+                }`}>
                   ACTIVO
                 </span>
               </div>
-              <p className={`text-[10px] truncate mt-0.5 ${activePath === '/admin/ai' ? 'text-white/80' : 'text-[#8C7E73] dark:text-[#A8988B]'}`}>
-                3 sugerencias de margen
+              <p className={`text-[10px] truncate mt-0.5 ${activePath === '/admin/ai' ? 'text-black/80' : 'text-neutral-500 dark:text-zinc-400'}`}>
+                Copiloto Gastronómico
               </p>
             </div>
           </div>

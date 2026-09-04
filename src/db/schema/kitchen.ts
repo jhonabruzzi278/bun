@@ -1,19 +1,20 @@
-import { pgTable, text, timestamp, integer, boolean } from 'drizzle-orm/pg-core';
+import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
+import { sql } from 'drizzle-orm';
 import { tenants, businesses } from './tenants';
 import { orders } from './orders';
 
-export const prepStations = pgTable('prep_stations', {
+export const prepStations = sqliteTable('prep_stations', {
   id: text('id').primaryKey(), // e.g. 'st_grill', 'st_fry', 'st_bar'
   tenantId: text('tenant_id').references(() => tenants.id, { onDelete: 'cascade' }).notNull(),
   businessId: text('business_id').references(() => businesses.id, { onDelete: 'cascade' }).notNull(),
   name: text('name').notNull(), // e.g. "Parrilla / Plancha", "Frituras", "Bar / Bebidas"
   code: text('code').notNull(), // e.g. "GRILL", "FRY", "BAR"
   color: text('color').default('#f97316').notNull(),
-  isActive: boolean('is_active').default(true).notNull(),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
+  isActive: integer('is_active', { mode: 'boolean' }).default(true).notNull(),
+  createdAt: text('created_at').default(sql`(CURRENT_TIMESTAMP)`).notNull(),
 });
 
-export const kitchenTickets = pgTable('kitchen_tickets', {
+export const kitchenTickets = sqliteTable('kitchen_tickets', {
   id: text('id').primaryKey(),
   tenantId: text('tenant_id').references(() => tenants.id, { onDelete: 'cascade' }).notNull(),
   businessId: text('business_id').references(() => businesses.id, { onDelete: 'cascade' }).notNull(),
@@ -26,16 +27,16 @@ export const kitchenTickets = pgTable('kitchen_tickets', {
   status: text('status').default('PENDING').notNull(), // 'PENDING', 'PREPARING', 'READY', 'DELIVERED', 'CANCELLED'
   notes: text('notes'),
   targetMinutes: integer('target_minutes').default(15).notNull(),
-  prepStartedAt: timestamp('prep_started_at'),
-  readyAt: timestamp('ready_at'),
-  deliveredAt: timestamp('delivered_at'),
-  cancelledAt: timestamp('cancelled_at'),
+  prepStartedAt: text('prep_started_at'),
+  readyAt: text('ready_at'),
+  deliveredAt: text('delivered_at'),
+  cancelledAt: text('cancelled_at'),
   cancellationReason: text('cancellation_reason'),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  createdAt: text('created_at').default(sql`(CURRENT_TIMESTAMP)`).notNull(),
+  updatedAt: text('updated_at').default(sql`(CURRENT_TIMESTAMP)`).notNull(),
 });
 
-export const kitchenTicketItems = pgTable('kitchen_ticket_items', {
+export const kitchenTicketItems = sqliteTable('kitchen_ticket_items', {
   id: text('id').primaryKey(),
   ticketId: text('ticket_id').references(() => kitchenTickets.id, { onDelete: 'cascade' }).notNull(),
   productId: text('product_id'),
@@ -47,11 +48,11 @@ export const kitchenTicketItems = pgTable('kitchen_ticket_items', {
   status: text('status').default('PENDING').notNull(), // 'PENDING', 'PREPARING', 'READY', 'CANCELLED'
 });
 
-export const prepEvents = pgTable('prep_events', {
+export const prepEvents = sqliteTable('prep_events', {
   id: text('id').primaryKey(),
   ticketId: text('ticket_id').references(() => kitchenTickets.id, { onDelete: 'cascade' }).notNull(),
   eventType: text('event_type').notNull(), // 'CREATED', 'STARTED', 'READY', 'DELIVERED', 'CANCELLED', 'RESENT'
-  timestamp: timestamp('timestamp').defaultNow().notNull(),
+  timestamp: text('timestamp').default(sql`(CURRENT_TIMESTAMP)`).notNull(),
   actorName: text('actor_name').default('Sistema Cocina').notNull(),
   metadata: text('metadata'),
 });

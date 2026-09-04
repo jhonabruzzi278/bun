@@ -1,118 +1,139 @@
 import React, { useState } from 'react';
-import { Menu, X, ArrowRight, Sparkles, ChefHat, Smartphone, Store, ShieldCheck } from 'lucide-react';
+import {
+  IconMenu2,
+  IconX,
+  IconArrowUpRight,
+  IconSparkles,
+  IconChefHat,
+  IconDeviceMobile,
+  IconBrandWhatsapp,
+  IconLogin,
+  IconBeer
+} from '@tabler/icons-react';
 
 export default function LandingNavbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 bg-slate-950/80 backdrop-blur-lg border-b border-slate-800/80">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-        
-        {/* Brand Logo */}
-        <a href="/" className="flex items-center gap-3 group">
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-brand-600 via-brand-500 to-amber-400 flex items-center justify-center text-xl shadow-lg shadow-brand-500/25 group-hover:scale-105 transition">
-            🍔
-          </div>
-          <div>
-            <span className="text-2xl font-black tracking-tight text-white">BUN</span>
-            <span className="text-[10px] uppercase font-bold tracking-widest bg-brand-500/20 text-brand-400 px-1.5 py-0.5 rounded ml-1.5 border border-brand-500/30">
-              OlaClick style
-            </span>
-          </div>
+    <header className="sticky top-0 z-50 w-full border-b border-white/[0.08] bg-[#09090B]/85 backdrop-blur-xl font-mono">
+      <div className="max-w-6xl mx-auto flex h-14 md:h-16 items-center justify-between px-4 sm:px-6">
+        {/* Brand: Minimalist Prompt Style */}
+        <a href="/" className="flex items-center gap-2 group text-sm tracking-tight text-white">
+          <span className="text-amber-400 font-bold">&gt;</span>
+          <span className="font-bold tracking-tight">brew.cl</span>
+          <span className="text-[10px] px-1.5 py-0.5 rounded-[2px] border border-amber-500/30 bg-amber-500/10 text-amber-400 font-normal ml-1">
+            v2.0
+          </span>
         </a>
 
         {/* Desktop Navigation Links */}
         <nav className="hidden md:flex items-center gap-8">
-          <a href="#features" className="text-sm font-semibold text-slate-300 hover:text-brand-400 transition">
-            Funcionalidades
+          <a
+            href="#modulos"
+            className="text-xs uppercase tracking-widest text-zinc-400 hover:text-white transition-colors"
+          >
+            Módulos
           </a>
-          <a href="#kds" className="text-sm font-semibold text-slate-300 hover:text-brand-400 transition flex items-center gap-1.5">
-            <ChefHat className="w-4 h-4 text-brand-400" />
-            Cocina KDS
+          <a
+            href="/admin/kitchen"
+            className="text-xs uppercase tracking-widest text-zinc-400 hover:text-white transition-colors flex items-center gap-1.5"
+          >
+            <IconChefHat className="w-3.5 h-3.5 text-amber-400" />
+            <span>KDS Cocina</span>
           </a>
-          <a href="#pricing" className="text-sm font-semibold text-slate-300 hover:text-brand-400 transition">
-            Planes & Precios
+          <a
+            href="#planes"
+            className="text-xs uppercase tracking-widest text-zinc-400 hover:text-white transition-colors"
+          >
+            Planes
           </a>
-          <a href="#faq" className="text-sm font-semibold text-slate-300 hover:text-brand-400 transition">
-            Preguntas
-          </a>
-          <a href="/menu/burger-craft" target="_blank" className="text-sm font-semibold text-slate-300 hover:text-white transition flex items-center gap-1">
-            <span>Demo Menú</span>
-            <span className="text-xs">↗</span>
+          <a
+            href="/menu/burger-craft"
+            target="_blank"
+            className="text-xs uppercase tracking-widest text-zinc-400 hover:text-amber-400 transition-colors flex items-center gap-1 group"
+          >
+            <span>Demo Carta</span>
+            <IconArrowUpRight className="w-3 h-3 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
           </a>
         </nav>
 
         {/* Desktop CTAs */}
         <div className="hidden md:flex items-center gap-3">
           <a
-            href="/auth/login"
-            className="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-200 hover:text-white bg-slate-900 hover:bg-slate-800 border border-slate-700/80 transition"
+            href="/sign-in"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-[4px] border border-white/[0.08] text-xs font-mono uppercase tracking-wider text-zinc-300 hover:text-white hover:border-white/20 transition-colors"
           >
-            Iniciar Sesión
+            <IconLogin className="w-3.5 h-3.5" />
+            <span>Acceso</span>
           </a>
           <a
-            href="/onboarding"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-500 to-amber-500 hover:from-brand-600 hover:to-amber-600 text-white font-extrabold text-xs shadow-lg shadow-brand-500/25 transition group"
+            href="/admin"
+            className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-[4px] bg-white text-black hover:bg-zinc-200 text-xs font-mono uppercase tracking-wider font-semibold transition-colors"
           >
-            <span>Crear Menú Gratis</span>
-            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition" />
+            <span>Panel Control</span>
+            <span className="text-amber-600">✦</span>
           </a>
         </div>
 
-
-        {/* Mobile menu button */}
-        <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden p-2 rounded-xl text-slate-400 hover:text-white bg-slate-900 border border-slate-800"
-        >
-          {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-        </button>
+        {/* Mobile menu toggle */}
+        <div className="md:hidden flex items-center">
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="p-1.5 rounded-[4px] border border-white/[0.08] text-zinc-400 hover:text-white"
+            aria-label="Abrir menú"
+          >
+            {mobileMenuOpen ? <IconX className="w-5 h-5" /> : <IconMenu2 className="w-5 h-5" />}
+          </button>
+        </div>
       </div>
 
-      {/* Mobile dropdown */}
+      {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-slate-950 border-b border-slate-800 px-4 pt-3 pb-6 space-y-3">
-          <a
-            href="#features"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block py-2 text-sm font-semibold text-slate-200"
-          >
-            Funcionalidades
-          </a>
-          <a
-            href="#kds"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block py-2 text-sm font-semibold text-slate-200"
-          >
-            Cocina KDS en Vivo
-          </a>
-          <a
-            href="#pricing"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block py-2 text-sm font-semibold text-slate-200"
-          >
-            Planes & Precios
-          </a>
-          <a
-            href="#faq"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block py-2 text-sm font-semibold text-slate-200"
-          >
-            Preguntas Frecuentes
-          </a>
-          <a
-            href="/menu/burger-craft"
-            target="_blank"
-            className="block py-2 text-sm font-semibold text-brand-400"
-          >
-            Ver Menú Público Demo ↗
-          </a>
-          <div className="pt-3 flex flex-col gap-2">
+        <div className="md:hidden border-b border-white/[0.08] bg-[#09090B] px-6 py-6 space-y-4 font-mono">
+          <nav className="flex flex-col space-y-3">
+            <a
+              href="#modulos"
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-xs uppercase tracking-widest text-zinc-400 hover:text-white"
+            >
+              // 01 Módulos
+            </a>
+            <a
+              href="/admin/kitchen"
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-xs uppercase tracking-widest text-zinc-400 hover:text-white"
+            >
+              // 02 KDS Cocina
+            </a>
+            <a
+              href="#planes"
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-xs uppercase tracking-widest text-zinc-400 hover:text-white"
+            >
+              // 03 Planes
+            </a>
+            <a
+              href="/menu/burger-craft"
+              target="_blank"
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-xs uppercase tracking-widest text-amber-400 hover:text-amber-300"
+            >
+              // 04 Demo Carta ↗
+            </a>
+          </nav>
+          <div className="pt-4 border-t border-white/[0.08] flex flex-col gap-2">
+            <a
+              href="/sign-in"
+              className="w-full text-center py-2 rounded-[4px] border border-white/[0.08] text-xs uppercase tracking-wider text-zinc-300"
+            >
+              Iniciar Sesión
+            </a>
             <a
               href="/admin"
-              className="w-full py-3 rounded-xl bg-brand-500 text-white text-center font-bold text-sm shadow-md"
+              className="w-full text-center py-2 rounded-[4px] bg-white text-black font-semibold text-xs uppercase tracking-wider"
             >
-              Crear Menú Gratis 🚀
+              Entrar al Panel
             </a>
           </div>
         </div>

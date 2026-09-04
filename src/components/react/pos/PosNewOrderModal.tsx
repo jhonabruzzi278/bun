@@ -1,6 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { Product } from '@/lib/types';
-import { X, Plus, Minus, Search } from 'lucide-react';
+import { X, Plus, Minus, Search, ShoppingBag, Truck, Armchair, Barcode, Scan, Sparkles, CheckCircle2 } from 'lucide-react';
+import { Button, Badge, Input } from '@/components/ui';
+import {
+  playBarcodeBeep,
+  RETAIL_BARCODE_SAMPLES,
+  createPhysicalBarcodeListener,
+} from '@/lib/barcodeSimulator';
 
 interface PosNewOrderModalProps {
   isOpen: boolean;
@@ -28,9 +34,9 @@ export default function PosNewOrderModal({
   const [customerName, setCustomerName] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
   const [searchFilter, setSearchFilter] = useState('');
+  const [manualBarcodeInput, setManualBarcodeInput] = useState('');
   const [cartItems, setCartItems] = useState<{ product: Product; quantity: number }[]>([]);
-
-  if (!isOpen) return null;
+  const [lastScannedName, setLastScannedName] = useState<string | null>(null);
 
   const filteredProducts = products.filter((p) =>
     p.name.toLowerCase().includes(searchFilter.toLowerCase())
@@ -48,22 +54,72 @@ export default function PosNewOrderModal({
     });
   };
 
-  const handleUpdateQuantity = (productId: string, delta: number) => {
+  const handleScanBarcode = (barcode: string) => {
+    playBarcodeBeep();
+
+    // 1. Search in existing catalog by barcode or sku
+    let match = products.find((p) => p.sku === barcode || (p as any).barcode === barcode);
+
+    // 2. If not found in catalog, search in retail samples (Coca-Cola, etc.)
+    if (!match) {
+      const sample = RETAIL_BARCODE_SAMPLES.find((s) => s.barcode === barcode);
+      if (sample) {
+        match = {
+          id: `prod_retail_${sample.barcode}`,
+          tenantId: 'tenant_001',
+          businessId: 'biz_001',
+          name: sample.name,
+          description: `Producto Retail (${sample.category}) - Código: ${sample.barcode}`,
+          price: sample.price,
+          sku: sample.barcode,
+          categoryId: 'cat_drinks',
+          imageUrl: '',
+          isAvailable: true,
+          isVisible: true,
+          isFeatured: false,
+          position: 0,
+        };
+      }
+    }
+
+    if (match) {
+      handleAddItem(match);
+      setLastScannedName(match.name);
+      setTimeout(() => setLastScannedName(null), 3000);
+    } else {
+      alert(`Código de barras [${barcode}] no encontrado en el catálogo.`);
+    }
+  };
+
+  // Attach physical barcode gun listener (USB HID)
+  useEffect(() => {
+    if (!isOpen) return;
+    const cleanup = createPhysicalBarcodeListener(handleScanBarcode);
+    return cleanup;
+  }, [isOpen, products]);
+
+  const handleUpdateQty = (productId: string, delta: number) => {
     setCartItems((prev) =>
       prev
-        .map((item) =>
-          item.product.id === productId ? { ...item, quantity: item.quantity + delta } : item
-        )
-        .filter((item) => item.quantity > 0)
+        .map((item) => {
+          if (item.product.id === productId) {
+            const newQty = item.quantity + delta;
+            return newQty > 0 ? { ...item, quantity: newQty } : null;
+          }
+          return item;
+        })
+        .filter(Boolean) as { product: Product; quantity: number }[]
     );
   };
 
-  const orderTotal = cartItems.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+  const calculateTotal = () => {
+    return cartItems.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (cartItems.length === 0) {
-      alert('Agrega al menos un producto al pedido');
+      alert('Debes agregar al menos 1 producto a la orden');
       return;
     }
 
@@ -80,159 +136,280 @@ export default function PosNewOrderModal({
     setCustomerPhone('');
   };
 
+  if (!isOpen) return null;
+
   return (
-    <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-      <div className="bg-white dark:bg-[#241512] border border-[#EAE1D6] dark:border-[#3D2420] rounded-3xl max-w-3xl w-full p-6 shadow-2xl space-y-5 my-8 transition-colors">
-        <div className="flex items-center justify-between pb-3 border-b border-[#EAE1D6] dark:border-[#3D2420]">
-          <h3 className="font-bold text-coffee-950 dark:text-white text-lg">
-            Crear Nuevo Pedido POS
-          </h3>
+    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xl flex items-center justify-center p-4 overflow-y-auto">
+      <div className="bg-[#1C1C1E]/95 border border-white/[0.12] rounded-[36px] max-w-3xl w-full p-6 sm:p-8 shadow-2xl space-y-6 my-8 transition-colors backdrop-blur-2xl text-white">
+        <div className="flex items-center justify-between pb-4 border-b border-white/[0.08]">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center">
+              <ShoppingBag className="w-5 h-5 text-amber-400" />
+            </div>
+            <div>
+              <h3 className="font-black text-white text-lg sm:text-xl tracking-tight">
+                Crear Nuevo Pedido POS
+              </h3>
+              <p className="text-xs text-[#A8988B]">Caja rápida y comanda directa a cocina KDS</p>
+            </div>
+          </div>
           <button
             type="button"
             onClick={onClose}
-            className="text-[#8C7E73] hover:text-coffee-950 dark:hover:text-white p-1 rounded-lg hover:bg-[#FAF7F2] dark:hover:bg-[#38201C]"
+            className="w-9 h-9 rounded-full bg-white/[0.08] hover:bg-white/[0.15] text-white/80 hover:text-white flex items-center justify-center transition-all duration-200"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4 max-h-[75vh] overflow-y-auto pr-1">
-          {/* Service Type */}
-          <div className="grid grid-cols-3 gap-2">
+        <form onSubmit={handleSubmit} className="space-y-5 max-h-[75vh] overflow-y-auto pr-1">
+          {/* Apple Segmented Service Type */}
+          <div className="grid grid-cols-3 gap-2 p-1 rounded-2xl bg-white/[0.05] border border-white/[0.08]">
             <button
               type="button"
               onClick={() => setServiceType('TAKEAWAY')}
-              className={`py-2 rounded-xl text-xs font-bold border transition ${
+              className={`py-2 rounded-xl text-xs font-bold transition-all duration-200 flex items-center justify-center gap-1.5 ${
                 serviceType === 'TAKEAWAY'
-                  ? 'bg-color4 text-white border-transparent'
-                  : 'bg-[#FAF7F2] dark:bg-[#180E0C] text-[#70645A] border-[#EAE1D6] dark:border-[#3D2420]'
+                  ? 'bg-white text-black shadow-sm font-black'
+                  : 'text-[#A8988B] hover:text-white'
               }`}
             >
-              🛍️ Para Llevar
+              <ShoppingBag className="w-3.5 h-3.5" />
+              <span>Para Llevar</span>
             </button>
             <button
               type="button"
               onClick={() => setServiceType('TABLE')}
-              className={`py-2 rounded-xl text-xs font-bold border transition ${
+              className={`py-2 rounded-xl text-xs font-bold transition-all duration-200 flex items-center justify-center gap-1.5 ${
                 serviceType === 'TABLE'
-                  ? 'bg-color4 text-white border-transparent'
-                  : 'bg-[#FAF7F2] dark:bg-[#180E0C] text-[#70645A] border-[#EAE1D6] dark:border-[#3D2420]'
+                  ? 'bg-white text-black shadow-sm font-black'
+                  : 'text-[#A8988B] hover:text-white'
               }`}
             >
-              🍽️ En Mesa
+              <Armchair className="w-3.5 h-3.5" />
+              <span>En Mesa</span>
             </button>
             <button
               type="button"
               onClick={() => setServiceType('DELIVERY')}
-              className={`py-2 rounded-xl text-xs font-bold border transition ${
+              className={`py-2 rounded-xl text-xs font-bold transition-all duration-200 flex items-center justify-center gap-1.5 ${
                 serviceType === 'DELIVERY'
-                  ? 'bg-color4 text-white border-transparent'
-                  : 'bg-[#FAF7F2] dark:bg-[#180E0C] text-[#70645A] border-[#EAE1D6] dark:border-[#3D2420]'
+                  ? 'bg-white text-black shadow-sm font-black'
+                  : 'text-[#A8988B] hover:text-white'
               }`}
             >
-              🛵 Delivery
+              <Truck className="w-3.5 h-3.5" />
+              <span>Delivery</span>
             </button>
           </div>
 
-          {/* Customer & Table */}
+          {/* Table / Customer Details */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label className="block text-xs font-semibold text-coffee-950 dark:text-[#E8DFD8] mb-1">Nombre del Cliente</label>
-              <input
-                type="text"
-                value={customerName}
-                onChange={(e) => setCustomerName(e.target.value)}
-                placeholder="ej. Jonathan Guerra"
-                className="w-full px-3.5 py-2 rounded-xl bg-[#FAF7F2] dark:bg-[#180E0C] border border-[#EAE1D6] dark:border-[#3D2420] text-coffee-950 dark:text-white text-xs focus:outline-none"
-              />
-            </div>
-
             {serviceType === 'TABLE' ? (
               <div>
-                <label className="block text-xs font-semibold text-coffee-950 dark:text-[#E8DFD8] mb-1">Número de Mesa</label>
-                <input
+                <label htmlFor="pos-table-number" className="text-xs font-black text-white block mb-1.5">
+                  Número de Mesa <span className="text-amber-400 font-bold">*</span>
+                </label>
+                <Input
+                  id="pos-table-number"
+                  name="tableNumber"
                   type="number"
-                  min={1}
-                  max={50}
+                  min="1"
+                  max="100"
                   value={tableNumber}
-                  onChange={(e) => setTableNumber(Number(e.target.value))}
-                  className="w-full px-3.5 py-2 rounded-xl bg-[#FAF7F2] dark:bg-[#180E0C] border border-[#EAE1D6] dark:border-[#3D2420] text-coffee-950 dark:text-white text-xs font-bold focus:outline-none"
+                  onChange={(e) => setTableNumber(parseInt(e.target.value) || 1)}
+                  className="bg-[#18181C] border-zinc-700 text-white placeholder:text-zinc-400 font-medium focus-visible:border-amber-400"
                 />
               </div>
             ) : (
               <div>
-                <label className="block text-xs font-semibold text-coffee-950 dark:text-[#E8DFD8] mb-1">Teléfono</label>
-                <input
+                <label htmlFor="pos-customer-name" className="text-xs font-black text-white flex items-center justify-between mb-1.5">
+                  <span>Nombre del Cliente <span className="text-amber-400 font-bold">*</span></span>
+                  <span className="text-[10px] text-amber-400/90 font-mono">⚡ Rápido</span>
+                </label>
+                <Input
+                  id="pos-customer-name"
+                  name="name"
                   type="text"
-                  value={customerPhone}
-                  onChange={(e) => setCustomerPhone(e.target.value)}
-                  placeholder="+56 9..."
-                  className="w-full px-3.5 py-2 rounded-xl bg-[#FAF7F2] dark:bg-[#180E0C] border border-[#EAE1D6] dark:border-[#3D2420] text-coffee-950 dark:text-white text-xs focus:outline-none"
+                  autoComplete="name"
+                  inputMode="text"
+                  enterKeyHint="next"
+                  placeholder="ej. Carlos Silva"
+                  value={customerName}
+                  onChange={(e) => setCustomerName(e.target.value)}
+                  className="bg-[#18181C] border-zinc-700 text-white placeholder:text-zinc-400 font-medium focus-visible:border-amber-400"
                 />
+              </div>
+            )}
+
+            <div>
+              <label htmlFor="pos-customer-phone" className="text-xs font-black text-white flex items-center justify-between mb-1.5">
+                <span>Teléfono / WhatsApp</span>
+                <span className="text-[10px] text-zinc-400 font-mono">(Opcional)</span>
+              </label>
+              <Input
+                id="pos-customer-phone"
+                name="tel"
+                type="tel"
+                autoComplete="tel"
+                inputMode="tel"
+                placeholder="+56 9 1234 5678"
+                value={customerPhone}
+                onChange={(e) => setCustomerPhone(e.target.value)}
+                className="bg-[#18181C] border-zinc-700 text-white placeholder:text-zinc-400 font-medium focus-visible:border-amber-400"
+              />
+            </div>
+          </div>
+
+          {/* Barcode Scanner & Retail Quick-Pick (Like Toteat / Fudo) */}
+          <div className="p-3.5 rounded-2xl bg-amber-500/[0.07] border border-amber-500/25 space-y-2.5">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Scan className="w-4 h-4 text-amber-400" />
+                <span className="text-xs font-black text-white flex items-center gap-1.5">
+                  Lector de Códigos de Barras <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300">Fast Retail</span>
+                </span>
+              </div>
+              <span className="text-[10px] text-zinc-400 font-mono hidden sm:inline">
+                Pistola USB activa
+              </span>
+            </div>
+
+            {/* Quick scan retail sample buttons (Coca-Cola, Corona, etc.) */}
+            <div className="space-y-1">
+              <p className="text-[10px] text-zinc-400">
+                Simula el escaneo de una lata o botella de un clic (o dispara tu lector físico):
+              </p>
+              <div className="flex flex-wrap gap-1.5">
+                {RETAIL_BARCODE_SAMPLES.map((sample) => (
+                  <button
+                    key={sample.barcode}
+                    type="button"
+                    onClick={() => handleScanBarcode(sample.barcode)}
+                    className="px-2.5 py-1.5 rounded-xl bg-white/[0.06] hover:bg-amber-500/20 border border-white/[0.1] hover:border-amber-500/40 text-[11px] font-semibold text-zinc-200 flex items-center gap-1.5 transition active:scale-95"
+                    title={`EAN: ${sample.barcode}`}
+                  >
+                    <span>{sample.icon}</span>
+                    <span>{sample.name.split(' ')[0]} {sample.name.split(' ')[1]}</span>
+                    <span className="font-mono text-amber-400 font-bold">${sample.price.toLocaleString('es-CL')}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Manual Barcode Input */}
+            <div className="flex items-center gap-2 pt-1">
+              <div className="relative flex-1">
+                <Barcode className="w-3.5 h-3.5 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <input
+                  id="barcode-scanner-input"
+                  type="text"
+                  placeholder="Escanear o ingresar código EAN (ej. 7801620006785)..."
+                  value={manualBarcodeInput}
+                  onChange={(e) => setManualBarcodeInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      if (manualBarcodeInput.trim()) {
+                        handleScanBarcode(manualBarcodeInput.trim());
+                        setManualBarcodeInput('');
+                      }
+                    }
+                  }}
+                  className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-black/40 border border-white/[0.1] text-xs font-mono text-white placeholder:text-neutral-500 focus:outline-none focus:border-amber-500"
+                />
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  if (manualBarcodeInput.trim()) {
+                    handleScanBarcode(manualBarcodeInput.trim());
+                    setManualBarcodeInput('');
+                  }
+                }}
+                className="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-black font-black text-xs transition"
+              >
+                Escanear
+              </button>
+            </div>
+
+            {lastScannedName && (
+              <div className="text-[11px] text-emerald-400 font-bold flex items-center gap-1 bg-emerald-950/40 px-2.5 py-1 rounded-lg border border-emerald-500/30">
+                <CheckCircle2 className="w-3 h-3" />
+                ¡Escaneado con éxito: {lastScannedName}!
               </div>
             )}
           </div>
 
-          {/* Product Quick Picker */}
-          <div className="space-y-2 pt-2 border-t border-[#EAE1D6] dark:border-[#3D2420]">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-coffee-950 dark:text-white">Selecciona Productos:</span>
+          {/* Product Quick-Picker */}
+          <div className="space-y-3 pt-2">
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-xs font-bold text-neutral-300">Seleccionar Productos:</span>
               <div className="relative w-48">
-                <Search className="w-3.5 h-3.5 text-[#8C7E73] absolute left-2.5 top-2" />
+                <Search className="w-3.5 h-3.5 text-[#8C7E73] absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
-                  placeholder="Buscar..."
+                  placeholder="Buscar plato..."
                   value={searchFilter}
                   onChange={(e) => setSearchFilter(e.target.value)}
-                  className="w-full pl-8 pr-3 py-1 rounded-lg bg-[#FAF7F2] dark:bg-[#180E0C] border border-[#EAE1D6] dark:border-[#3D2420] text-[11px] text-coffee-950 dark:text-white"
+                  className="w-full pl-8 pr-3 py-1.5 rounded-xl bg-white/[0.05] border border-white/[0.08] text-xs text-white placeholder:text-neutral-500 focus:outline-none"
                 />
               </div>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-48 overflow-y-auto p-1">
-              {filteredProducts.map((p) => (
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 max-h-48 overflow-y-auto p-1">
+              {filteredProducts.map((prod) => (
                 <button
-                  key={p.id}
+                  key={prod.id}
                   type="button"
-                  onClick={() => handleAddItem(p)}
-                  className="p-2 rounded-xl bg-[#FAF7F2] dark:bg-[#180E0C] hover:bg-[#F3EDE3] dark:hover:bg-[#2D1B18] border border-[#EAE1D6] dark:border-[#3D2420] text-left transition flex flex-col justify-between"
+                  onClick={() => handleAddItem(prod)}
+                  className="p-3 rounded-2xl bg-white/[0.04] border border-white/[0.08] hover:border-amber-500/40 text-left transition-all duration-200 active:scale-95 group"
                 >
-                  <span className="text-xs font-bold text-coffee-950 dark:text-white line-clamp-1">{p.name}</span>
-                  <span className="text-[11px] font-mono font-bold text-color4 dark:text-color2 mt-1">
-                    {currencySymbol}{p.price.toLocaleString('es-CL')}
-                  </span>
+                  <p className="font-bold text-xs text-white truncate group-hover:text-amber-400">
+                    {prod.name}
+                  </p>
+                  <p className="text-[11px] font-mono text-amber-400 font-bold mt-1">
+                    {currencySymbol}{prod.price.toLocaleString('es-CL')}
+                  </p>
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Cart Summary */}
+          {/* Order Summary & Total */}
           {cartItems.length > 0 && (
-            <div className="p-3 rounded-2xl bg-[#FAF7F2] dark:bg-[#180E0C] border border-[#EAE1D6] dark:border-[#3D2420] space-y-2">
-              <span className="text-xs font-bold text-coffee-950 dark:text-white block">Ítems Seleccionados:</span>
+            <div className="space-y-2 pt-2 border-t border-white/[0.08]">
+              <span className="text-xs font-bold text-neutral-300">Ítems Seleccionados:</span>
               <div className="space-y-1.5 max-h-32 overflow-y-auto">
-                {cartItems.map((item) => (
-                  <div key={item.product.id} className="flex items-center justify-between text-xs bg-white dark:bg-[#241512] p-2 rounded-xl border border-[#EAE1D6] dark:border-[#3D2420]">
-                    <span className="font-semibold text-coffee-950 dark:text-white">{item.product.name}</span>
+                {cartItems.map(({ product, quantity }) => (
+                  <div
+                    key={product.id}
+                    className="flex items-center justify-between p-2.5 rounded-xl bg-white/[0.04] border border-white/[0.06] text-xs"
+                  >
+                    <span className="font-semibold text-white truncate max-w-[200px]">
+                      {product.name}
+                    </span>
                     <div className="flex items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => handleUpdateQuantity(item.product.id, -1)}
-                        className="w-5 h-5 rounded bg-[#FAF7F2] dark:bg-[#180E0C] flex items-center justify-center text-xs"
-                      >
-                        <Minus className="w-3 h-3" />
-                      </button>
-                      <span className="font-bold text-xs">{item.quantity}</span>
-                      <button
-                        type="button"
-                        onClick={() => handleUpdateQuantity(item.product.id, 1)}
-                        className="w-5 h-5 rounded bg-[#FAF7F2] dark:bg-[#180E0C] flex items-center justify-center text-xs"
-                      >
-                        <Plus className="w-3 h-3" />
-                      </button>
-                      <span className="font-mono font-bold text-xs ml-2">
-                        {currencySymbol}{(item.product.price * item.quantity).toLocaleString('es-CL')}
+                      <span className="font-mono text-amber-400 font-bold">
+                        {currencySymbol}{(product.price * quantity).toLocaleString('es-CL')}
                       </span>
+                      <div className="flex items-center gap-1 bg-white/[0.08] rounded-lg p-0.5">
+                        <button
+                          type="button"
+                          onClick={() => handleUpdateQty(product.id, -1)}
+                          className="w-5 h-5 rounded flex items-center justify-center hover:bg-white/[0.15]"
+                        >
+                          <Minus className="w-3 h-3" />
+                        </button>
+                        <span className="w-5 text-center font-bold font-mono">{quantity}</span>
+                        <button
+                          type="button"
+                          onClick={() => handleUpdateQty(product.id, 1)}
+                          className="w-5 h-5 rounded flex items-center justify-center hover:bg-white/[0.15]"
+                        >
+                          <Plus className="w-3 h-3" />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -240,29 +417,23 @@ export default function PosNewOrderModal({
             </div>
           )}
 
-          {/* Footer Submit */}
-          <div className="flex items-center justify-between pt-3 border-t border-[#EAE1D6] dark:border-[#3D2420]">
+          {/* Footer & Submit */}
+          <div className="flex items-center justify-between pt-4 border-t border-white/[0.08]">
             <div>
-              <span className="text-[10px] uppercase text-[#8C7E73] dark:text-[#A8988B] block">Total Pedido</span>
-              <span className="text-lg font-black font-mono text-coffee-950 dark:text-white">
-                {currencySymbol}{orderTotal.toLocaleString('es-CL')}
+              <span className="text-xs text-[#A8988B] block">Total de la Orden:</span>
+              <span className="text-xl font-black text-amber-400 font-mono">
+                {currencySymbol}{calculateTotal().toLocaleString('es-CL')}
               </span>
             </div>
 
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={onClose}
-                className="px-4 py-2 rounded-xl text-xs font-bold text-[#70645A] dark:text-[#A8988B]"
-              >
+            <div className="flex items-center gap-2">
+              <Button variant="ghost" size="sm" type="button" onClick={onClose}>
                 Cancelar
-              </button>
-              <button
-                type="submit"
-                className="px-6 py-2.5 rounded-xl bg-color4 hover:bg-[#522B2B] text-white font-bold text-xs shadow-coffee-sm transition"
-              >
-                Crear Comanda
-              </button>
+              </Button>
+              <Button variant="primary" size="default" type="submit" disabled={cartItems.length === 0}>
+                <span>Lanzar a Cocina</span>
+                <Plus className="w-4 h-4" />
+              </Button>
             </div>
           </div>
         </form>

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useCatalogStore } from '@/lib/useCatalogStore';
 import type { Product, CartItem } from '@/lib/types';
 import { openWhatsAppOrder } from '@/lib/whatsappOrderBuilder';
+import { toast } from 'sonner';
+import confetti from 'canvas-confetti';
 
 import MenuTopBar from './MenuTopBar';
 import MenuHeroHeader from './MenuHeroHeader';
@@ -52,12 +54,21 @@ export default function PublicMenuIsland() {
       } else if (tipo === 'delivery') {
         setOrderType('delivery');
       }
+
+      try {
+        const savedName = localStorage.getItem('brew_customer_name');
+        if (savedName) setCustomerName(savedName);
+        const savedPhone = localStorage.getItem('brew_customer_phone');
+        if (savedPhone) setCustomerPhone(savedPhone);
+        const savedAddress = localStorage.getItem('brew_customer_address');
+        if (savedAddress) setCustomerAddress(savedAddress);
+      } catch {}
     }
   }, []);
 
-  if (!isLoaded) {
+  if (!isLoaded && products.length === 0) {
     return (
-      <div className="min-h-screen bg-[#1F1412] flex items-center justify-center p-4">
+      <div className="min-h-screen bg-[#09090B] flex items-center justify-center p-4">
         <div className="animate-spin text-3xl">☕</div>
       </div>
     );
@@ -88,17 +99,94 @@ export default function PublicMenuIsland() {
     };
     setCart((prev) => [...prev, newItem]);
     setActiveProductModal(null);
+    toast.success(`¡${itemData.name} agregado!`, {
+      description: `${itemData.quantity}x comanda actualizada`,
+      duration: 2500,
+    });
   };
 
   const handleRemoveCartItem = (index: number) => {
     setCart((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const handleSendWhatsApp = () => {
+  const handleSendWhatsApp = async () => {
     if (!customerName.trim()) {
       alert('Por favor escribe tu nombre para registrar la comanda');
       return;
     }
+
+    const orderNumber = Math.floor(100 + Math.random() * 900);
+    const ticketId = `kt_${Date.now()}`;
+
+    // 1. Send order to Turso database via API
+    try {
+      fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          orderNumber,
+          customerName,
+          customerPhone,
+          customerAddress,
+          orderType,
+          tableNumber,
+          total: cartTotal,
+          items: cart,
+          notes: `Pago: ${paymentMethod}`,
+        }),
+      }).catch((e) => console.warn('Order sync warning:', e));
+    } catch (e) {}
+
+    // 2. Dispatch to local Kitchen KDS for instant chime and board update
+    try {
+      const storedTickets = localStorage.getItem('bun_kitchen_tickets_state');
+      const tickets = storedTickets ? JSON.parse(storedTickets) : [];
+      const kitchenItems = cart.map((item, idx) => ({
+        id: `ki_${Date.now()}_${idx}`,
+        ticketId,
+        productId: item.productId,
+        productName: item.name,
+        quantity: item.quantity,
+        variantName: item.selectedVariant?.name,
+        modifiers: item.selectedModifiers?.map((m) => `${m.quantity}x ${m.modifier.name}`),
+        notes: item.notes,
+        stationCode: 'GRILL',
+        status: 'PENDING' as const,
+      }));
+
+      const newTicket = {
+        id: ticketId,
+        tenantId: business.tenantId || 'tenant_001',
+        businessId: business.id || 'biz_001',
+        ticketNumber: orderNumber,
+        orderType,
+        tableNumber: tableNumber ? `Mesa ${tableNumber}` : undefined,
+        customerName,
+        status: 'PENDING' as const,
+        targetMinutes: 15,
+        notes: `Medio de pago: ${paymentMethod}`,
+        items: kitchenItems,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+
+      localStorage.setItem('bun_kitchen_tickets_state', JSON.stringify([newTicket, ...tickets]));
+      window.dispatchEvent(new Event('bun:kitchen_updated'));
+    } catch (e) {}
+
+    // 3. Open formatted WhatsApp comanda
+    try {
+      confetti({
+        particleCount: 75,
+        spread: 60,
+        origin: { y: 0.6 },
+      });
+    } catch (e) {}
+
+    toast.success('¡Comanda despachada a Cocina!', {
+      description: 'Abriendo WhatsApp para confirmar tu pedido...',
+      duration: 3500,
+    });
 
     openWhatsAppOrder({
       business,
@@ -111,10 +199,14 @@ export default function PublicMenuIsland() {
       orderType,
       paymentMethod,
     });
+
+    // 4. Clear cart
+    setCart([]);
+    setIsCartOpen(false);
   };
 
   return (
-    <div className="min-h-screen bg-[#180E0C] text-[#F5EFE8] font-sans pb-32">
+    <div className="min-h-screen bg-[#09090B] text-zinc-100 font-sans pb-32">
       {/* 1. Top Bar with Table Indicator & Client Theme Color Picker */}
       <MenuTopBar
         tableNumber={tableNumber}

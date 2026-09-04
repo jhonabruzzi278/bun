@@ -1,7 +1,8 @@
-import { pgTable, text, timestamp, integer, jsonb } from 'drizzle-orm/pg-core';
+import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
+import { sql } from 'drizzle-orm';
 import { tenants, businesses } from './tenants';
 
-export const orders = pgTable('orders', {
+export const orders = sqliteTable('orders', {
   id: text('id').primaryKey(),
   tenantId: text('tenant_id').references(() => tenants.id, { onDelete: 'cascade' }).notNull(),
   businessId: text('business_id').references(() => businesses.id, { onDelete: 'cascade' }).notNull(),
@@ -13,8 +14,8 @@ export const orders = pgTable('orders', {
   tableNumber: text('table_number'),
   status: text('status').default('NEW').notNull(), // 'NEW', 'CONFIRMED', 'PREPARING', 'READY', 'DELIVERED', 'CANCELLED'
   total: integer('total').notNull(),
-  items: jsonb('items').notNull(), // Snapshot of items at checkout
+  items: text('items', { mode: 'json' }).notNull(), // Snapshot of items at checkout
   notes: text('notes'),
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  createdAt: text('created_at').default(sql`(CURRENT_TIMESTAMP)`).notNull(),
+  updatedAt: text('updated_at').default(sql`(CURRENT_TIMESTAMP)`).notNull(),
 });

@@ -4,73 +4,76 @@
 
 @layer base {
   body {
-    @apply antialiased font-sans bg-[#F9F6F0] text-coffee-950 selection:bg-color4 selection:text-white transition-colors duration-200;
+    @apply antialiased font-sans bg-[#FBFBFD] text-neutral-900 selection:bg-amber-500 selection:text-black transition-colors duration-200;
   }
 
   html.dark body {
-    background-color: #170D0B;
-    color: #F5EFE8;
+    background-color: #09090B;
+    color: #F4F4F5;
   }
 }
 
-/* Colores Solicitados por el Usuario */
-.color1 { color: #BEC483; }
-.color2 { color: #C7B140; }
-.color3 { color: #B1813B; }
-.color4 { color: #774C3B; }
-.color5 { color: #522B2B; }
+/* Colores Solicitados por el Usuario - Refinados a Alta Gama */
+.color1 { color: #10B981; }
+.color2 { color: #FBBF24; }
+.color3 { color: #F59E0B; }
+.color4 { color: #D97706; }
+.color5 { color: #18181B; }
 
-.bg-color1 { background-color: #BEC483; }
-.bg-color2 { background-color: #C7B140; }
-.bg-color3 { background-color: #B1813B; }
-.bg-color4 { background-color: #774C3B; }
-.bg-color5 { background-color: #522B2B; }
+.bg-color1 { background-color: #10B981; }
+.bg-color2 { background-color: #FBBF24; }
+.bg-color3 { background-color: #F59E0B; }
+.bg-color4 { background-color: #D97706; }
+.bg-color5 { background-color: #18181B; }
 
-.border-color1 { border-color: #BEC483; }
-.border-color2 { border-color: #C7B140; }
-.border-color3 { border-color: #B1813B; }
-.border-color4 { border-color: #774C3B; }
-.border-color5 { border-color: #522B2B; }
+.border-color1 { border-color: #10B981; }
+.border-color2 { border-color: #FBBF24; }
+.border-color3 { border-color: #F59E0B; }
+.border-color4 { border-color: #D97706; }
+.border-color5 { border-color: #18181B; }
 
-/* Paneles y Tarjetas Cálidas Modo Claro (Latte) */
+/* Paneles y Tarjetas Modo Claro */
 .coffee-card {
-  @apply bg-white border border-[#ECE4DA] rounded-2xl shadow-coffee-sm transition-all;
+  @apply bg-white border border-neutral-200/80 rounded-3xl shadow-sm transition-all;
 }
 
 .coffee-card-hover {
-  @apply bg-white border border-[#ECE4DA] rounded-2xl shadow-coffee-sm hover:shadow-coffee-md hover:border-[#DFD4C7] transition-all;
+  @apply bg-white border border-neutral-200/80 rounded-3xl shadow-sm hover:shadow-md hover:border-neutral-300 transition-all;
 }
 
 .coffee-panel {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid #ECE4DA;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 0, 0, 0.06);
 }
 
-/* Modo Oscuro (Espresso / Tostado Profundo) */
+/* Modo Oscuro Apple - Deep Pitch Black & Frosted Glass */
 .dark .coffee-card {
-  background-color: #241512;
-  border-color: #3D2420;
-  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.3);
+  background-color: #121215;
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
 }
 
 .dark .coffee-card-hover {
-  background-color: #241512;
-  border-color: #3D2420;
-  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.3);
+  background-color: #121215;
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
 }
 .dark .coffee-card-hover:hover {
-  border-color: #5C3832;
-  box-shadow: 0 8px 20px -3px rgba(0, 0, 0, 0.4);
+  border-color: rgba(245, 158, 11, 0.35);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5);
+  background-color: #16161A;
 }
 
 .dark .coffee-panel {
-  background: rgba(36, 21, 18, 0.95);
-  border-color: #3D2420;
+  background: rgba(18, 18, 21, 0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-color: rgba(255, 255, 255, 0.08);
 }
 
-/* Custom Scrollbar en tonos café */
+/* Custom Apple Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -79,16 +82,39 @@
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #D7C7B5;
+  background: #D1D1D6;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #B1813B;
+  background: #A1A1AA;
 }
 
 .dark ::-webkit-scrollbar-thumb {
-  background: #4A2B25;
+  background: #27272A;
 }
 .dark ::-webkit-scrollbar-thumb:hover {
-  background: #774C3B;
+  background: #3F3F46;
+}
+
+/* Apple Cupertino Glassmorphism & Micro-interactions */
+.apple-glass {
+  background: rgba(18, 18, 21, 0.75);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.apple-card {
+  border-radius: 28px;
+  background: rgba(18, 18, 21, 0.65);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.apple-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(245, 158, 11, 0.4);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
 }
