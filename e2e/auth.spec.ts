@@ -15,4 +15,12 @@ test.describe('Autenticación Gestionada con Clerk - brew.cl', () => {
     // Captura visual de la pantalla de autenticación
     await page.screenshot({ path: 'playwright-report/screenshots/12_clerk_sign_in.png', fullPage: true });
   });
+
+  test('las rutas de OAuth sso-callback deben responder exitosamente y no dar 404', async ({ page }) => {
+    const ssoResponse = await page.goto('/sign-in/sso-callback', { waitUntil: 'commit' });
+    expect(ssoResponse?.status()).not.toBe(404);
+
+    const directCallbackResponse = await page.goto('/sso-callback', { waitUntil: 'commit' });
+    expect(directCallbackResponse?.status()).not.toBe(404);
+  });
 });

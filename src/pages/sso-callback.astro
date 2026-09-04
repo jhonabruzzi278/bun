@@ -1,0 +1,23 @@
+---
+import '../styles/global.css';
+import { AuthenticateWithRedirectCallback } from '@clerk/astro/components';
+---
+
+<!DOCTYPE html>
+<html lang="es" class="dark h-full bg-[#09090B]">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Completando Acceso - brew.cl</title>
+    <link rel="icon" type="image/jpeg" href="/images/brew-mascot.jpg" />
+  </head>
+  <body class="h-full flex items-center justify-center bg-[#09090B] text-white font-sans antialiased p-4">
+    <div class="text-center space-y-4">
+      <div class="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-500/40 text-amber-400 flex items-center justify-center font-black text-xl mx-auto animate-pulse">
+        🍺
+      </div>
+      <p class="text-sm font-bold text-zinc-300">Conectando sesión con brew.cl...</p>
+      <AuthenticateWithRedirectCallback />
+    </div>
+  </body>
+</html>

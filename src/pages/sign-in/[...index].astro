@@ -1,6 +1,6 @@
 ---
-import '../styles/global.css';
-import { SignUp } from '@clerk/astro/components';
+import '../../styles/global.css';
+import { SignIn } from '@clerk/astro/components';
 ---
 
 <!DOCTYPE html>
@@ -8,7 +8,7 @@ import { SignUp } from '@clerk/astro/components';
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Crear Cuenta - brew.cl</title>
+    <title>Iniciar Sesión - brew.cl</title>
     <link rel="icon" type="image/jpeg" href="/images/brew-mascot.jpg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -29,19 +29,19 @@ import { SignUp } from '@clerk/astro/components';
             brew<span class="text-amber-500">.cl</span>
           </h1>
           <p class="text-xs text-zinc-400 mt-0.5">
-            Únete a la plataforma gastronómica de nueva generación
+            Acceso al Sistema Operativo Gastronómico
           </p>
         </div>
       </div>
 
-      {/* Clerk Sign-Up Component Container */}
+      {/* Clerk Sign-In Component Container */}
       <div class="flex justify-center">
-        <SignUp routing="path" path="/sign-up" signInUrl="/sign-in" />
+        <SignIn routing="path" path="/sign-in" signUpUrl="/sign-up" />
       </div>
 
-      {/* Footer */}
+      {/* Footer link */}
       <p class="text-center text-[11px] text-zinc-500">
-        Al registrarte aceptas los Términos y Condiciones de <span class="text-amber-400">brew.cl</span>
+        ¿Necesitas ayuda con tu cuenta? Contacta a soporte en <a href="mailto:soporte@brew.cl" class="text-amber-400 hover:underline">soporte@brew.cl</a>
       </p>
     </div>
 
