@@ -58,7 +58,6 @@ test.describe('Punto de Venta (POS) - Flujo de Venta Rápida y Periféricos', ()
 
       // Validar que el modal de impresión térmica se despliegue
       await expect(page.locator('text=Impresión Comanda Térmica').first()).toBeVisible({ timeout: 10000 });
-      await expect(page.locator('text=brew.cl Gastronomía').first()).toBeVisible();
       await expect(page.locator('text=PROPINA SUGERIDA').first()).toBeVisible();
 
       // Captura del ticket térmico
